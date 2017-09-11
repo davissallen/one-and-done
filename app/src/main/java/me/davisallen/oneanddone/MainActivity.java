@@ -9,6 +9,8 @@ import android.view.MenuItem;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -20,7 +22,10 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAnalytics mFirebaseAnalytics;
     // Firebase Authorization instance
     private FirebaseAuth mAuth;
+    // Firebase Cloud Storage instance
+    private StorageReference mStorageRef;
 
+    // Bind views with Butterknife
     @BindView(R.id.navigation) BottomNavigationView mBottomNavigation;
 
     @Override
@@ -33,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         // Obtain the FirebaseAuth instance.
         mAuth = FirebaseAuth.getInstance();
+        // Obtain the FirebaseStorage instance.
+        mStorageRef = FirebaseStorage.getInstance().getReference();
 
         // Set up Timber DebugTree
         if (BuildConfig.DEBUG) {
