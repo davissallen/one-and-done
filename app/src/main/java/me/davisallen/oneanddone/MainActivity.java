@@ -6,11 +6,16 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity {
+
+    // Firebase Analytics instance
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @BindView(R.id.navigation) BottomNavigationView mBottomNavigation;
 
@@ -19,6 +24,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        // Obtain the FirebaseAnalytics instance.
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         // Set up Timber DebugTree
         if (BuildConfig.DEBUG) {
