@@ -3,4 +3,5 @@
     <string name="title_daily_goal">Daily Goal</string>
     <string name="title_list">Progress List</string>
     <string name="title_calendar">Calendar</string>
+    <string name="daily_goal_prompt">What will you do today?</string>
 </resources>

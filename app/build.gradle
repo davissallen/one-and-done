@@ -29,4 +29,12 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+
+    //*********** Library imports ***********//
+    // Timber
+    implementation 'com.jakewharton.timber:timber:4.5.1'
+    // Butterknife
+
+    // Espresso?
+
 }
