@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -16,6 +18,8 @@ public class MainActivity extends AppCompatActivity {
 
     // Firebase Analytics instance
     private FirebaseAnalytics mFirebaseAnalytics;
+    // Firebase Authorization instance
+    private FirebaseAuth mAuth;
 
     @BindView(R.id.navigation) BottomNavigationView mBottomNavigation;
 
@@ -27,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
 
         // Obtain the FirebaseAnalytics instance.
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        // Obtain the FirebaseAuth instance.
+        mAuth = FirebaseAuth.getInstance();
 
         // Set up Timber DebugTree
         if (BuildConfig.DEBUG) {
@@ -34,6 +40,16 @@ public class MainActivity extends AppCompatActivity {
         }
 
         mBottomNavigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        // TODO: Do something with currentUser
+        // See FirebaseAssistant tool on auth
+        // See getting started info here: https://firebase.google.com/docs/auth/android/start
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
