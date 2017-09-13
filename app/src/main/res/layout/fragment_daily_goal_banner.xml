@@ -15,9 +15,11 @@
         android:clickable="true"
         android:focusable="true"
         app:backgroundTint="?android:attr/colorBackground"
+        app:fabSize="normal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_calendar_check_neutral_36dp" />
 
     <ImageView
         android:id="@+id/cancel"

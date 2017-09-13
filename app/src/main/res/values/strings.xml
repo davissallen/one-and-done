@@ -4,4 +4,7 @@
     <string name="title_list">Progress List</string>
     <string name="title_calendar">Calendar</string>
     <string name="daily_goal_prompt">What will you do today?</string>
+    <string name="calendar_goal_completed">Goal completed</string>
+    <string name="calendar_goal_negative">Goal uncompleted</string>
+    <string name="calendar_goal_neutral">Goal not set</string>
 </resources>

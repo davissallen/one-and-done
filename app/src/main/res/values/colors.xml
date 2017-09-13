@@ -6,4 +6,7 @@
 
     <color name="colorNegative">#FF0000</color>
     <color name="colorPositive">#00FF00</color>
+    <color name="colorNeutral">#D0D0D0</color>
+
+    <color name="colorDivider">#A0A0A0</color>
 </resources>
