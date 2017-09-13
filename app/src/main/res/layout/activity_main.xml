@@ -9,6 +9,13 @@
     tools:layout_editor_absoluteX="0dp"
     tools:layout_editor_absoluteY="0dp">
 
+    <fragment
+        android:id="@+id/fragment_create_goal"
+        android:name="me.davisallen.oneanddone.DailyGoalCreateFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/navigation"
         android:layout_width="0dp"
@@ -22,6 +29,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:menu="@menu/navigation" />
+        app:menu="@menu/navigation"
+        android:visibility="gone"/>
 
 </android.support.constraint.ConstraintLayout>

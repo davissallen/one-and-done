@@ -8,6 +8,8 @@
 
     <EditText
         android:id="@+id/et_daily_goal"
+        android:imeOptions="actionGo"
+        android:inputType="text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"

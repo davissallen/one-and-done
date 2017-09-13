@@ -46,7 +46,9 @@ public class MainActivity extends AppCompatActivity {
             Timber.plant(new Timber.DebugTree());
         }
 
-        mBottomNavigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        if (mBottomNavigation != null) {
+            mBottomNavigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        }
     }
 
     @Override
