@@ -1,10 +1,10 @@
 package me.davisallen.oneanddone;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MenuItem;
+import android.widget.FrameLayout;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
@@ -16,7 +16,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+        implements DailyGoalCreateFragment.DailyGoalCreatedListener {
 
     // Firebase Analytics instance
     private FirebaseAnalytics mFirebaseAnalytics;
@@ -26,7 +27,9 @@ public class MainActivity extends AppCompatActivity {
     private StorageReference mStorageRef;
 
     // Bind views with Butterknife
-    @BindView(R.id.navigation) BottomNavigationView mBottomNavigation;
+    @BindView(R.id.fragment_container) FrameLayout mFragmentContainer;
+
+    FragmentManager mFragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,9 +49,14 @@ public class MainActivity extends AppCompatActivity {
             Timber.plant(new Timber.DebugTree());
         }
 
-        if (mBottomNavigation != null) {
-            mBottomNavigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        }
+        DailyGoalCreateFragment createGoalFragment =  new DailyGoalCreateFragment();
+        mFragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = mFragmentManager.beginTransaction();
+        transaction.replace(R.id.fragment_container, createGoalFragment);
+        transaction.commit();
+
+        // TODO: open up createGoalFragment if there is no goal, or mainViewFragment if it already exists
+        // maybe have a splash screen to hold the place while the lookup is done...
     }
 
     @Override
@@ -61,24 +69,16 @@ public class MainActivity extends AppCompatActivity {
         // See getting started info here: https://firebase.google.com/docs/auth/android/start
     }
 
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            Timber.d("Timberrrrr: you just pressed %d", item.getItemId());
-
-            switch (item.getItemId()) {
-                case R.id.navigation_list:
-                    return true;
-                case R.id.navigation_calendar:
-                    return true;
-            }
-
-
-            return false;
+    @Override
+    public void onCreateGoal(String goal) {
+        if (mFragmentManager != null) {
+            mFragmentManager = getSupportFragmentManager();
         }
-    };
 
-
+        FragmentMainView fragmentMainView = new FragmentMainView();
+        FragmentTransaction transaction = mFragmentManager.beginTransaction();
+        transaction.replace(R.id.fragment_container, fragmentMainView);
+        transaction.commit();
+    }
 }
