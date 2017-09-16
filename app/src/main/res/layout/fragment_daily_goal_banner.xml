@@ -6,7 +6,7 @@
     android:layout_height="wrap_content">
 
     <android.support.design.widget.FloatingActionButton
-        android:id="fab_goal"
+        android:id="@+id/fab_goal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
