@@ -28,6 +28,7 @@
         android:layout_marginLeft="24dp"
         android:layout_marginStart="24dp"
         android:background="@drawable/ic_cancel_red_36dp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@+id/floatingActionButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/floatingActionButton" />
@@ -41,18 +42,28 @@
         android:background="@drawable/ic_check_green_36dp"
         app:layout_constraintBottom_toBottomOf="@+id/floatingActionButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/floatingActionButton" />
+        app:layout_constraintTop_toTopOf="@+id/floatingActionButton"
+        android:visibility="invisible"/>
 
     <TextView
         android:id="@+id/tv_banner_goal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/floatingActionButton"
         app:layout_constraintStart_toEndOf="@+id/floatingActionButton"
         app:layout_constraintTop_toBottomOf="@+id/floatingActionButton"
         tools:text="Bake Cookies" />
+
+    <View
+        android:id="@+id/banner_shadow"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/banner_elevation"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bottom_shadow"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_banner_goal" />
+
 </android.support.constraint.ConstraintLayout>
