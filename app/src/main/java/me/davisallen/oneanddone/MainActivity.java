@@ -19,6 +19,9 @@ import timber.log.Timber;
 public class MainActivity extends AppCompatActivity
         implements DailyGoalCreateFragment.DailyGoalCreatedListener {
 
+    // Params to send data to fragments
+    public static final String PARAM_CREATE_GOAL = "create_goal";
+
     // Firebase Analytics instance
     private FirebaseAnalytics mFirebaseAnalytics;
     // Firebase Authorization instance
@@ -76,9 +79,13 @@ public class MainActivity extends AppCompatActivity
             mFragmentManager = getSupportFragmentManager();
         }
 
-        FragmentMainView fragmentMainView = new FragmentMainView();
+        MainViewFragment mainViewFragment = new MainViewFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(PARAM_CREATE_GOAL, goal);
+        mainViewFragment.setArguments(bundle);
+
         FragmentTransaction transaction = mFragmentManager.beginTransaction();
-        transaction.replace(R.id.fragment_container, fragmentMainView);
+        transaction.replace(R.id.fragment_container, mainViewFragment);
         transaction.commit();
     }
 }
