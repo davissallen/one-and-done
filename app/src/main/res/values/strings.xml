@@ -7,4 +7,5 @@
     <string name="calendar_goal_completed">Goal completed</string>
     <string name="calendar_goal_negative">Goal uncompleted</string>
     <string name="calendar_goal_neutral">Goal not set</string>
+    <string name="create_goal_text_transition">create_goal_text_transition</string>
 </resources>

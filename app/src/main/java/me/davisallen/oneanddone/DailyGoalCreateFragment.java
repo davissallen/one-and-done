@@ -24,7 +24,7 @@ public class DailyGoalCreateFragment extends Fragment {
 
     DailyGoalCreatedListener mListener;
 
-    @BindView(R.id.et_daily_goal) EditText mEditTextDailyGoal;
+    @BindView(R.id.et_create_goal) EditText mEditTextDailyGoal;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

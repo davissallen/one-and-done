@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <EditText
-        android:id="@+id/et_daily_goal"
+        android:id="@+id/et_create_goal"
         android:imeOptions="actionGo"
         android:inputType="text"
         android:layout_width="match_parent"
@@ -21,6 +21,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:transitionName="@string/create_goal_text_transition" />
 
 </android.support.constraint.ConstraintLayout>

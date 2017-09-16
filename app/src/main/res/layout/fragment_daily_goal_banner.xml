@@ -54,7 +54,8 @@
         app:layout_constraintEnd_toStartOf="@+id/floatingActionButton"
         app:layout_constraintStart_toEndOf="@+id/floatingActionButton"
         app:layout_constraintTop_toBottomOf="@+id/floatingActionButton"
-        tools:text="Bake Cookies" />
+        tools:text="Bake Cookies"
+        android:transitionName="@string/create_goal_text_transition"/>
 
     <View
         android:id="@+id/banner_shadow"
