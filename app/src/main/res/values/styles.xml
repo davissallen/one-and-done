@@ -12,6 +12,8 @@
     <style name="WhiteEditTextTheme">
         <!-- Used for the bottom line when not selected / focused -->
         <item name="colorControlNormal">#FFFFFF</item>
+        <item name="colorControlActivated">#FFFFFF</item>
+        <item name="colorControlHighlight">#FFFFFF</item>
         <!-- colorControlActivated & colorControlHighlight use the colorAccent color by default -->
     </style>
 
