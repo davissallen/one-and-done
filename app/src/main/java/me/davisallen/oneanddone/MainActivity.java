@@ -14,7 +14,7 @@ import com.google.firebase.storage.StorageReference;
 import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity
-        implements DailyGoalCreateFragment.DailyGoalCreatedListener {
+        implements GoalCreateFragment.DailyGoalCreatedListener {
 
     // Params to send data to fragments
     public static final String PARAM_CREATE_GOAL = "create_goal";
@@ -47,10 +47,10 @@ public class MainActivity extends AppCompatActivity
             Timber.plant(new Timber.DebugTree());
         }
 
-        DailyGoalCreateFragment createGoalFragment =  new DailyGoalCreateFragment();
+        GoalCreateFragment createGoalFragment =  new GoalCreateFragment();
         mFragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = mFragmentManager.beginTransaction();
-        transaction.replace(R.id.fragment_container, createGoalFragment);
+        transaction.replace(R.id.main_fragment_container, createGoalFragment);
         transaction.commit();
 
         // TODO: open up createGoalFragment if there is no goal, or mainViewFragment if it already exists
@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity
         mainViewFragment.setArguments(bundle);
 
         FragmentTransaction transaction = mFragmentManager.beginTransaction();
-        transaction.replace(R.id.fragment_container, mainViewFragment);
+        transaction.replace(R.id.main_fragment_container, mainViewFragment);
         transaction.commit();
     }
 }

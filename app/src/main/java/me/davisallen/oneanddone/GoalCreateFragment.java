@@ -20,7 +20,7 @@ import butterknife.ButterKnife;
  * Created by davis, on 9/10/17
  */
 
-public class DailyGoalCreateFragment extends Fragment {
+public class GoalCreateFragment extends Fragment {
 
     DailyGoalCreatedListener mListener;
 
