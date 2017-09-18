@@ -47,11 +47,7 @@ public class MainActivity extends AppCompatActivity
             Timber.plant(new Timber.DebugTree());
         }
 
-        GoalCreateFragment createGoalFragment =  new GoalCreateFragment();
-        mFragmentManager = getSupportFragmentManager();
-        FragmentTransaction transaction = mFragmentManager.beginTransaction();
-        transaction.replace(R.id.main_fragment_container, createGoalFragment);
-        transaction.commit();
+        openCreateGoalFragment();
 
         // TODO: open up createGoalFragment if there is no goal, or mainViewFragment if it already exists
         // maybe have a splash screen to hold the place while the lookup is done...
@@ -64,23 +60,38 @@ public class MainActivity extends AppCompatActivity
         FirebaseUser currentUser = mAuth.getCurrentUser();
         // TODO: Do something with currentUser
         // See FirebaseAssistant tool on auth
-        // See getting started info here: https://firebase.google.com/docs/auth/android/start
+        // See getting started info here: https://firebase.goo gle.com/docs/auth/android/start
     }
 
 
     @Override
     public void onCreateGoal(String goal) {
-        if (mFragmentManager != null) {
+        openViewGoalFragment(goal);
+    }
+
+    private void openCreateGoalFragment() {
+        if (mFragmentManager == null) {
             mFragmentManager = getSupportFragmentManager();
         }
 
-        MainViewFragment mainViewFragment = new MainViewFragment();
+        GoalCreateFragment goalCreateFragment =  new GoalCreateFragment();
+        FragmentTransaction transaction = mFragmentManager.beginTransaction();
+        transaction.replace(R.id.main_fragment_container, goalCreateFragment);
+        transaction.commit();
+    }
+
+    private void openViewGoalFragment(String goal) {
+        if (mFragmentManager == null) {
+            mFragmentManager = getSupportFragmentManager();
+        }
+
+        GoalViewFragment goalViewFragment =  new GoalViewFragment();
         Bundle bundle = new Bundle();
         bundle.putString(PARAM_CREATE_GOAL, goal);
-        mainViewFragment.setArguments(bundle);
+        goalViewFragment.setArguments(bundle);
 
         FragmentTransaction transaction = mFragmentManager.beginTransaction();
-        transaction.replace(R.id.main_fragment_container, mainViewFragment);
+        transaction.replace(R.id.main_fragment_container, goalViewFragment);
         transaction.commit();
     }
 }
