@@ -6,63 +6,50 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/constraintLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="16dp"
-        app:layout_constraintBottom_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="parent">
-
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/textInputLayout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="0dp"
-            app:counterEnabled="true"
-            app:counterMaxLength="90"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginRight="0dp">
-
-            <EditText
-                android:id="@+id/et_create_goal"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:imeOptions="actionGo"
-                android:inputType="text"
-                android:maxLength="90"
-                android:theme="@style/WhiteEditTextTheme" />
-
-        </android.support.design.widget.TextInputLayout>
-
-        <Button
-            android:id="@+id/button_create_goal"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginBottom="24dp"
-            android:background="@drawable/ic_add_circle_outline_white_24dp"
-            app:layout_constraintBottom_toBottomOf="@+id/textInputLayout"
-            app:layout_constraintEnd_toEndOf="@+id/textInputLayout"
-            app:layout_constraintTop_toTopOf="@+id/textInputLayout" />
-
-    </android.support.constraint.ConstraintLayout>
-
-    <TextView
-        android:id="@+id/tv_create_goal"
+    <TextClock
+        android:id="@+id/tv_goal_view_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="UPDATE ME"
-        android:theme="@style/CreateGoalPrompt"
-        app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
+        android:theme="@style/Clock"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.25"
+        tools:text="11:11am" />
+
+    <TextView
+        android:id="@+id/tv_goal_view_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toStartOf="@+id/tv_goal_view_time"
+        app:layout_constraintStart_toEndOf="@+id/tv_goal_view_time"
+        app:layout_constraintTop_toBottomOf="@+id/tv_goal_view_time"
+        tools:text="January 30, 2016" />
+
+    <TextView
+        android:id="@+id/tv_goal_view_goal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:theme="@style/ViewGoalGoal"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="64dp"
+        tools:text="Bake Cookies"
+        app:layout_constraintEnd_toEndOf="@+id/tv_goal_view_time"
+        app:layout_constraintStart_toStartOf="@+id/tv_goal_view_time"
+        app:layout_constraintTop_toBottomOf="@+id/tv_goal_view_date" />
+
+    <ImageView
+        android:id="@+id/goal_view_complete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
+        app:layout_constraintEnd_toStartOf="@+id/tv_goal_view_goal"
+        app:layout_constraintStart_toEndOf="@+id/tv_goal_view_goal"
+        app:layout_constraintTop_toBottomOf="@+id/tv_goal_view_goal"
+        app:srcCompat="@drawable/ic_check_white_36dp" />
+
 </android.support.constraint.ConstraintLayout>

@@ -26,13 +26,23 @@
     <style name="GoalListItem">
         <item name="android:textColor">@color/black</item>
     </style>
-
     <style name="ListItemGoal" parent="GoalListItem">
         <item name="android:textSize">20sp</item>
     </style>
-
     <style name="ListItemDate" parent="GoalListItem">
         <item name="android:textSize">28sp</item>
+    </style>
+
+    <style name="Clock">
+        <item name="android:textSize">56sp</item>
+        <item name="android:format12Hour">hh:mm a</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="ViewGoalGoal">
+        <item name="android:textSize">40sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:fontFamily">sans-serif-light</item>
     </style>
 
 </resources>
