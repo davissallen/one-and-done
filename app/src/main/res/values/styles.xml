@@ -8,8 +8,10 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:fontFamily">sans-serif-thin</item>
     </style>
-
-    <style name="WhiteEditTextTheme">
+    <style name="WhiteCounter">
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+    <style name="WhiteEditText">
         <!-- Used for the bottom line when not selected / focused -->
         <item name="colorControlNormal">#FFFFFF</item>
         <item name="colorControlActivated">#FFFFFF</item>
@@ -31,12 +33,6 @@
     </style>
     <style name="ListItemDate" parent="GoalListItem">
         <item name="android:textSize">28sp</item>
-    </style>
-
-    <style name="Clock">
-        <item name="android:textSize">56sp</item>
-        <item name="android:format12Hour">hh:mm a</item>
-        <item name="android:textColor">@color/white</item>
     </style>
 
     <style name="ViewGoalGoal">

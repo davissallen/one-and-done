@@ -1,6 +1,18 @@
 package me.davisallen.oneanddone;
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextClock;
+import android.widget.TextView;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+import static me.davisallen.oneanddone.MainActivity.PARAM_CREATE_GOAL;
 
 /**
  * Package Name:   me.davisallen.oneanddone
@@ -9,4 +21,35 @@ import android.support.v4.app.Fragment;
  */
 
 public class GoalViewFragment extends Fragment {
+
+    private String mGoal;
+
+    @BindView(R.id.clock_goal_view) TextClock mTextClock;
+    @BindView(R.id.tv_goal_view_goal) TextView mGoalTextView;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        Bundle receivedArgs = getArguments();
+        if (receivedArgs != null && receivedArgs.containsKey(PARAM_CREATE_GOAL)) {
+            mGoal = receivedArgs.getString(PARAM_CREATE_GOAL);
+        } else {
+            mGoal = "";
+        }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_goal_view, container, false);
+        ButterKnife.bind(this, view);
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        mGoalTextView.setText(mGoal);
+    }
 }

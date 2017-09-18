@@ -22,20 +22,22 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="0dp"
+            app:counterTextAppearance="@style/WhiteCounter"
             app:counterEnabled="true"
             app:counterMaxLength="90"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginRight="0dp">
+            app:layout_constraintStart_toStartOf="parent" >
 
             <EditText
                 android:id="@+id/et_create_goal"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:textSize="24sp"
                 android:imeOptions="actionGo"
+                android:textColor="@color/white"
                 android:inputType="text"
                 android:maxLength="90"
-                android:theme="@style/WhiteEditTextTheme" />
+                android:theme="@style/WhiteEditText" />
 
         </android.support.design.widget.TextInputLayout>
 
@@ -53,6 +55,7 @@
 
     <TextView
         android:id="@+id/tv_create_goal"
+        android:labelFor="@id/et_create_goal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -65,4 +68,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 </android.support.constraint.ConstraintLayout>

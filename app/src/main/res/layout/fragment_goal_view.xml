@@ -7,10 +7,13 @@
     android:layout_height="match_parent">
 
     <TextClock
-        android:id="@+id/tv_goal_view_time"
+        android:id="@+id/clock_goal_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:theme="@style/Clock"
+        android:textSize="68sp"
+        android:textColor="@color/white"
+        android:format12Hour="h:mm a"
+        android:fontFamily="sans-serif-thin"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,11 +26,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/white"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toStartOf="@+id/tv_goal_view_time"
-        app:layout_constraintStart_toEndOf="@+id/tv_goal_view_time"
-        app:layout_constraintTop_toBottomOf="@+id/tv_goal_view_time"
-        tools:text="January 30, 2016" />
+        android:textSize="24sp"
+        app:layout_constraintEnd_toStartOf="@+id/clock_goal_view"
+        app:layout_constraintStart_toEndOf="@+id/clock_goal_view"
+        app:layout_constraintTop_toBottomOf="@+id/clock_goal_view"
+        android:text="January 30, 2016" />
 
     <TextView
         android:id="@+id/tv_goal_view_goal"
@@ -38,8 +41,8 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="64dp"
         tools:text="Bake Cookies"
-        app:layout_constraintEnd_toEndOf="@+id/tv_goal_view_time"
-        app:layout_constraintStart_toStartOf="@+id/tv_goal_view_time"
+        app:layout_constraintEnd_toEndOf="@+id/clock_goal_view"
+        app:layout_constraintStart_toStartOf="@+id/clock_goal_view"
         app:layout_constraintTop_toBottomOf="@+id/tv_goal_view_date" />
 
     <ImageView
