@@ -9,6 +9,10 @@ import android.view.ViewGroup;
 import android.widget.TextClock;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -25,6 +29,7 @@ public class GoalViewFragment extends Fragment {
     private String mGoal;
 
     @BindView(R.id.clock_goal_view) TextClock mTextClock;
+    @BindView(R.id.tv_goal_view_date) TextView mDateTextView;
     @BindView(R.id.tv_goal_view_goal) TextView mGoalTextView;
 
     @Override
@@ -50,6 +55,12 @@ public class GoalViewFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        setDate();
         mGoalTextView.setText(mGoal);
+    }
+
+    private void setDate() {
+        SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy", Locale.US);
+        mDateTextView.setText(sdf.format(new Date()));
     }
 }

@@ -30,7 +30,7 @@
         app:layout_constraintEnd_toStartOf="@+id/clock_goal_view"
         app:layout_constraintStart_toEndOf="@+id/clock_goal_view"
         app:layout_constraintTop_toBottomOf="@+id/clock_goal_view"
-        android:text="January 30, 2016" />
+        tools:text="January 30, 2016" />
 
     <TextView
         android:id="@+id/tv_goal_view_goal"
