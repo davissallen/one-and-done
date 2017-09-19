@@ -28,7 +28,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" >
 
-            <EditText
+            <android.support.design.widget.TextInputEditText
                 android:id="@+id/et_create_goal"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

@@ -3,6 +3,7 @@ package me.davisallen.oneanddone;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -11,7 +12,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import butterknife.BindView;
@@ -27,7 +27,7 @@ public class GoalCreateFragment extends Fragment {
 
     DailyGoalCreatedListener mListener;
 
-    @BindView(R.id.et_create_goal) EditText mEditTextDailyGoal;
+    @BindView(R.id.et_create_goal) TextInputEditText mEditTextDailyGoal;
     @BindView(R.id.button_create_goal) Button mCreateGoalButton;
 
     @Override
