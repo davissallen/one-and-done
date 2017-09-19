@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -25,6 +26,7 @@ public class GoalCreateFragment extends Fragment {
     DailyGoalCreatedListener mListener;
 
     @BindView(R.id.et_create_goal) EditText mEditTextDailyGoal;
+    @BindView(R.id.button_create_goal) Button mCreateGoalButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,16 +46,26 @@ public class GoalCreateFragment extends Fragment {
         mEditTextDailyGoal.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
-                // 6, 66 && 0
                 if ((actionId == EditorInfo.IME_ACTION_GO) || ((event.getKeyCode() == KeyEvent.KEYCODE_ENTER) && (event.getAction() == KeyEvent.ACTION_DOWN))) {
-                    String goal = textView.getText().toString();
-                    mListener.onCreateGoal(goal);
+                    createGoal();
                     return true;
                 } else {
                     return false;
                 }
             }
         });
+
+        mCreateGoalButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                createGoal();
+            }
+        });
+    }
+
+    public void createGoal() {
+        String goal = mEditTextDailyGoal.getText().toString();
+        mListener.onCreateGoal(goal);
     }
 
     interface DailyGoalCreatedListener {
