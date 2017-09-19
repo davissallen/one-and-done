@@ -1,5 +1,6 @@
 package me.davisallen.oneanddone;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -8,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -65,7 +67,19 @@ public class GoalCreateFragment extends Fragment {
 
     public void createGoal() {
         String goal = mEditTextDailyGoal.getText().toString();
-        mListener.onCreateGoal(goal);
+
+        if (goal.length() > 0) {
+            View view = getActivity().getCurrentFocus();
+            if (view != null) {
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (imm != null) {
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
+            }
+            mListener.onCreateGoal(goal);
+        } else {
+            // TODO: Make an error notification
+        }
     }
 
     interface DailyGoalCreatedListener {
