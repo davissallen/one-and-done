@@ -9,4 +9,7 @@
     <string name="calendar_goal_neutral">Goal not set</string>
     <string name="create_goal_text_transition">create_goal_text_transition</string>
     <string name="create_goal_prompt">What will you do today?</string>
+    <string name="navigation_drawer_open">navigation_drawer_open</string>
+    <string name="navigation_drawer_close">navigation_drawer_close</string>
+    <string name="action_settings">Settings</string>
 </resources>

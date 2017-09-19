@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <item
+        android:id="@+id/nav_daily_goal"
+        android:icon="@drawable/ic_calendar_check_black_24dp"
+        android:title="@string/title_daily_goal" />
+
+    <item
+        android:id="@+id/nav_list"
+        android:icon="@drawable/ic_table_black_24dp"
+        android:title="@string/title_list" />
+
+    <item
+        android:id="@+id/nav_calendar"
+        android:icon="@drawable/ic_calendar_black_24dp"
+        android:title="@string/title_calendar" />
+
+</menu>
