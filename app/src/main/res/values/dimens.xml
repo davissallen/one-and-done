@@ -9,4 +9,5 @@
     <dimen name="fab_elevation_touched">12dp</dimen>
     <dimen name="fab_elevation_resting">6dp</dimen>
     <dimen name="banner_elevation">8dp</dimen>
+    <dimen name="legend_margin">12dp</dimen>
 </resources>

@@ -125,11 +125,11 @@ public class MainActivity extends AppCompatActivity implements
         int id = item.getItemId();
 
         if (id == R.id.nav_daily_goal) {
-            // Handle the camera action
+            openViewGoalFragment("Bake cookies");
         } else if (id == R.id.nav_list) {
-
+            openProgressListFragment();
         } else if (id == R.id.nav_calendar) {
-
+            openCalendarFragment();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -156,6 +156,28 @@ public class MainActivity extends AppCompatActivity implements
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    private void openProgressListFragment() {
+        if (mFragmentManager == null) {
+            mFragmentManager = getSupportFragmentManager();
+        }
+
+        ProgressListFragment progressListFragment =  new ProgressListFragment();
+        FragmentTransaction transaction = mFragmentManager.beginTransaction();
+        transaction.replace(R.id.main_fragment_container, progressListFragment);
+        transaction.commit();
+    }
+
+    private void openCalendarFragment() {
+        if (mFragmentManager == null) {
+            mFragmentManager = getSupportFragmentManager();
+        }
+
+        CalendarFragment calendarFragment =  new CalendarFragment();
+        FragmentTransaction transaction = mFragmentManager.beginTransaction();
+        transaction.replace(R.id.main_fragment_container, calendarFragment);
+        transaction.commit();
     }
 
     private void openCreateGoalFragment() {

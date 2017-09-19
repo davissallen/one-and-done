@@ -1,13 +1,16 @@
 package me.davisallen.oneanddone;
 
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,7 +25,6 @@ public class ProgressListFragment extends Fragment {
 
     // Bind views with Butterknife
     @BindView(R.id.rv_progress_list) RecyclerView mRecyclerView;
-    @BindView(R.id.goal_list_item) ConstraintLayout mGoalListItem;
 
     LinearLayoutManager mLayoutManager;
     GoalListAdapter mAdapter;
@@ -35,7 +37,13 @@ public class ProgressListFragment extends Fragment {
         mLayoutManager = new LinearLayoutManager(this.getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mAdapter = new GoalListAdapter();
+        // TODO: pass real goal information
+        // a.k.a. init the dataset
+        ArrayList<String> goals = new ArrayList<String>();
+        goals.add("Bake cookies.");
+        goals.add("Call mom.");
+        goals.add("Make a cake.");
+        mAdapter = new GoalListAdapter(goals);
         mRecyclerView.setAdapter(mAdapter);
 
         return view;
@@ -43,25 +51,45 @@ public class ProgressListFragment extends Fragment {
 
     public class GoalListAdapter extends RecyclerView.Adapter<GoalListAdapter.ViewHolder> {
 
+        private ArrayList<String> mGoals;
+
+        public GoalListAdapter(ArrayList<String> goals) {
+            if (goals != null && goals.size() > 0) {
+                mGoals = goals;
+            } else {
+                mGoals = new ArrayList<>();
+            }
+        }
+
         @Override
         public GoalListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return null;
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.goal_list_item, parent, false);
+
+            return new ViewHolder(view);
         }
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-
+            holder.mGoalTextView.setText(mGoals.get(position));
+            holder.mDateTextView.setText("23");
+            holder.mStatusImageView.setImageResource(R.drawable.ic_cancel_red_36dp);
         }
 
         @Override
         public int getItemCount() {
-            return 0;
+            return mGoals.size();
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
+            @BindView(R.id.li_goal) TextView mGoalTextView;
+            @BindView(R.id.li_date) TextView mDateTextView;
+            @BindView(R.id.li_status) ImageView mStatusImageView;
+
             public ViewHolder(View itemView) {
                 super(itemView);
+                ButterKnife.bind(this, itemView);
             }
+
         }
     }
 
