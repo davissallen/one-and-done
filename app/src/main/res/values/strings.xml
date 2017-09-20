@@ -18,5 +18,6 @@
     <string name="no_internet_connection">No internet connection</string>
     <string name="unknown_error">Unknown error</string>
     <string name="unknown_sign_in_response">I don\'t have a clue...</string>
+    <string name="a11y_nav_user_image">profile picture</string>
 
 </resources>

@@ -47,6 +47,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:11.4.0'
 
     //*********** Library imports ***********//
+    // Picasso
+    implementation 'com.squareup.picasso:picasso:2.5.2'
     // Timber
     implementation 'com.jakewharton.timber:timber:4.5.1'
     // Butterknife

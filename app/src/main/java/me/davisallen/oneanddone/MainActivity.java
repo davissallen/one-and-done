@@ -3,6 +3,7 @@ package me.davisallen.oneanddone;
 import android.animation.ObjectAnimator;
 import android.animation.StateListAnimator;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -18,6 +19,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
@@ -27,6 +30,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -47,8 +51,16 @@ public class MainActivity extends AppCompatActivity implements
     private StorageReference mStorageRef;
 
     // Bind any views with Butterknife
+    // Toolbar
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.app_bar_layout) AppBarLayout mAppBarLayout;
+    // Nav drawer
+    @BindView(R.id.nav_view) NavigationView mNavigationView;
+    @BindView(R.id.drawer_layout) DrawerLayout mDrawer;
+
+    ImageView mUserImage;
+    TextView mUserName;
+    TextView mUserEmail;
 
     FragmentManager mFragmentManager;
 
@@ -61,28 +73,21 @@ public class MainActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        // Obtain the FirebaseAnalytics instance.
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-        // Obtain the FirebaseAuth instance.
-        mAuth = FirebaseAuth.getInstance();
-        // Obtain the FirebaseStorage instance.
-        mStorageRef = FirebaseStorage.getInstance().getReference();
-
-        // Set up Timber DebugTree
-        if (BuildConfig.DEBUG) {
-            Timber.plant(new Timber.DebugTree());
-        }
-
         // Sets toolbar elevation to 0 with state list animator
-        setUpToolbar();
-        setSupportActionBar(mToolbar);
+        initializeToolbar();
 
-        initializeNavigationMenu();
+        // Initializes nav drawer layout
+        initializeNavDrawer();
 
-        openCreateGoalFragment();
+        // Initializes Firebase instances
+        initializeFirebaseTools();
+
+        // Initializes Timber debugger
+        initializeTimber();
 
         // TODO: open up createGoalFragment if there is no goal, or mainViewFragment if it already exists
         // maybe have a splash screen to hold the place while the lookup is done...
+        openCreateGoalFragment();
     }
 
     @Override
@@ -91,15 +96,16 @@ public class MainActivity extends AppCompatActivity implements
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         updateUi(currentUser);
-        // See FirebaseAssistant tool on auth
-        // See getting started info here: https://firebase.goo gle.com/docs/auth/android/start
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
+        if (mDrawer == null) {
+            mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        }
+
+        if (mDrawer.isDrawerOpen(GravityCompat.START)) {
+            mDrawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }
@@ -127,7 +133,6 @@ public class MainActivity extends AppCompatActivity implements
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle activity_main_drawer view item clicks here.
@@ -141,30 +146,33 @@ public class MainActivity extends AppCompatActivity implements
             openCalendarFragment();
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        if (mDrawer == null) {
+            mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        }
+        mDrawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
-    private void setUpToolbar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            StateListAnimator stateListAnimator = new StateListAnimator();
-            stateListAnimator.addState(new int[0], ObjectAnimator.ofFloat(mAppBarLayout, "elevation", 0.1f));
-            mAppBarLayout.setStateListAnimator(stateListAnimator);
-        }
-        mToolbar.setTitle("");
-        mToolbar.setSubtitle("");
-    }
 
     private void updateUi(FirebaseUser currentUser) {
         if (currentUser == null) {
-            // TODO: use smart lock for production
             startActivityForResult(
                     AuthUI.getInstance()
                             .createSignInIntentBuilder()
                             .setIsSmartLockEnabled(true)
                             .build(),
                     REQUEST_CODE_SIGN_IN);
+        } else {
+            // TODO: get those views and update them in nav drawer
+            // Name, email address, and profile photo Url
+            String name = currentUser.getDisplayName();
+            String email = currentUser.getEmail();
+            Uri photoUrl = currentUser.getPhotoUrl();
+
+            mUserName.setText(name);
+            mUserEmail.setText(email);
+            Picasso.with(this).load(photoUrl).into(mUserImage);
+
         }
     }
 
@@ -176,6 +184,7 @@ public class MainActivity extends AppCompatActivity implements
 
             // Successfully signed in
             if (resultCode == RESULT_OK) {
+                // TODO: what to do here?
 //                startActivity(SignedInActivity.createIntent(this, response));
 //                finish();
 //                return;
@@ -208,15 +217,38 @@ public class MainActivity extends AppCompatActivity implements
         snackbar.show();
     }
 
-    private void initializeNavigationMenu() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
+    private void initializeToolbar() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            StateListAnimator stateListAnimator = new StateListAnimator();
+            stateListAnimator.addState(new int[0], ObjectAnimator.ofFloat(mAppBarLayout, "elevation", 0.1f));
+            mAppBarLayout.setStateListAnimator(stateListAnimator);
+        }
+        mToolbar.setTitle("");
+        mToolbar.setSubtitle("");
+        setSupportActionBar(mToolbar);
+    }
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+    private void initializeNavDrawer() {
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, mDrawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        mDrawer.addDrawerListener(toggle);
+        toggle.syncState();
+        mNavigationView.setNavigationItemSelectedListener(this);
+    }
+
+    private void initializeFirebaseTools() {
+        // Obtain the FirebaseAnalytics instance.
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        // Obtain the FirebaseAuth instance.
+        mAuth = FirebaseAuth.getInstance();
+        // Obtain the FirebaseStorage instance.
+        mStorageRef = FirebaseStorage.getInstance().getReference();
+    }
+
+    private void initializeTimber() {
+        // Set up Timber DebugTree
+        if (BuildConfig.DEBUG) {
+            Timber.plant(new Timber.DebugTree());
+        }
     }
 
     private void openProgressListFragment() {
