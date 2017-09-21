@@ -20,6 +20,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.firebase.ui.auth.AuthUI;
@@ -30,7 +31,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -93,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onStart() {
         super.onStart();
+
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         updateUi(currentUser);
@@ -171,8 +172,7 @@ public class MainActivity extends AppCompatActivity implements
 
             mUserName.setText(name);
             mUserEmail.setText(email);
-            Picasso.with(this).load(photoUrl).into(mUserImage);
-
+//            Picasso.with(this).load(photoUrl).into(mUserImage);
         }
     }
 
@@ -233,6 +233,11 @@ public class MainActivity extends AppCompatActivity implements
         mDrawer.addDrawerListener(toggle);
         toggle.syncState();
         mNavigationView.setNavigationItemSelectedListener(this);
+
+        LinearLayout navHeaderLayout = (LinearLayout) mNavigationView.getHeaderView(0);
+        mUserImage = (ImageView) navHeaderLayout.findViewById(R.id.nav_user_image);
+        mUserName = (TextView) navHeaderLayout.findViewById(R.id.nav_user_name);
+        mUserEmail = (TextView) navHeaderLayout.findViewById(R.id.nav_user_email);
     }
 
     private void initializeFirebaseTools() {
