@@ -2,6 +2,7 @@ package me.davisallen.oneanddone;
 
 import android.animation.ObjectAnimator;
 import android.animation.StateListAnimator;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -19,6 +20,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -50,6 +52,8 @@ public class MainActivity extends AppCompatActivity implements
     // Firebase Cloud Storage instance
     private StorageReference mStorageRef;
 
+    private Context mContext;
+
     // Bind any views with Butterknife
     // Toolbar
     @BindView(R.id.toolbar) Toolbar mToolbar;
@@ -61,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements
     ImageView mUserImage;
     TextView mUserName;
     TextView mUserEmail;
+    TextView mSignOut;
 
     FragmentManager mFragmentManager;
 
@@ -72,6 +77,8 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        mContext = this;
 
         // Sets toolbar elevation to 0 with state list animator
         initializeToolbar();
@@ -238,6 +245,15 @@ public class MainActivity extends AppCompatActivity implements
         mUserImage = (ImageView) navHeaderLayout.findViewById(R.id.nav_user_image);
         mUserName = (TextView) navHeaderLayout.findViewById(R.id.nav_user_name);
         mUserEmail = (TextView) navHeaderLayout.findViewById(R.id.nav_user_email);
+        mSignOut = (TextView) navHeaderLayout.findViewById(R.id.nav_sign_out);
+
+        mSignOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mAuth.signOut();
+                updateUi(mAuth.getCurrentUser());
+            }
+        });
     }
 
     private void initializeFirebaseTools() {

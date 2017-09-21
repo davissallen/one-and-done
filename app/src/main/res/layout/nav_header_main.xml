@@ -35,4 +35,12 @@
         android:layout_height="wrap_content"
         tools:text="getglazed@aol.com" />
 
+    <TextView
+        android:id="@+id/nav_sign_out"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="4dp"
+        android:fontFamily="sans-serif-medium"
+        android:text="Sign out"/>
+
 </LinearLayout>
