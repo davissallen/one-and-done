@@ -43,6 +43,8 @@ public class ProgressListFragment extends Fragment {
         goals.add("Bake cookies.");
         goals.add("Call mom.");
         goals.add("Make a cake.");
+
+
         mAdapter = new GoalListAdapter(goals);
         mRecyclerView.setAdapter(mAdapter);
 

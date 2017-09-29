@@ -31,8 +31,8 @@ import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,8 +49,8 @@ public class MainActivity extends AppCompatActivity implements
     private FirebaseAnalytics mFirebaseAnalytics;
     // Firebase Authorization instance
     private FirebaseAuth mAuth;
-    // Firebase Cloud Storage instance
-    private StorageReference mStorageRef;
+    // Firebase Database instance
+    private FirebaseDatabase mFirebaseDatabase;
 
     private Context mContext;
 
@@ -262,7 +262,7 @@ public class MainActivity extends AppCompatActivity implements
         // Obtain the FirebaseAuth instance.
         mAuth = FirebaseAuth.getInstance();
         // Obtain the FirebaseStorage instance.
-        mStorageRef = FirebaseStorage.getInstance().getReference();
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
     }
 
     private void initializeTimber() {
@@ -307,7 +307,15 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onCreateGoal(String goal) {
+        saveGoalToCloud(goal);
         openViewGoalFragment(goal);
+    }
+
+    private void saveGoalToCloud(String goal) {
+        Timber.d("Sending my message to database.");
+        // Write a message to the database
+        DatabaseReference mDb = mFirebaseDatabase.getReference("message");
+        mDb.setValue("Hello, Lovely World!");
     }
 
     private void openViewGoalFragment(String goal) {
