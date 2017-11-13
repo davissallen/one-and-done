@@ -29,6 +29,8 @@ public class ProgressListFragment extends Fragment {
     LinearLayoutManager mLayoutManager;
     GoalListAdapter mAdapter;
 
+    ArrayList<String> mGoals;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_progress_list, container, false);
@@ -39,13 +41,16 @@ public class ProgressListFragment extends Fragment {
 
         // TODO: pass real goal information
         // a.k.a. init the dataset
-        ArrayList<String> goals = new ArrayList<String>();
-        goals.add("Bake cookies.");
-        goals.add("Call mom.");
-        goals.add("Make a cake.");
 
 
-        mAdapter = new GoalListAdapter(goals);
+//        ArrayList<String> goals = new ArrayList<String>();
+//        goals.add("Bake cookies.");
+//        goals.add("Call mom.");
+//        goals.add("Make a cake.");
+
+
+        mAdapter = new GoalListAdapter(null);
+//        mAdapter = new GoalListAdapter(goals);
         mRecyclerView.setAdapter(mAdapter);
 
         return view;

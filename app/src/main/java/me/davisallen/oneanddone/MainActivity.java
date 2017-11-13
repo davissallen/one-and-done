@@ -263,6 +263,7 @@ public class MainActivity extends AppCompatActivity implements
         mAuth = FirebaseAuth.getInstance();
         // Obtain the FirebaseStorage instance.
         mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mFirebaseDatabase.setPersistenceEnabled(true);
     }
 
     private void initializeTimber() {
@@ -314,8 +315,8 @@ public class MainActivity extends AppCompatActivity implements
     private void saveGoalToCloud(String goal) {
         Timber.d("Sending my message to database.");
         // Write a message to the database
-        DatabaseReference mDb = mFirebaseDatabase.getReference("message");
-        mDb.setValue("Hello, Lovely World!");
+        DatabaseReference mDb = mFirebaseDatabase.getReference(mAuth.getCurrentUser().getUid());
+        mDb.setValue("Hello, Juliani World!");
     }
 
     private void openViewGoalFragment(String goal) {
