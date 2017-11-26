@@ -31,11 +31,15 @@ import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import me.davisallen.oneanddone.pojo.Goal;
 import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity implements
@@ -51,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements
     private FirebaseAuth mAuth;
     // Firebase Database instance
     private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference mGoalsDbReference;
 
     private Context mContext;
 
@@ -66,6 +71,8 @@ public class MainActivity extends AppCompatActivity implements
     TextView mUserName;
     TextView mUserEmail;
     TextView mSignOut;
+
+    String mUserId;
 
     FragmentManager mFragmentManager;
 
@@ -147,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements
         int id = item.getItemId();
 
         if (id == R.id.nav_daily_goal) {
-            openViewGoalFragment("Bake cookies");
+            openViewGoalFragment();
         } else if (id == R.id.nav_list) {
             openProgressListFragment();
         } else if (id == R.id.nav_calendar) {
@@ -261,9 +268,26 @@ public class MainActivity extends AppCompatActivity implements
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         // Obtain the FirebaseAuth instance.
         mAuth = FirebaseAuth.getInstance();
+        mUserId = mAuth.getUid();
         // Obtain the FirebaseStorage instance.
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mFirebaseDatabase.setPersistenceEnabled(true);
+        // Obtain DatabaseReference to "goals"
+        // TODO: Make this db reference "goals" a project-wide constant.
+        mGoalsDbReference = mFirebaseDatabase.getReference("goals");
+        // Attach a listener to read the data at our posts reference
+        mGoalsDbReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Goal goal = dataSnapshot.getValue(Goal.class);
+                System.out.println(goal);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+            }
+        });
     }
 
     private void initializeTimber() {
@@ -308,21 +332,35 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onCreateGoal(String goal) {
-        saveGoalToCloud(goal);
-        openViewGoalFragment(goal);
+        if (goalNotSetToday()) {
+            saveGoalToCloud(goal);
+        }
+        openViewGoalFragment();
+    }
+
+    private boolean goalNotSetToday() {
+        // TODO: Query db to see if goal was set today
+        return true;
     }
 
     private void saveGoalToCloud(String goal) {
-        Timber.d("Sending my message to database.");
+        // TODO: Think about making this an asynctask
+        Timber.d(String.format("Sending goal '%s' to database.", goal));
+
         // Write a message to the database
-        DatabaseReference mDb = mFirebaseDatabase.getReference(mAuth.getCurrentUser().getUid());
-        mDb.setValue("Hello, Juliani World!");
+        if (mGoalsDbReference != null && mUserId != null) {
+            mGoalsDbReference.push().setValue(new Goal(goal, mUserId));
+        } else {
+            Timber.e("Could not get reference to goals database.");
+        }
     }
 
-    private void openViewGoalFragment(String goal) {
+    private void openViewGoalFragment() {
         if (mFragmentManager == null) {
             mFragmentManager = getSupportFragmentManager();
         }
+
+        String goal = getGoalForToday(mUserId);
 
         GoalViewFragment goalViewFragment =  new GoalViewFragment();
         Bundle bundle = new Bundle();
@@ -332,5 +370,8 @@ public class MainActivity extends AppCompatActivity implements
         FragmentTransaction transaction = mFragmentManager.beginTransaction();
         transaction.replace(R.id.main_fragment_container, goalViewFragment);
         transaction.commit();
+    }
+
+    private String getGoalForToday(String userId) {
     }
 }
