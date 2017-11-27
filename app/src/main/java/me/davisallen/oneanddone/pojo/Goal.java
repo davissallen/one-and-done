@@ -11,29 +11,28 @@ import java.util.Date;
 
 public class Goal {
 
-    private String goal;
-    private Date date;
-
-    private String userId;
-    private boolean isCompleted;
-
-    public Goal(String goal, String userId) {
-        this.goal = goal;
-        this.userId = userId;
-        this.date = Calendar.getInstance().getTime();
-        this.isCompleted = false;
-    }
-
     public String getGoal() {
         return goal;
+    }
+
+    public void setGoal(String goal) {
+        this.goal = goal;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public String getUserId() {
         return userId;
     }
 
-    public Date getDate() {
-        return date;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public boolean isCompleted() {
@@ -42,5 +41,21 @@ public class Goal {
 
     public void setCompleted(boolean completed) {
         isCompleted = completed;
+    }
+
+    private String goal;
+    private Date date;
+    private String userId;
+    private boolean isCompleted;
+
+    public Goal() {
+
+    }
+
+    public Goal(String goal, String userId) {
+        this.goal = goal;
+        this.userId = userId;
+        this.date = Calendar.getInstance().getTime();
+        this.isCompleted = false;
     }
 }

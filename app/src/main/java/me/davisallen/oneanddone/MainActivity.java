@@ -31,11 +31,11 @@ import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -275,19 +275,6 @@ public class MainActivity extends AppCompatActivity implements
         // Obtain DatabaseReference to "goals"
         // TODO: Make this db reference "goals" a project-wide constant.
         mGoalsDbReference = mFirebaseDatabase.getReference("goals");
-        // Attach a listener to read the data at our posts reference
-        mGoalsDbReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Goal goal = dataSnapshot.getValue(Goal.class);
-                System.out.println(goal);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                System.out.println("The read failed: " + databaseError.getCode());
-            }
-        });
     }
 
     private void initializeTimber() {
@@ -360,7 +347,10 @@ public class MainActivity extends AppCompatActivity implements
             mFragmentManager = getSupportFragmentManager();
         }
 
-        String goal = getGoalForToday(mUserId);
+        String goal = "";
+        if (mUserId != null) {
+            goal = getGoalForToday(mUserId);
+        }
 
         GoalViewFragment goalViewFragment =  new GoalViewFragment();
         Bundle bundle = new Bundle();
@@ -373,5 +363,40 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private String getGoalForToday(String userId) {
+
+//        Goal test = snapshot.getValue(Goal.class);
+//        if (test != null) {
+//            Timber.d(test.getGoal());
+//        }
+
+        mGoalsDbReference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Timber.d("on child added");
+                Timber.d(dataSnapshot.getValue(Goal.class).getGoal());
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                Timber.d("on child changed");
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                Timber.d("on child removed");
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                Timber.d("on child moved");
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Timber.d("on child cancelled");
+            }
+        });
+
+        return "test goal";
     }
 }
