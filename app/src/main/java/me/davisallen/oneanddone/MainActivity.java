@@ -31,11 +31,11 @@ import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements
     TextView mSignOut;
 
     String mUserId;
+    String mGoalForToday;
 
     FragmentManager mFragmentManager;
 
@@ -87,21 +88,22 @@ public class MainActivity extends AppCompatActivity implements
 
         mContext = this;
 
-        // Sets toolbar elevation to 0 with state list animator
+        // Sets toolbar elevation to 0 with state list animator.
         initializeToolbar();
 
-        // Initializes nav drawer layout
+        // Initializes nav drawer layout.
         initializeNavDrawer();
 
-        // Initializes Firebase instances
+        // Initializes Firebase instances.
         initializeFirebaseTools();
 
-        // Initializes Timber debugger
+        // Initializes Timber debugger.
         initializeTimber();
 
-        // TODO: open up createGoalFragment if there is no goal, or mainViewFragment if it already exists
-        // maybe have a splash screen to hold the place while the lookup is done...
-        openCreateGoalFragment();
+        // Initializes the main screen.
+        // If a goal was already set today, open up the GoalViewFragment.
+        // Else, open the GoalCreateFragment.
+        initializeMainScreen();
     }
 
     @Override
@@ -284,6 +286,17 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
+    private void initializeMainScreen() {
+        // TODO: Check server to see if goal exists for today.
+        // If so, open viewgoal, else, open creategoal
+        boolean goalCreatedToday = false;
+        if (goalCreatedToday) {
+            openViewGoalFragment();
+        } else {
+            openCreateGoalFragment();
+        }
+    }
+
     private void openProgressListFragment() {
         if (mFragmentManager == null) {
             mFragmentManager = getSupportFragmentManager();
@@ -347,56 +360,44 @@ public class MainActivity extends AppCompatActivity implements
             mFragmentManager = getSupportFragmentManager();
         }
 
-        String goal = "";
         if (mUserId != null) {
-            goal = getGoalForToday(mUserId);
+            mUserId = mAuth.getUid();
         }
 
-        GoalViewFragment goalViewFragment =  new GoalViewFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString(PARAM_CREATE_GOAL, goal);
-        goalViewFragment.setArguments(bundle);
+        // TODO: fix this...
 
-        FragmentTransaction transaction = mFragmentManager.beginTransaction();
-        transaction.replace(R.id.main_fragment_container, goalViewFragment);
-        transaction.commit();
-    }
-
-    private String getGoalForToday(String userId) {
-
-//        Goal test = snapshot.getValue(Goal.class);
-//        if (test != null) {
-//            Timber.d(test.getGoal());
-//        }
-
-        mGoalsDbReference.addChildEventListener(new ChildEventListener() {
+        mGoalsDbReference.orderByChild("date").limitToLast(1).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Timber.d("on child added");
-                Timber.d(dataSnapshot.getValue(Goal.class).getGoal());
-            }
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Goal goal = snapshot.getValue(Goal.class);
+                    if (goal != null) {
+                        Timber.d(goal.getGoal());
+                        GoalViewFragment goalViewFragment =  new GoalViewFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putString(PARAM_CREATE_GOAL, goal.getGoal());
+                        goalViewFragment.setArguments(bundle);
 
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                Timber.d("on child changed");
-            }
+                        FragmentTransaction transaction = mFragmentManager.beginTransaction();
+                        transaction.replace(R.id.main_fragment_container, goalViewFragment);
+                        transaction.commit();
+                    } else {
+                        GoalViewFragment goalViewFragment =  new GoalViewFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putString(PARAM_CREATE_GOAL, "No goal found :(");
+                        goalViewFragment.setArguments(bundle);
 
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                Timber.d("on child removed");
+                        FragmentTransaction transaction = mFragmentManager.beginTransaction();
+                        transaction.replace(R.id.main_fragment_container, goalViewFragment);
+                        transaction.commit();
+                    }
+                }
             }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                Timber.d("on child moved");
-            }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Timber.d("on child cancelled");
             }
         });
 
-        return "test goal";
     }
+
 }

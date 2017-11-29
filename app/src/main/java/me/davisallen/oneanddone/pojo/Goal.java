@@ -1,8 +1,5 @@
 package me.davisallen.oneanddone.pojo;
 
-import java.util.Calendar;
-import java.util.Date;
-
 /**
  * Package Name:   me.davisallen.oneanddone.pojo
  * Project:        one-and-done
@@ -19,12 +16,12 @@ public class Goal {
         this.goal = goal;
     }
 
-    public Date getDate() {
-        return date;
+    public long getDate() {
+        return dateInMillis;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setDate(long dateInMillis) {
+        this.dateInMillis = dateInMillis;
     }
 
     public String getUserId() {
@@ -44,7 +41,7 @@ public class Goal {
     }
 
     private String goal;
-    private Date date;
+    private long dateInMillis;
     private String userId;
     private boolean isCompleted;
 
@@ -55,7 +52,7 @@ public class Goal {
     public Goal(String goal, String userId) {
         this.goal = goal;
         this.userId = userId;
-        this.date = Calendar.getInstance().getTime();
+        this.dateInMillis = System.currentTimeMillis();
         this.isCompleted = false;
     }
 }
