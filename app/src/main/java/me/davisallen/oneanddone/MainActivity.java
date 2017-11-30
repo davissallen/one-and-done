@@ -18,6 +18,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.format.DateUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,6 +37,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -73,8 +76,7 @@ public class MainActivity extends AppCompatActivity implements
     TextView mSignOut;
 
     String mUserId;
-    String mGoalForToday;
-
+    ArrayList<Goal> mGoals;
     FragmentManager mFragmentManager;
 
     // Choose an arbitrary request code value
@@ -87,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements
         ButterKnife.bind(this);
 
         mContext = this;
+        mGoals = new ArrayList<>();
 
         // Sets toolbar elevation to 0 with state list animator.
         initializeToolbar();
@@ -286,15 +289,63 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
+    private void getUserGoalsFromFirebase() {
+        if (mUserId == null) {
+            // TODO: Do some error handling
+            return;
+        }
+
+        // Query the goals tree
+        // WHERE userId = mUserId
+        // AND SORT desc date (might have to be asc, that's ok.
+        mGoalsDbReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Goal goal = snapshot.getValue(Goal.class);
+                    if (goal != null) {
+                        mGoals.add(goal);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     private void initializeMainScreen() {
         // TODO: Check server to see if goal exists for today.
         // If so, open viewgoal, else, open creategoal
-        boolean goalCreatedToday = false;
-        if (goalCreatedToday) {
-            openViewGoalFragment();
-        } else {
-            openCreateGoalFragment();
-        }
+
+        // Query the goals tree
+        // WHERE userId = mUserId
+        // AND SORT desc date (might have to be asc, that's ok.
+        mGoalsDbReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Goal goal = snapshot.getValue(Goal.class);
+                    if (goal != null) {
+                        mGoals.add(goal);
+                    }
+                }
+                long lastGoalCreatedMillis = mGoals.get(mGoals.size()-1).getDate();
+                if (DateUtils.isToday(lastGoalCreatedMillis)) {
+                    openViewGoalFragment();
+                } else {
+                    openCreateGoalFragment();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // TODO: Handle this cancelled data
+            }
+        });
+
     }
 
     private void openProgressListFragment() {
@@ -360,43 +411,14 @@ public class MainActivity extends AppCompatActivity implements
             mFragmentManager = getSupportFragmentManager();
         }
 
-        if (mUserId != null) {
-            mUserId = mAuth.getUid();
-        }
+        GoalViewFragment goalViewFragment =  new GoalViewFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(PARAM_CREATE_GOAL, mGoals.get(mGoals.size()-1).getGoal());
+        goalViewFragment.setArguments(bundle);
 
-        // TODO: fix this...
-
-        mGoalsDbReference.orderByChild("date").limitToLast(1).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Goal goal = snapshot.getValue(Goal.class);
-                    if (goal != null) {
-                        Timber.d(goal.getGoal());
-                        GoalViewFragment goalViewFragment =  new GoalViewFragment();
-                        Bundle bundle = new Bundle();
-                        bundle.putString(PARAM_CREATE_GOAL, goal.getGoal());
-                        goalViewFragment.setArguments(bundle);
-
-                        FragmentTransaction transaction = mFragmentManager.beginTransaction();
-                        transaction.replace(R.id.main_fragment_container, goalViewFragment);
-                        transaction.commit();
-                    } else {
-                        GoalViewFragment goalViewFragment =  new GoalViewFragment();
-                        Bundle bundle = new Bundle();
-                        bundle.putString(PARAM_CREATE_GOAL, "No goal found :(");
-                        goalViewFragment.setArguments(bundle);
-
-                        FragmentTransaction transaction = mFragmentManager.beginTransaction();
-                        transaction.replace(R.id.main_fragment_container, goalViewFragment);
-                        transaction.commit();
-                    }
-                }
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
+        FragmentTransaction transaction = mFragmentManager.beginTransaction();
+        transaction.replace(R.id.main_fragment_container, goalViewFragment);
+        transaction.commit();
 
     }
 
