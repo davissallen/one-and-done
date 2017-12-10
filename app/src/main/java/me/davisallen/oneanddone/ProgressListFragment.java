@@ -64,39 +64,32 @@ public class ProgressListFragment extends Fragment {
         mParentActivity = (MainActivity) getActivity();
         mRecyclerView = (RecyclerView) view.findViewById(R.id.rv_progress_list);
         mLayoutManager = new LinearLayoutManager(getActivity());
-
-        if (savedInstanceState != null) {
-            // TODO: Save the goals to savedInstanceState and regrab them here.
-            if (savedInstanceState.containsKey(GOALS_KEY)) {
-                mGoals = savedInstanceState.getParcelableArrayList(GOALS_KEY));
-                mGoalsAdapter = new GoalsAdapter(mGoals);
-                mRecyclerView.setAdapter(mGoalsAdapter);
-                mRecyclerView.setLayoutManager(mLayoutManager);
-            }
-        }
-
-        // Set the recycler view layout manager.
         setRecyclerViewLayoutManager();
 
-        mParentActivity.mGoalsDbReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // Create list of goals.
-                mGoals = new ArrayList<>();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Goal goal = snapshot.getValue(Goal.class);
-                    mGoals.add(goal);
+        if (savedInstanceState != null && savedInstanceState.containsKey(GOALS_KEY)) {
+            mGoals = savedInstanceState.getParcelableArrayList(GOALS_KEY);
+            initGoals();
+        } else {
+            mParentActivity.mGoalsDbReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    // Create list of goals.
+                    mGoals = new ArrayList<>();
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        Goal goal = snapshot.getValue(Goal.class);
+                        mGoals.add(goal);
+                    }
+                    initGoals();
                 }
-                mGoalsAdapter = new GoalsAdapter(mGoals);
-                mRecyclerView.setAdapter(mGoalsAdapter);
-                mRecyclerView.setLayoutManager(mLayoutManager);
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-            }
-        });
+                }
+            });
+        }
+
+
 
         return view;
 
@@ -108,6 +101,13 @@ public class ProgressListFragment extends Fragment {
             outState.putParcelableArrayList(GOALS_KEY, mGoals);
         }
         super.onSaveInstanceState(outState);
+    }
+
+    private void initGoals() {
+
+        mGoalsAdapter = new GoalsAdapter(mGoals);
+        mRecyclerView.setAdapter(mGoalsAdapter);
+        mRecyclerView.setLayoutManager(mLayoutManager);
     }
 
     public void setRecyclerViewLayoutManager() {

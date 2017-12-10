@@ -95,14 +95,14 @@ public class MainActivity extends AppCompatActivity implements
         mContext = this;
         mGoals = new ArrayList<>();
 
+        // Initializes Firebase instances.
+        initializeFirebaseTools();
+
         // Sets toolbar elevation to 0 with state list animator.
         initializeToolbar();
 
         // Initializes nav drawer layout.
         initializeNavDrawer();
-
-        // Initializes Firebase instances.
-        initializeFirebaseTools();
 
         // Initializes Timber debugger.
         initializeTimber();
@@ -281,8 +281,7 @@ public class MainActivity extends AppCompatActivity implements
         mAuth = FirebaseAuth.getInstance();
         mUserId = mAuth.getUid();
         // Obtain the FirebaseStorage instance.
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mFirebaseDatabase.setPersistenceEnabled(true);
+        mFirebaseDatabase = FirebaseUtils.getDatabase();
         // Obtain DatabaseReference to "goals"
         // TODO: Make this db reference "goals" a project-wide constant.
         mGoalsDbReference = mFirebaseDatabase.getReference("goals");
