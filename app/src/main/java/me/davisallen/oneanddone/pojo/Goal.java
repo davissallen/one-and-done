@@ -8,6 +8,28 @@ package me.davisallen.oneanddone.pojo;
 
 public class Goal {
 
+    private String goal;
+    private long dateInMillis;
+    private boolean isCompleted;
+    private String userId;
+
+    public Goal() {
+    }
+
+    public Goal(String goal, String userId) {
+        this.goal = goal;
+        this.userId = userId;
+        this.dateInMillis = System.currentTimeMillis();
+        this.isCompleted = false;
+    }
+
+    public Goal(String goal, long dateInMillis, boolean isCompleted, String userId) {
+        this.goal = goal;
+        this.dateInMillis = dateInMillis;
+        this.isCompleted = isCompleted;
+        this.userId = userId;
+    }
+
     public String getGoal() {
         return goal;
     }
@@ -16,20 +38,12 @@ public class Goal {
         this.goal = goal;
     }
 
-    public long getDate() {
+    public long getDateInMillis() {
         return dateInMillis;
     }
 
-    public void setDate(long dateInMillis) {
+    public void setDateInMillis(long dateInMillis) {
         this.dateInMillis = dateInMillis;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
     }
 
     public boolean isCompleted() {
@@ -40,19 +54,11 @@ public class Goal {
         isCompleted = completed;
     }
 
-    private String goal;
-    private long dateInMillis;
-    private String userId;
-    private boolean isCompleted;
-
-    public Goal() {
-
+    public String getUserId() {
+        return userId;
     }
 
-    public Goal(String goal, String userId) {
-        this.goal = goal;
+    public void setUserId(String userId) {
         this.userId = userId;
-        this.dateInMillis = System.currentTimeMillis();
-        this.isCompleted = false;
     }
 }

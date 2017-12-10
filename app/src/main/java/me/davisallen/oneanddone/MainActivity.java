@@ -32,11 +32,11 @@ import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -58,17 +58,21 @@ public class MainActivity extends AppCompatActivity implements
     private FirebaseAuth mAuth;
     // Firebase Database instance
     private FirebaseDatabase mFirebaseDatabase;
-    private DatabaseReference mGoalsDbReference;
+    public DatabaseReference mGoalsDbReference;
 
     private Context mContext;
 
     // Bind any views with Butterknife
     // Toolbar
-    @BindView(R.id.toolbar) Toolbar mToolbar;
-    @BindView(R.id.app_bar_layout) AppBarLayout mAppBarLayout;
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
+    @BindView(R.id.app_bar_layout)
+    AppBarLayout mAppBarLayout;
     // Nav drawer
-    @BindView(R.id.nav_view) NavigationView mNavigationView;
-    @BindView(R.id.drawer_layout) DrawerLayout mDrawer;
+    @BindView(R.id.nav_view)
+    NavigationView mNavigationView;
+    @BindView(R.id.drawer_layout)
+    DrawerLayout mDrawer;
 
     ImageView mUserImage;
     TextView mUserName;
@@ -113,6 +117,7 @@ public class MainActivity extends AppCompatActivity implements
     protected void onStart() {
         super.onStart();
 
+        // TODO: Should I put this in onResume ?
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         updateUi(currentUser);
@@ -159,7 +164,7 @@ public class MainActivity extends AppCompatActivity implements
         int id = item.getItemId();
 
         if (id == R.id.nav_daily_goal) {
-            openViewGoalFragment();
+            initializeMainScreen();
         } else if (id == R.id.nav_list) {
             openProgressListFragment();
         } else if (id == R.id.nav_calendar) {
@@ -169,10 +174,10 @@ public class MainActivity extends AppCompatActivity implements
         if (mDrawer == null) {
             mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         }
+
         mDrawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
 
     private void updateUi(FirebaseUser currentUser) {
         if (currentUser == null) {
@@ -242,6 +247,7 @@ public class MainActivity extends AppCompatActivity implements
             stateListAnimator.addState(new int[0], ObjectAnimator.ofFloat(mAppBarLayout, "elevation", 0.1f));
             mAppBarLayout.setStateListAnimator(stateListAnimator);
         }
+
         mToolbar.setTitle("");
         mToolbar.setSubtitle("");
         setSupportActionBar(mToolbar);
@@ -289,33 +295,6 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    private void getUserGoalsFromFirebase() {
-        if (mUserId == null) {
-            // TODO: Do some error handling
-            return;
-        }
-
-        // Query the goals tree
-        // WHERE userId = mUserId
-        // AND SORT desc date (might have to be asc, that's ok.
-        mGoalsDbReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Goal goal = snapshot.getValue(Goal.class);
-                    if (goal != null) {
-                        mGoals.add(goal);
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
     private void initializeMainScreen() {
         // TODO: Check server to see if goal exists for today.
         // If so, open viewgoal, else, open creategoal
@@ -323,29 +302,38 @@ public class MainActivity extends AppCompatActivity implements
         // Query the goals tree
         // WHERE userId = mUserId
         // AND SORT desc date (might have to be asc, that's ok.
-        mGoalsDbReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        ChildEventListener childEventListener = new ChildEventListener() {
+
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Goal goal = snapshot.getValue(Goal.class);
-                    if (goal != null) {
-                        mGoals.add(goal);
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Goal goal = dataSnapshot.getValue(Goal.class);
+                if (goal != null) {
+                    long lastGoalCreatedMillis = goal.getDateInMillis();
+                    if (DateUtils.isToday(lastGoalCreatedMillis)) {
+                        openViewGoalFragment(goal.getGoal());
+                    } else {
+                        openCreateGoalFragment();
                     }
                 }
-                long lastGoalCreatedMillis = mGoals.get(mGoals.size()-1).getDate();
-                if (DateUtils.isToday(lastGoalCreatedMillis)) {
-                    openViewGoalFragment();
-                } else {
-                    openCreateGoalFragment();
-                }
             }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {}
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 // TODO: Handle this cancelled data
             }
-        });
+        };
 
+        mGoalsDbReference.orderByChild("goals").limitToLast(1).addChildEventListener(childEventListener);
+//        mGoalsDbReference.removeEventListener(childEventListener);
     }
 
     private void openProgressListFragment() {
@@ -353,7 +341,7 @@ public class MainActivity extends AppCompatActivity implements
             mFragmentManager = getSupportFragmentManager();
         }
 
-        ProgressListFragment progressListFragment =  new ProgressListFragment();
+        ProgressListFragment progressListFragment = new ProgressListFragment();
         FragmentTransaction transaction = mFragmentManager.beginTransaction();
         transaction.replace(R.id.main_fragment_container, progressListFragment);
         transaction.commit();
@@ -364,7 +352,7 @@ public class MainActivity extends AppCompatActivity implements
             mFragmentManager = getSupportFragmentManager();
         }
 
-        CalendarFragment calendarFragment =  new CalendarFragment();
+        CalendarFragment calendarFragment = new CalendarFragment();
         FragmentTransaction transaction = mFragmentManager.beginTransaction();
         transaction.replace(R.id.main_fragment_container, calendarFragment);
         transaction.commit();
@@ -375,7 +363,7 @@ public class MainActivity extends AppCompatActivity implements
             mFragmentManager = getSupportFragmentManager();
         }
 
-        GoalCreateFragment goalCreateFragment =  new GoalCreateFragment();
+        GoalCreateFragment goalCreateFragment = new GoalCreateFragment();
         FragmentTransaction transaction = mFragmentManager.beginTransaction();
         transaction.replace(R.id.main_fragment_container, goalCreateFragment);
         transaction.commit();
@@ -383,37 +371,26 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onCreateGoal(String goal) {
-        if (goalNotSetToday()) {
-            saveGoalToCloud(goal);
-        }
-        openViewGoalFragment();
-    }
-
-    private boolean goalNotSetToday() {
-        // TODO: Query db to see if goal was set today
-        return true;
-    }
-
-    private void saveGoalToCloud(String goal) {
-        // TODO: Think about making this an asynctask
+        // TODO: Think about making this an asynctask (?)
         Timber.d(String.format("Sending goal '%s' to database.", goal));
 
         // Write a message to the database
         if (mGoalsDbReference != null && mUserId != null) {
             mGoalsDbReference.push().setValue(new Goal(goal, mUserId));
+            initializeMainScreen();
         } else {
             Timber.e("Could not get reference to goals database.");
         }
     }
 
-    private void openViewGoalFragment() {
+    private void openViewGoalFragment(String goal) {
         if (mFragmentManager == null) {
             mFragmentManager = getSupportFragmentManager();
         }
 
-        GoalViewFragment goalViewFragment =  new GoalViewFragment();
+        GoalViewFragment goalViewFragment = new GoalViewFragment();
         Bundle bundle = new Bundle();
-        bundle.putString(PARAM_CREATE_GOAL, mGoals.get(mGoals.size()-1).getGoal());
+        bundle.putString(PARAM_CREATE_GOAL, goal);
         goalViewFragment.setArguments(bundle);
 
         FragmentTransaction transaction = mFragmentManager.beginTransaction();
