@@ -141,7 +141,8 @@ public class ProgressListFragment extends Fragment {
         public void onBindViewHolder(GoalHolder holder, int position) {
             Goal goal = mGoals.get(position);
             holder.goalTextView.setText(goal.getGoal());
-            holder.dateTextView.setText(String.valueOf(goal.getDateInMillis()));
+            holder.dayOfMonthTextView.setText(goal.getDayOfMonth());
+            holder.monthTextView.setText(goal.getMonth());
             if (goal.isCompleted()) {
                 holder.statusImageView.setImageResource(R.drawable.ic_check_green_36dp);
             } else {
@@ -161,14 +162,16 @@ public class ProgressListFragment extends Fragment {
 
     class GoalHolder extends RecyclerView.ViewHolder {
         TextView goalTextView;
-        TextView dateTextView;
+        TextView dayOfMonthTextView;
+        TextView monthTextView;
         ImageView statusImageView;
 
         GoalHolder(View itemView) {
             super(itemView);
 
             goalTextView = (TextView) itemView.findViewById(R.id.li_goal);
-            dateTextView = (TextView) itemView.findViewById(R.id.li_date);
+            dayOfMonthTextView = (TextView) itemView.findViewById(R.id.li_day_of_month);
+            monthTextView = (TextView) itemView.findViewById(R.id.li_month);
             statusImageView = (ImageView) itemView.findViewById(R.id.li_status);
         }
     }

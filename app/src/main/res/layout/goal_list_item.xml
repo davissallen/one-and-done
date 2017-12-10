@@ -13,27 +13,24 @@
         android:id="@+id/li_goal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
         android:theme="@style/ListItemGoal"
-        app:layout_constraintBottom_toTopOf="@+id/li_date"
-        app:layout_constraintStart_toEndOf="@+id/li_date"
-        app:layout_constraintTop_toBottomOf="@+id/li_date"
+        app:layout_constraintBottom_toTopOf="@+id/li_day_of_month"
+        app:layout_constraintStart_toEndOf="@+id/li_month"
+        app:layout_constraintTop_toBottomOf="@+id/li_month"
         tools:text="Bake cookies" />
 
     <TextView
-        android:id="@+id/li_date"
+        android:id="@+id/li_day_of_month"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:theme="@style/ListItemDate"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/li_month"
+        app:layout_constraintStart_toEndOf="@+id/li_month"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="16" />
+        tools:text="6" />
 
     <ImageView
         android:id="@+id/li_status"
@@ -57,6 +54,17 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/li_goal" />
+        app:layout_constraintTop_toBottomOf="@+id/li_month" />
+
+    <TextView
+        android:id="@+id/li_month"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/li_day_of_month"
+        tools:text="DEC" />
 
 </android.support.constraint.ConstraintLayout>
