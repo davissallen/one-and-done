@@ -45,6 +45,8 @@ import butterknife.ButterKnife;
 import me.davisallen.oneanddone.pojo.Goal;
 import timber.log.Timber;
 
+// TODO: Create setting to change background color.
+
 public class MainActivity extends AppCompatActivity implements
         GoalCreateFragment.DailyGoalCreatedListener,
         NavigationView.OnNavigationItemSelectedListener {
