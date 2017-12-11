@@ -62,7 +62,6 @@ public class ProgressListFragment extends Fragment {
 
         // Initialize variables.
         mParentActivity = (MainActivity) getActivity();
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.rv_progress_list);
         mLayoutManager = new LinearLayoutManager(getActivity());
         setRecyclerViewLayoutManager();
 
@@ -104,7 +103,6 @@ public class ProgressListFragment extends Fragment {
     }
 
     private void initGoals() {
-
         mGoalsAdapter = new GoalsAdapter(mGoals);
         mRecyclerView.setAdapter(mGoalsAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -141,9 +139,9 @@ public class ProgressListFragment extends Fragment {
         public void onBindViewHolder(GoalHolder holder, int position) {
             Goal goal = mGoals.get(position);
             holder.goalTextView.setText(goal.getGoal());
-            holder.dayOfMonthTextView.setText(goal.getDayOfMonth());
-            holder.monthTextView.setText(goal.getMonth());
-            if (goal.isCompleted()) {
+            holder.dayOfMonthTextView.setText(goal.getDayOfMonthFromMillis());
+            holder.monthTextView.setText(goal.getMonthFromMillis());
+            if (goal.getIsCompleted()) {
                 holder.statusImageView.setImageResource(R.drawable.ic_check_green_36dp);
             } else {
                 holder.statusImageView.setImageResource(R.drawable.ic_cancel_red_36dp);

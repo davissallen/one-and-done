@@ -19,6 +19,7 @@ public class Goal implements Parcelable {
     private String userId;
 
     public Goal() {
+        // Needed for firebase.
     }
 
     public Goal(String goal, String userId) {
@@ -26,13 +27,6 @@ public class Goal implements Parcelable {
         this.userId = userId;
         this.dateInMillis = System.currentTimeMillis();
         this.isCompleted = false;
-    }
-
-    public Goal(String goal, long dateInMillis, boolean isCompleted, String userId) {
-        this.goal = goal;
-        this.dateInMillis = dateInMillis;
-        this.isCompleted = isCompleted;
-        this.userId = userId;
     }
 
     public String getGoal() {
@@ -51,11 +45,11 @@ public class Goal implements Parcelable {
         this.dateInMillis = dateInMillis;
     }
 
-    public boolean isCompleted() {
+    public boolean getIsCompleted() {
         return isCompleted;
     }
 
-    public void setCompleted(boolean completed) {
+    public void setIsCompleted(boolean completed) {
         isCompleted = completed;
     }
 
@@ -67,8 +61,7 @@ public class Goal implements Parcelable {
         this.userId = userId;
     }
 
-
-    public String getMonth() {
+    public String getMonthFromMillis() {
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(this.dateInMillis);
         int month = c.get(Calendar.MONTH);
@@ -89,7 +82,7 @@ public class Goal implements Parcelable {
         }
     }
 
-    public String getDayOfMonth() {
+    public String getDayOfMonthFromMillis() {
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(this.dateInMillis);
         return String.valueOf(c.get(Calendar.DAY_OF_MONTH));
@@ -108,7 +101,7 @@ public class Goal implements Parcelable {
         dest.writeString(this.userId);
     }
 
-    private Goal(Parcel in) {
+    protected Goal(Parcel in) {
         this.goal = in.readString();
         this.dateInMillis = in.readLong();
         this.isCompleted = in.readByte() != 0;
