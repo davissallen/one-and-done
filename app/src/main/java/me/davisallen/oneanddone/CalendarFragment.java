@@ -39,16 +39,15 @@ public class CalendarFragment extends Fragment {
 
         mParentActivity = (MainActivity) getActivity();
 
+        updateCountViews();
+
         return view;
     }
 
-
-
     private void updateCountViews() {
-
-
-//        mCountCompleted.setText(String.valueOf(count_completed));
-//        mCountNeutral.setText(String.valueOf(count_neutral));
-//        mCountUncompleted.setText(String.valueOf(count_uncompleted));
+        // TODO: Update calendar stats.
+        mCountCompleted.setText("Do");
+        mCountNeutral.setText("Re");
+        mCountUncompleted.setText("Mi");
     }
 }

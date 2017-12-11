@@ -315,7 +315,8 @@ public class MainActivity extends AppCompatActivity implements
     private void getGoalsFromServer() {
         if (mGoals == null) {
             mGoals = new ArrayList<>();
-            mGoalsDbReference.orderByChild("userId").equalTo(mUserId).addChildEventListener(saveAllGoalsByUserListener);
+            mGoalsDbReference.orderByChild("userId").equalTo(mUserId).
+                    addChildEventListener(saveAllGoalsByUserListener);
         }
     }
 
@@ -328,7 +329,7 @@ public class MainActivity extends AppCompatActivity implements
                 openCreateGoalFragment();
             }
         } else {
-            Timber.w("Did not get a most recent goal from initailzeMainScreen()");
+            Timber.w("Did not get a most recent goal.");
             openCreateGoalFragment();
         }
     }

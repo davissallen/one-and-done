@@ -10,10 +10,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
-
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -44,7 +40,6 @@ public class ProgressListFragment extends Fragment {
     private MainActivity mParentActivity;
     private RecyclerView.LayoutManager mLayoutManager;
     private GoalsAdapter mGoalsAdapter;
-    private ArrayList<Goal> mGoals;
 
 
     @Override
@@ -65,45 +60,14 @@ public class ProgressListFragment extends Fragment {
         mLayoutManager = new LinearLayoutManager(getActivity());
         setRecyclerViewLayoutManager();
 
-        if (savedInstanceState != null && savedInstanceState.containsKey(GOALS_KEY)) {
-            mGoals = savedInstanceState.getParcelableArrayList(GOALS_KEY);
-            initGoals();
-        } else {
-            mParentActivity.mGoalsDbReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    // Create list of goals.
-                    mGoals = new ArrayList<>();
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        Goal goal = snapshot.getValue(Goal.class);
-                        mGoals.add(goal);
-                    }
-                    initGoals();
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-        }
-
-
+        initGoals();
 
         return view;
 
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        if (mGoals != null) {
-            outState.putParcelableArrayList(GOALS_KEY, mGoals);
-        }
-        super.onSaveInstanceState(outState);
-    }
-
     private void initGoals() {
-        mGoalsAdapter = new GoalsAdapter(mGoals);
+        mGoalsAdapter = new GoalsAdapter(mParentActivity.mGoals);
         mRecyclerView.setAdapter(mGoalsAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);
     }
@@ -123,10 +87,10 @@ public class ProgressListFragment extends Fragment {
 
     class GoalsAdapter extends RecyclerView.Adapter<GoalHolder> {
 
-        ArrayList<Goal> mGoals;
+        ArrayList<Goal> goals;
 
         public GoalsAdapter(ArrayList<Goal> goals) {
-            mGoals = goals;
+            this.goals = goals;
         }
 
         @Override
@@ -137,7 +101,7 @@ public class ProgressListFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(GoalHolder holder, int position) {
-            Goal goal = mGoals.get(position);
+            Goal goal = goals.get(position);
             holder.goalTextView.setText(goal.getGoal());
             holder.dayOfMonthTextView.setText(goal.getDayOfMonthFromMillis());
             holder.monthTextView.setText(goal.getMonthFromMillis());
@@ -150,8 +114,8 @@ public class ProgressListFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            if (mGoals != null) {
-                return mGoals.size();
+            if (goals != null) {
+                return goals.size();
             } else {
                 return 0;
             }
