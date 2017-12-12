@@ -55,6 +55,12 @@ dependencies {
     // Butterknife
     implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    // Pulsator4Droid
+    implementation 'pl.bclogic:pulsator4droid:1.0.3'
+    // Rounded ImageView
+    implementation 'com.makeramen:roundedimageview:2.3.0'
+
+
 }
 
 

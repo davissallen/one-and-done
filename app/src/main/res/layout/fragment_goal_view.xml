@@ -2,18 +2,18 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/colorPrimary"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary">
 
     <TextClock
         android:id="@+id/clock_goal_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="68sp"
-        android:textColor="@color/white"
-        android:format12Hour="h:mm a"
         android:fontFamily="sans-serif-thin"
+        android:format12Hour="h:mm a"
+        android:textColor="@color/white"
+        android:textSize="68sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -36,23 +36,42 @@
         android:id="@+id/tv_goal_view_goal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:theme="@style/ViewGoalGoal"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
         android:layout_marginTop="64dp"
-        tools:text="Bake Cookies"
+        android:theme="@style/ViewGoalGoal"
         app:layout_constraintEnd_toEndOf="@+id/clock_goal_view"
         app:layout_constraintStart_toStartOf="@+id/clock_goal_view"
-        app:layout_constraintTop_toBottomOf="@+id/tv_goal_view_date" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_goal_view_date"
+        tools:text="Bake Cookies" />
 
-    <ImageView
-        android:id="@+id/goal_view_complete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
-        app:layout_constraintEnd_toStartOf="@+id/tv_goal_view_goal"
-        app:layout_constraintStart_toEndOf="@+id/tv_goal_view_goal"
-        app:layout_constraintTop_toBottomOf="@+id/tv_goal_view_goal"
-        app:srcCompat="@drawable/ic_check_white_36dp" />
+    <pl.bclogic.pulsator4droid.library.PulsatorLayout
+    android:id="@+id/pulsator"
+    android:layout_width="124dp"
+    android:layout_height="124dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toStartOf="@+id/tv_goal_view_goal"
+    app:layout_constraintStart_toEndOf="@+id/tv_goal_view_goal"
+    app:layout_constraintTop_toBottomOf="@+id/tv_goal_view_goal"
+    app:pulse_color="@color/white"
+    app:pulse_count="2"
+    app:pulse_duration="2500"
+    app:pulse_interpolator="AccelerateDecelerate"
+    app:pulse_repeat="0"
+    app:pulse_startFromScratch="false">
+
+        <com.makeramen.roundedimageview.RoundedImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:background="@color/colorPrimary"
+            android:scaleType="center"
+            android:src="@drawable/ic_check_white_36dp"
+            app:riv_corner_radius="30dip"
+            app:riv_mutate_background="true"
+            app:riv_oval="true"
+            app:riv_tile_mode="repeat" />
+
+    </pl.bclogic.pulsator4droid.library.PulsatorLayout>
 
 </android.support.constraint.ConstraintLayout>

@@ -41,13 +41,6 @@ public class ProgressListFragment extends Fragment {
     private RecyclerView.LayoutManager mLayoutManager;
     private GoalsAdapter mGoalsAdapter;
 
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -59,7 +52,6 @@ public class ProgressListFragment extends Fragment {
         mParentActivity = (MainActivity) getActivity();
         mLayoutManager = new LinearLayoutManager(getActivity());
         setRecyclerViewLayoutManager();
-
         initGoals();
 
         return view;

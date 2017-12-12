@@ -15,6 +15,7 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import pl.bclogic.pulsator4droid.library.PulsatorLayout;
 
 import static me.davisallen.oneanddone.MainActivity.PARAM_CREATE_GOAL;
 
@@ -31,6 +32,7 @@ public class GoalViewFragment extends Fragment {
     @BindView(R.id.clock_goal_view) TextClock mTextClock;
     @BindView(R.id.tv_goal_view_date) TextView mDateTextView;
     @BindView(R.id.tv_goal_view_goal) TextView mGoalTextView;
+    @BindView(R.id.pulsator) PulsatorLayout mPulsator;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,6 +50,8 @@ public class GoalViewFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_goal_view, container, false);
         ButterKnife.bind(this, view);
+        mPulsator.start();
+
         return view;
     }
 
