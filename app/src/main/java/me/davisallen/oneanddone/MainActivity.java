@@ -25,6 +25,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
@@ -449,4 +450,7 @@ public class MainActivity extends AppCompatActivity implements
         }
     };
 
+    public void completeGoal(View view) {
+        Toast.makeText(mContext, "Congrats bro OMG", Toast.LENGTH_SHORT).show();
+    }
 }
