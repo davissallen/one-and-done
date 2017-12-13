@@ -1,14 +1,16 @@
 package me.davisallen.oneanddone;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CalendarView;
 import android.widget.TextView;
+
+import com.prolificinteractive.materialcalendarview.CalendarDay;
+import com.prolificinteractive.materialcalendarview.CalendarMode;
+import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -18,7 +20,6 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import me.davisallen.oneanddone.pojo.Goal;
 
 /**
  * Package Name:   me.davisallen.oneanddone
@@ -28,9 +29,7 @@ import me.davisallen.oneanddone.pojo.Goal;
 
 public class CalendarFragment extends Fragment {
 
-    private static final String CALENDAR_KEY = "calendar_key";
-
-    @BindView(R.id.calendarView) CalendarView mCalendar;
+    @BindView(R.id.calendarView) MaterialCalendarView mCalendar;
     @BindView(R.id.count_completed) TextView mCountCompleted;
     @BindView(R.id.count_neutral) TextView mCountNeutral;
     @BindView(R.id.count_uncompleted) TextView mCountUncompleted;
@@ -45,45 +44,72 @@ public class CalendarFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_calendar, container, false);
         ButterKnife.bind(this, view);
 
-        mCalendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
-            @Override
-            public void onSelectedDayChange(@NonNull CalendarView calendarView, int i, int i1, int i2) {
-                // TODO: Figure out why this is not updating...
-                updateCountViews();
-            }
-        });
-
         mParentActivity = (MainActivity) getActivity();
-        updateCountViews();
+
+        updateCalendarUI();
 
         return view;
     }
 
-    private void updateCountViews() {
-        long dateInMillis = mCalendar.getDate();
+    private void updateCalendarUI() {
+        // Get the date of first goal ever.
+        long firstGoalDateInMillis = mParentActivity.mGoals.get(0).getDateInMillis();
+        // Get the date of last goal ever.
+        long lastGoalDateInMillis = mParentActivity.mGoals.get(
+                mParentActivity.mGoals.size()-1).getDateInMillis();
 
-        long begOfMonthInMillis = getBeginningOfMonth(dateInMillis);
-        long endOfMonthInMillis = getEndOfMonth(dateInMillis);
+        SimpleDateFormat dayFormatter = new SimpleDateFormat("d", Locale.US);
+        SimpleDateFormat monthFormatter = new SimpleDateFormat("M", Locale.US);
+        SimpleDateFormat yearFormatter = new SimpleDateFormat("yyyy", Locale.US);
 
-        int count_completed = 0;
-        int count_neutral = Math.round((endOfMonthInMillis - begOfMonthInMillis) / 1000f / 60f / 60f / 24f);
-        int count_uncompleted = 0;
-        for (Goal goal : mParentActivity.mGoals) {
-            long goalMillis = goal.getDateInMillis();
-            if (goalMillis >= begOfMonthInMillis && goalMillis <= endOfMonthInMillis) {
-                if (goal.getIsCompleted()) {
-                    count_completed += 1;
-                } else {
-                    count_uncompleted += 1;
-                }
-                count_neutral -= 1;
-            }
-        }
+        Calendar calendar = Calendar.getInstance();
+        int day, month, year;
 
-        updateUI(count_completed, count_neutral, count_uncompleted);
+        calendar.setTimeInMillis(firstGoalDateInMillis);
+        day = Integer.parseInt(dayFormatter.format(calendar.getTime()));
+        month = Integer.parseInt(monthFormatter.format(calendar.getTime()));
+        year = Integer.parseInt(yearFormatter.format(calendar.getTime()));
+        CalendarDay calendarBegin = CalendarDay.from(year, month, day);
+
+        calendar.setTimeInMillis(lastGoalDateInMillis);
+        day = Integer.parseInt(dayFormatter.format(calendar.getTime()));
+        month = Integer.parseInt(monthFormatter.format(calendar.getTime()));
+        year = Integer.parseInt(yearFormatter.format(calendar.getTime()));
+        CalendarDay calendarEnd = CalendarDay.from(year, month, day);
+
+        mCalendar.state().edit()
+                .setFirstDayOfWeek(Calendar.SUNDAY)
+                .setMinimumDate(calendarBegin)
+                .setMaximumDate(calendarEnd)
+                .setCalendarDisplayMode(CalendarMode.MONTHS)
+                .commit();
     }
 
-    private void updateUI(int count_completed, int count_neutral, int count_uncompleted) {
+//    private void updateCountViews() {
+//        long dateInMillis = mCalendar.getDate();
+//
+//        long begOfMonthInMillis = getBeginningOfMonth(dateInMillis);
+//        long endOfMonthInMillis = getEndOfMonth(dateInMillis);
+//
+//        int count_completed = 0;
+//        int count_neutral = Math.round((endOfMonthInMillis - begOfMonthInMillis) / 1000f / 60f / 60f / 24f);
+//        int count_uncompleted = 0;
+//        for (Goal goal : mParentActivity.mGoals) {
+//            long goalMillis = goal.getDateInMillis();
+//            if (goalMillis >= begOfMonthInMillis && goalMillis <= endOfMonthInMillis) {
+//                if (goal.getIsCompleted()) {
+//                    count_completed += 1;
+//                } else {
+//                    count_uncompleted += 1;
+//                }
+//                count_neutral -= 1;
+//            }
+//        }
+//
+//        updateUI(count_completed, count_neutral, count_uncompleted);
+//    }
+
+    private void updateCounts(int count_completed, int count_neutral, int count_uncompleted) {
         mCountCompleted.setText(String.valueOf(count_completed));
         mCountNeutral.setText(String.valueOf(count_neutral));
         mCountUncompleted.setText(String.valueOf(count_uncompleted));

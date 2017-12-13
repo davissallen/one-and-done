@@ -59,6 +59,8 @@ dependencies {
     implementation 'pl.bclogic:pulsator4droid:1.0.3'
     // Rounded ImageView
     implementation 'com.makeramen:roundedimageview:2.3.0'
+    // MaterialCalendarView
+    implementation 'com.prolificinteractive:material-calendarview:1.4.3'
 
 
 }
