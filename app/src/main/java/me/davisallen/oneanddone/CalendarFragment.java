@@ -1,9 +1,12 @@
 package me.davisallen.oneanddone;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CalendarView;
@@ -44,47 +47,24 @@ public class CalendarFragment extends Fragment {
 
         mParentActivity = (MainActivity) getActivity();
 
+        // Set the min and max dates on the calendar.
+        // Update the count text views with the appropriate data.
         initializeCalendarSettings();
-        updateCalendar();
 
         return view;
     }
 
-//    private void updateCalendarUI() {
-//        // Get the date of first goal ever.
-//        long firstGoalDateInMillis = mParentActivity.mGoals.get(0).getDateInMillis();
-//        // Get the date of last goal ever.
-//        long lastGoalDateInMillis = mParentActivity.mGoals.get(
-//                mParentActivity.mGoals.size()-1).getDateInMillis();
-//
-//        SimpleDateFormat dayFormatter = new SimpleDateFormat("d", Locale.US);
-//        SimpleDateFormat monthFormatter = new SimpleDateFormat("M", Locale.US);
-//        SimpleDateFormat yearFormatter = new SimpleDateFormat("yyyy", Locale.US);
-//
-//        Calendar calendar = Calendar.getInstance();
-//        int day, month, year;
-//
-//        calendar.setTimeInMillis(firstGoalDateInMillis);
-//        day = Integer.parseInt(dayFormatter.format(calendar.getTime()));
-//        month = Integer.parseInt(monthFormatter.format(calendar.getTime()));
-//        year = Integer.parseInt(yearFormatter.format(calendar.getTime()));
-//        CalendarDay calendarBegin = CalendarDay.from(year, month, day);
-//
-//        calendar.setTimeInMillis(lastGoalDateInMillis);
-//        day = Integer.parseInt(dayFormatter.format(calendar.getTime()));
-//        month = Integer.parseInt(monthFormatter.format(calendar.getTime()));
-//        year = Integer.parseInt(yearFormatter.format(calendar.getTime()));
-//        CalendarDay calendarEnd = CalendarDay.from(year, month, day);
-//
-//        mCalendar.state().edit()
-//                .setFirstDayOfWeek(Calendar.SUNDAY)
-//                .setMinimumDate(calendarBegin)
-//                .setMaximumDate(calendarEnd)
-//                .setCalendarDisplayMode(CalendarMode.MONTHS)
-//                .commit();
-//    }
-
     private void initializeCalendarSettings() {
+        mCalendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(@NonNull CalendarView calendarView, int year, int month, int day) {
+                month += 1;
+
+                return;
+            }
+        });
+
+        calculateGoalCounts();
 
         // Get the date of first goal ever.
         long firstGoalDateInMillis = mParentActivity.mGoals.get(0).getDateInMillis();
@@ -95,12 +75,12 @@ public class CalendarFragment extends Fragment {
         mCalendar.setMaxDate(lastGoalDateInMillis);
     }
 
-    private void updateCalendar() {
+    private void calculateGoalCounts() {
 
         long dateInMillis = mCalendar.getDate();
 
-        long begOfMonthInMillis = getBeginningOfMonth(dateInMillis);
-        long endOfMonthInMillis = getEndOfMonth(dateInMillis);
+        long begOfMonthInMillis = getBeginningOfMonthInMillis(dateInMillis);
+        long endOfMonthInMillis = getEndOfMonthInMillis(dateInMillis);
 
         int count_completed = 0;
         int count_neutral = Math.round((endOfMonthInMillis - begOfMonthInMillis) / 1000f / 60f / 60f / 24f);
@@ -126,7 +106,7 @@ public class CalendarFragment extends Fragment {
         mCountUncompleted.setText(String.valueOf(count_uncompleted));
     }
 
-    private long getBeginningOfMonth(long dateInMillis) {
+    private long getBeginningOfMonthInMillis(long dateInMillis) {
         // Get month from millis
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(dateInMillis);
@@ -149,7 +129,7 @@ public class CalendarFragment extends Fragment {
         return begOfMonthInMillis;
     }
 
-    private long getEndOfMonth(long dateInMillis) {
+    private long getEndOfMonthInMillis(long dateInMillis) {
         // Get month from millis
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(dateInMillis);
@@ -185,4 +165,76 @@ public class CalendarFragment extends Fragment {
 
         return endOfMonthInMillis;
     }
+}
+
+class LeftRightSwipeClickListener extends GestureDetector.SimpleOnGestureListener {
+
+    private static final int SWIPE_MIN_DISTANCE = 30;
+    private static final int SWIPE_MAX_OFF_PATH = 250;
+    private static final int SWIPE_THRESHOLD_VELOCITY = 200;
+
+    private Runnable onLeftListener;
+
+    /**
+     * Setter for the onLeftListener property.
+     * @param onLeftListener the runnable that will be run when a left swipe is detected
+     */
+    public void setOnLeftListener(final Runnable onLeftListener) {
+        this.onLeftListener = onLeftListener;
+    }
+
+    private Runnable onRightListener;
+
+    /**
+     * Setter for the onRightListener property.
+     * @param onRightListener the runnable that will be run when a right swipe is detected
+     */
+    public void setOnRightListener(final Runnable onRightListener) {
+        this.onRightListener = onRightListener;
+    }
+
+    private Runnable onClickListener;
+    /**
+     * Setter for the onClickListener property.
+     * @param onClickListener the runnable that will be run when a click is detected
+     */
+    public void setOnClickListener(final Runnable onClickListener) {
+        this.onClickListener = onClickListener;
+    }
+
+    @Override
+    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+        try {
+            if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH) {
+                return false;
+            }
+            // right to left swipe
+            if(e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                if(this.onLeftListener != null) {
+                    this.onLeftListener.run();
+                }
+            }  else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                if(this.onRightListener != null) {
+                    this.onRightListener.run();
+                }
+            }
+        } catch (Exception e) {
+            // nothing
+        }
+        return false;
+    }
+
+    @Override
+    public boolean onDown(MotionEvent e) {
+        return true;
+    }
+
+    @Override
+    public boolean onSingleTapConfirmed(MotionEvent e) {
+        if(this.onClickListener != null) {
+            this.onClickListener.run();
+        }
+        return true;
+    }
+
 }

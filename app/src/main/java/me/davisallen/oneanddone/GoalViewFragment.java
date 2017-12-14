@@ -51,7 +51,6 @@ public class GoalViewFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_goal_view, container, false);
         ButterKnife.bind(this, view);
         mPulsator.start();
-
         return view;
     }
 

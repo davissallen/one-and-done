@@ -22,6 +22,9 @@ import android.text.format.DateUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -451,6 +454,15 @@ public class MainActivity extends AppCompatActivity implements
     };
 
     public void completeGoal(View view) {
+        Animation anim = new ScaleAnimation(
+                1f, 3f, // Start and end values for the X axis scaling
+                1f, 3f, // Start and end values for the Y axis scaling
+                Animation.RELATIVE_TO_SELF, 0.5f, // Pivot point of X scaling
+                Animation.RELATIVE_TO_SELF, 0.5f); // Pivot point of Y scaling
+//        anim.setFillAfter(true); // Needed to keep the result of the animation
+        anim.setDuration(2500);
+        anim.setInterpolator(new DecelerateInterpolator());
+        view.startAnimation(anim);
         Toast.makeText(mContext, "Congrats bro OMG", Toast.LENGTH_SHORT).show();
     }
 }
