@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator;
 import android.animation.StateListAnimator;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,7 +29,6 @@ import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
@@ -53,11 +53,14 @@ import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity implements
         GoalCreateFragment.DailyGoalCreatedListener,
+        GoalViewFragment.OnGoalCompleteListener,
         NavigationView.OnNavigationItemSelectedListener {
 
     // Params to send data to fragments
     public static final String PARAM_CREATE_GOAL = "create_goal";
     private static final String GOALS_KEY = "goals_key";
+    private static final String PREFS_NAME = "preferences";
+    private static final String TODAYS_GOAL_KEY = "todays_goal_key";
 
     // Firebase Analytics instance
     private FirebaseAnalytics mFirebaseAnalytics;
@@ -84,7 +87,9 @@ public class MainActivity extends AppCompatActivity implements
 
     String mUserId;
     ArrayList<Goal> mGoals;
+    Goal mDailyGoal;
     FragmentManager mFragmentManager;
+    SharedPreferences mSettings;
 
     // Choose an arbitrary request code value
     private static final int REQUEST_CODE_SIGN_IN = 1738;
@@ -114,6 +119,9 @@ public class MainActivity extends AppCompatActivity implements
             mGoals = savedInstanceState.getParcelableArrayList(GOALS_KEY);
         }
 
+        // Restore preferences
+        mSettings = getSharedPreferences(PREFS_NAME, 0);
+
         initializeMainScreen();
     }
 
@@ -126,6 +134,17 @@ public class MainActivity extends AppCompatActivity implements
         FirebaseUser currentUser = mAuth.getCurrentUser();
         updateUi(currentUser);
     }
+
+    private void saveGoalKeyToPreferences(String key) {
+        // We need an Editor object to make preference changes.
+        // All objects are from android.context.Context
+        SharedPreferences.Editor editor = mSettings.edit();
+        editor.putString(TODAYS_GOAL_KEY, key);
+
+        // Commit the edits!
+        editor.apply();
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -319,8 +338,7 @@ public class MainActivity extends AppCompatActivity implements
     private void getGoalsFromServer() {
         if (mGoals == null) {
             mGoals = new ArrayList<>();
-            mGoalsDbReference.orderByChild("userId").equalTo(mUserId).
-                    addChildEventListener(saveAllGoalsByUserListener);
+            mGoalsDbReference.orderByChild("userId").equalTo(mUserId).addChildEventListener(saveAllGoalsByUserListener);
         }
     }
 
@@ -328,7 +346,8 @@ public class MainActivity extends AppCompatActivity implements
         if (goal != null) {
             long lastGoalCreatedMillis = goal.getDateInMillis();
             if (DateUtils.isToday(lastGoalCreatedMillis)) {
-                openViewGoalFragment(goal.getGoal());
+                mDailyGoal = goal;
+                openViewGoalFragment(mDailyGoal.getGoal());
             } else {
                 openCreateGoalFragment();
             }
@@ -378,7 +397,12 @@ public class MainActivity extends AppCompatActivity implements
 
         // Write a message to the database
         if (mGoalsDbReference != null && mUserId != null) {
-            mGoalsDbReference.push().setValue(new Goal(goal, mUserId));
+            mDailyGoal = new Goal(goal, mUserId);
+
+            DatabaseReference ref = mGoalsDbReference.push();
+            ref.setValue(new Goal(goal, mUserId));
+            saveGoalKeyToPreferences(ref.getKey());
+
             initializeMainScreen();
         } else {
             Timber.e("Could not get reference to goals database.");
@@ -454,15 +478,29 @@ public class MainActivity extends AppCompatActivity implements
     };
 
     public void completeGoal(View view) {
+        // TODO: Look at camera button for inspiration!
+        // TODO: Have the button click update the data in the cloud.
+
         Animation anim = new ScaleAnimation(
-                1f, 3f, // Start and end values for the X axis scaling
-                1f, 3f, // Start and end values for the Y axis scaling
+                1f, 1.2f, // Start and end values for the X axis scaling
+                1f, 1.2f, // Start and end values for the Y axis scaling
                 Animation.RELATIVE_TO_SELF, 0.5f, // Pivot point of X scaling
                 Animation.RELATIVE_TO_SELF, 0.5f); // Pivot point of Y scaling
-//        anim.setFillAfter(true); // Needed to keep the result of the animation
-        anim.setDuration(2500);
+        anim.setFillAfter(true); // Needed to keep the result of the animation
+        anim.setDuration(400);
+        anim.setRepeatCount(1);
+        anim.setRepeatMode(Animation.REVERSE);
         anim.setInterpolator(new DecelerateInterpolator());
         view.startAnimation(anim);
-        Toast.makeText(mContext, "Congrats bro OMG", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onGoalCompleted() {
+        // TODO: Update the goal!
+        mDailyGoal.setIsCompleted(true);
+        String goalDbLocation = mSettings.getString(TODAYS_GOAL_KEY, "UNKNOWN") + "/" + "isCompleted";
+        mGoalsDbReference.child(goalDbLocation).setValue(true);
+
+
     }
 }

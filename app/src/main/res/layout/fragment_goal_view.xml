@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/goal_view_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary">
@@ -44,30 +46,31 @@
         tools:text="Bake Cookies" />
 
     <pl.bclogic.pulsator4droid.library.PulsatorLayout
-    android:id="@+id/pulsator"
-    android:layout_width="124dp"
-    android:layout_height="124dp"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toStartOf="@+id/tv_goal_view_goal"
-    app:layout_constraintStart_toEndOf="@+id/tv_goal_view_goal"
-    app:layout_constraintTop_toBottomOf="@+id/tv_goal_view_goal"
-    app:pulse_color="@color/white"
-    app:pulse_count="2"
-    app:pulse_duration="2500"
-    app:pulse_interpolator="AccelerateDecelerate"
-    app:pulse_repeat="0"
-    app:pulse_startFromScratch="false">
+        android:id="@+id/pulsator"
+        android:layout_width="128dp"
+        android:layout_height="128dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/tv_goal_view_goal"
+        app:layout_constraintStart_toEndOf="@+id/tv_goal_view_goal"
+        app:layout_constraintTop_toBottomOf="@+id/tv_goal_view_goal"
+        app:pulse_color="@color/white"
+        app:pulse_count="2"
+        app:pulse_duration="2500"
+        app:pulse_interpolator="AccelerateDecelerate"
+        app:pulse_repeat="0"
+        app:pulse_startFromScratch="false">
 
-        <com.makeramen.roundedimageview.RoundedImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/imageView1"
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/button_complete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:background="@color/colorPrimary"
-            android:scaleType="center"
-            android:src="@drawable/ic_check_white_36dp"
             android:onClick="completeGoal"
+            android:scaleType="center"
+            android:src="@drawable/ic_check_white_64dp"
             app:riv_corner_radius="30dip"
             app:riv_mutate_background="true"
             app:riv_oval="true"
