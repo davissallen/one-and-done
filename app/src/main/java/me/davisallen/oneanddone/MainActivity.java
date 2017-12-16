@@ -2,16 +2,14 @@ package me.davisallen.oneanddone;
 
 import android.animation.ObjectAnimator;
 import android.animation.StateListAnimator;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -23,9 +21,6 @@ import android.text.format.DateUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -36,18 +31,23 @@ import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.davisallen.oneanddone.pojo.Goal;
 import timber.log.Timber;
+
+import static me.davisallen.oneanddone.utils.SnackbarUtils.showSnackbar;
 
 // TODO: Create setting to change background color.
 
@@ -68,9 +68,7 @@ public class MainActivity extends AppCompatActivity implements
     private FirebaseAuth mAuth;
     // Firebase Database instance
     private FirebaseDatabase mFirebaseDatabase;
-    public DatabaseReference mGoalsDbReference;
-
-    private Context mContext;
+    public DatabaseReference mGoalsByUserDbReference;
 
     // Bind any views with Butterknife
     // Toolbar
@@ -100,51 +98,52 @@ public class MainActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        mContext = this;
-
-        // Initializes Firebase instances.
-        initializeFirebaseTools();
-
-        // Sets toolbar elevation to 0 with state list animator.
-        initializeToolbar();
-
-        // Initializes nav drawer layout.
-        initializeNavDrawer();
-
-        // Initializes Timber debugger.
-        initializeTimber();
-
-        // Initialize Goals
+        // Get the goals from the saved instance state if they exist.
         if (savedInstanceState != null && savedInstanceState.containsKey(GOALS_KEY)) {
             mGoals = savedInstanceState.getParcelableArrayList(GOALS_KEY);
         }
 
-        // Restore preferences
-        mSettings = getSharedPreferences(PREFS_NAME, 0);
+        // Initializes Firebase instances.
+        initializeFirebaseTools();
+        // Initializes Timber debugger.
+        initializeTimber();
+        // Initialize the Toolbar, NavBar, and Main UI.
+        initializeUI();
 
+        // Get reference the shared preferences
+        mSettings = getSharedPreferences(PREFS_NAME, 0);
+    }
+
+    private void initializeFirebaseTools() {
+        // Obtain the FirebaseAnalytics instance.
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        // Obtain the FirebaseAuth instance.
+        mAuth = FirebaseAuth.getInstance();
+        mUserId = mAuth.getUid();
+        // Obtain the FirebaseStorage instance.
+        mFirebaseDatabase = FirebaseUtils.getDatabase();
+        // Obtain DatabaseReference to "goals"
+        mGoalsByUserDbReference = mFirebaseDatabase.getReference(
+                getString(R.string.goals_db_name)).child(mUserId);
+    }
+
+    private void initializeUI() {
+        // Sets toolbar elevation to 0 with state list animator.
+        initializeToolbar();
+        // Initializes nav drawer layout.
+        initializeNavDrawer();
+        // Initialize main screen.
         initializeMainScreen();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-
         // TODO: Should I put this in onResume ?
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        updateUi(currentUser);
+        updateUiForUserAuth(currentUser);
     }
-
-    private void saveGoalKeyToPreferences(String key) {
-        // We need an Editor object to make preference changes.
-        // All objects are from android.context.Context
-        SharedPreferences.Editor editor = mSettings.edit();
-        editor.putString(TODAYS_GOAL_KEY, key);
-
-        // Commit the edits!
-        editor.apply();
-    }
-
 
     @Override
     public void onBackPressed() {
@@ -189,9 +188,11 @@ public class MainActivity extends AppCompatActivity implements
         if (id == R.id.nav_daily_goal) {
             initializeMainScreen();
         } else if (id == R.id.nav_list) {
-            openProgressListFragment();
+            ProgressListFragment progressListFragment = new ProgressListFragment();
+            openFragment(progressListFragment);
         } else if (id == R.id.nav_calendar) {
-            openCalendarFragment();
+            CalendarFragment calendarFragment = new CalendarFragment();
+            openFragment(calendarFragment);
         }
 
         mDrawer.closeDrawer(GravityCompat.START);
@@ -200,15 +201,13 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        // TODO: Save goals to persistent state. always grab goals from the main activity in fragments.
         if (mGoals != null) {
             outState.putParcelableArrayList(GOALS_KEY, mGoals);
         }
         super.onSaveInstanceState(outState);
     }
 
-
-    private void updateUi(FirebaseUser currentUser) {
+    private void updateUiForUserAuth(FirebaseUser currentUser) {
         if (currentUser == null) {
             startActivityForResult(
                     AuthUI.getInstance()
@@ -245,29 +244,23 @@ public class MainActivity extends AppCompatActivity implements
                 // Sign in failed
                 if (response == null) {
                     // User pressed back button
-                    showSnackbar(R.string.sign_in_cancelled);
+                    showSnackbar(this, R.string.sign_in_cancelled);
                     return;
                 }
 
                 if (response.getErrorCode() == ErrorCodes.NO_NETWORK) {
-                    showSnackbar(R.string.no_internet_connection);
+                    showSnackbar(this, R.string.no_internet_connection);
                     return;
                 }
 
                 if (response.getErrorCode() == ErrorCodes.UNKNOWN_ERROR) {
-                    showSnackbar(R.string.unknown_error);
+                    showSnackbar(this, R.string.unknown_error);
                     return;
                 }
             }
 
-            showSnackbar(R.string.unknown_sign_in_response);
+            showSnackbar(this, R.string.unknown_sign_in_response);
         }
-    }
-
-    private void showSnackbar(int stringId) {
-        String message = getString(stringId);
-        Snackbar snackbar = Snackbar.make(new CoordinatorLayout(this), message, Snackbar.LENGTH_LONG);
-        snackbar.show();
     }
 
     private void initializeToolbar() {
@@ -289,7 +282,6 @@ public class MainActivity extends AppCompatActivity implements
         mNavigationView.setNavigationItemSelectedListener(this);
 
         LinearLayout navHeaderLayout = (LinearLayout) mNavigationView.getHeaderView(0);
-        // TODO: Remove this bc Butterknife!!!
         mUserImage = (ImageView) navHeaderLayout.findViewById(R.id.nav_user_image);
         mUserName = (TextView) navHeaderLayout.findViewById(R.id.nav_user_name);
         mUserEmail = (TextView) navHeaderLayout.findViewById(R.id.nav_user_email);
@@ -299,22 +291,9 @@ public class MainActivity extends AppCompatActivity implements
             @Override
             public void onClick(View view) {
                 mAuth.signOut();
-                updateUi(mAuth.getCurrentUser());
+                updateUiForUserAuth(mAuth.getCurrentUser());
             }
         });
-    }
-
-    private void initializeFirebaseTools() {
-        // Obtain the FirebaseAnalytics instance.
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-        // Obtain the FirebaseAuth instance.
-        mAuth = FirebaseAuth.getInstance();
-        mUserId = mAuth.getUid();
-        // Obtain the FirebaseStorage instance.
-        mFirebaseDatabase = FirebaseUtils.getDatabase();
-        // Obtain DatabaseReference to "goals"
-        // TODO: Make this db reference "goals" a project-wide constant.
-        mGoalsDbReference = mFirebaseDatabase.getReference("goals");
     }
 
     private void initializeTimber() {
@@ -325,182 +304,147 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void initializeMainScreen() {
-        // Get the most recent Goal from the database.
         if (mGoals != null) {
-            selectFragmentBasedOnGoal(mGoals.get(mGoals.size()-1));
+            selectFragmentBasedOnGoal();
         } else {
-            mGoalsDbReference.orderByChild("userId").equalTo(mUserId).limitToLast(1).
-                    addChildEventListener(initializeMainScreenListener);
-            getGoalsFromServer();
+            mGoalsByUserDbReference.orderByChild("dateInMillis").addListenerForSingleValueEvent(getAllGoalsByUserListener);
         }
     }
 
-    private void getGoalsFromServer() {
-        if (mGoals == null) {
-            mGoals = new ArrayList<>();
-            mGoalsDbReference.orderByChild("userId").equalTo(mUserId).addChildEventListener(saveAllGoalsByUserListener);
-        }
-    }
+    private void selectFragmentBasedOnGoal() {
 
-    private void selectFragmentBasedOnGoal(Goal goal) {
-        if (goal != null) {
-            long lastGoalCreatedMillis = goal.getDateInMillis();
+        if (mGoals != null && mGoals.size() > 0) {
+
+            Goal mostRecentGoal = mGoals.get(mGoals.size() - 1);
+            long lastGoalCreatedMillis = mostRecentGoal.getDateInMillis();
+
             if (DateUtils.isToday(lastGoalCreatedMillis)) {
-                mDailyGoal = goal;
-                openViewGoalFragment(mDailyGoal.getGoal());
+
+                GoalViewFragment goalViewFragment = new GoalViewFragment();
+                Bundle bundle = new Bundle();
+                bundle.putParcelable(PARAM_CREATE_GOAL, mostRecentGoal);
+                goalViewFragment.setArguments(bundle);
+                openFragment(goalViewFragment);
+
             } else {
-                openCreateGoalFragment();
+
+                GoalCreateFragment goalCreateFragment = new GoalCreateFragment();
+                openFragment(goalCreateFragment);
+
             }
+
         } else {
+
             Timber.w("Did not get a most recent goal.");
-            openCreateGoalFragment();
+            GoalCreateFragment goalCreateFragment = new GoalCreateFragment();
+            openFragment(goalCreateFragment);
+
         }
     }
 
-    private void openProgressListFragment() {
+    private void openFragment(Fragment fragment) {
         if (mFragmentManager == null) {
             mFragmentManager = getSupportFragmentManager();
         }
 
-        ProgressListFragment progressListFragment = new ProgressListFragment();
         FragmentTransaction transaction = mFragmentManager.beginTransaction();
-        transaction.replace(R.id.main_fragment_container, progressListFragment);
-        transaction.commit();
-    }
-
-    private void openCalendarFragment() {
-        if (mFragmentManager == null) {
-            mFragmentManager = getSupportFragmentManager();
-        }
-
-        CalendarFragment calendarFragment = new CalendarFragment();
-        FragmentTransaction transaction = mFragmentManager.beginTransaction();
-        transaction.replace(R.id.main_fragment_container, calendarFragment);
-        transaction.commit();
-    }
-
-    private void openCreateGoalFragment() {
-        if (mFragmentManager == null) {
-            mFragmentManager = getSupportFragmentManager();
-        }
-
-        GoalCreateFragment goalCreateFragment = new GoalCreateFragment();
-        FragmentTransaction transaction = mFragmentManager.beginTransaction();
-        transaction.replace(R.id.main_fragment_container, goalCreateFragment);
+        transaction.replace(R.id.main_fragment_container, fragment);
         transaction.commit();
     }
 
     @Override
     public void onCreateGoal(String goal) {
-        // TODO: Think about making this an asynctask (?)
+        // This is called when a goal is created by the user in GoalCreateFragment.
         Timber.d(String.format("Sending goal '%s' to database.", goal));
 
         // Write a message to the database
-        if (mGoalsDbReference != null && mUserId != null) {
-            mDailyGoal = new Goal(goal, mUserId);
-
-            DatabaseReference ref = mGoalsDbReference.push();
-            ref.setValue(new Goal(goal, mUserId));
-            saveGoalKeyToPreferences(ref.getKey());
-
+        if (mGoalsByUserDbReference != null && mUserId != null) {
+            mGoalsByUserDbReference.push().setValue(new Goal(goal));
             initializeMainScreen();
         } else {
-            Timber.e("Could not get reference to goals database.");
+            Timber.e("Could not get reference to goals database or user ID.");
         }
     }
 
-    private void openViewGoalFragment(String goal) {
-        if (mFragmentManager == null) {
-            mFragmentManager = getSupportFragmentManager();
-        }
+//    ChildEventListener getAllGoalsByUserListener = new ChildEventListener() {
+//        @Override
+//        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+//            Goal goal = dataSnapshot.getValue(Goal.class);
+//            if (goal != null) {
+//                mGoals.add(goal);
+//            } else {
+//                Timber.e("Got null goal from server :(");
+//            }
+//            selectFragmentBasedOnGoal();
+//        }
+//        @Override
+//        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+//
+//        }
+//        @Override
+//        public void onChildRemoved(DataSnapshot dataSnapshot) {
+//
+//        }
+//        @Override
+//        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+//
+//        }
+//        @Override
+//        public void onCancelled(DatabaseError databaseError) {
+//            Timber.e("Data download cancelled in intialize main screen.");
+//        }
+//    };
 
-        GoalViewFragment goalViewFragment = new GoalViewFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString(PARAM_CREATE_GOAL, goal);
-        goalViewFragment.setArguments(bundle);
-
-        FragmentTransaction transaction = mFragmentManager.beginTransaction();
-        transaction.replace(R.id.main_fragment_container, goalViewFragment);
-        transaction.commit();
-
-    }
-
-    ChildEventListener initializeMainScreenListener = new ChildEventListener() {
+    ValueEventListener getAllGoalsByUserListener = new ValueEventListener() {
         @Override
-        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-            Goal goal = dataSnapshot.getValue(Goal.class);
-            selectFragmentBasedOnGoal(goal);
-        }
-        @Override
-        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-        }
-        @Override
-        public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-        }
-        @Override
-        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-        }
-        @Override
-        public void onCancelled(DatabaseError databaseError) {
-            Timber.e("Data download cancelled in intialize main screen.");
-        }
-    };
-
-    ChildEventListener saveAllGoalsByUserListener = new ChildEventListener() {
-        @Override
-        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-            Goal goal = dataSnapshot.getValue(Goal.class);
-            if (goal != null) {
-                mGoals.add(goal);
-            } else {
-                Timber.e("Got null goal from server :(");
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            mGoals = new ArrayList<>();
+            // TODO: See if the behavior is different for one goal vs many goals bc getChildren()
+            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                try {
+                    Goal goal = snapshot.getValue(Goal.class);
+                    mGoals.add(goal);
+                } catch (DatabaseException e) {
+                    Timber.e("Data could not be converted to Goal!");
+                    Timber.d(snapshot.toString());
+                }
             }
+            selectFragmentBasedOnGoal();
         }
-        @Override
-        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
-        }
-        @Override
-        public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-        }
-        @Override
-        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-        }
         @Override
         public void onCancelled(DatabaseError databaseError) {
-            Timber.e("Data download cancelled in intialize main screen.");
+
         }
     };
 
-    public void completeGoal(View view) {
-        // TODO: Look at camera button for inspiration!
-        // TODO: Have the button click update the data in the cloud.
+    ValueEventListener getMostRecentGoalByUserListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            String key = dataSnapshot.getChildren().iterator().next().getKey();
+            setMostRecentGoalCompleted(key);
+        }
 
-        Animation anim = new ScaleAnimation(
-                1f, 1.2f, // Start and end values for the X axis scaling
-                1f, 1.2f, // Start and end values for the Y axis scaling
-                Animation.RELATIVE_TO_SELF, 0.5f, // Pivot point of X scaling
-                Animation.RELATIVE_TO_SELF, 0.5f); // Pivot point of Y scaling
-        anim.setFillAfter(true); // Needed to keep the result of the animation
-        anim.setDuration(400);
-        anim.setRepeatCount(1);
-        anim.setRepeatMode(Animation.REVERSE);
-        anim.setInterpolator(new DecelerateInterpolator());
-        view.startAnimation(anim);
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+
+        }
+    };
+
+    public void setMostRecentGoalCompleted(String key) {
+        Map<String, Object> goalUpdate = new HashMap<>();
+        goalUpdate.put(key + "/" + "isCompleted", true);
+        mGoalsByUserDbReference.updateChildren(goalUpdate);
     }
 
     @Override
     public void onGoalCompleted() {
-        // TODO: Update the goal!
-        mDailyGoal.setIsCompleted(true);
-        String goalDbLocation = mSettings.getString(TODAYS_GOAL_KEY, "UNKNOWN") + "/" + "isCompleted";
-        mGoalsDbReference.child(goalDbLocation).setValue(true);
+        // TODO: Update the goal in the cloud!
 
+        mGoalsByUserDbReference.orderByChild("dateInMillis").limitToLast(1).addListenerForSingleValueEvent(getMostRecentGoalByUserListener);
 
+        // Update value in cloud to completed.
+        Timber.e("Goal is doing nothing");
+        System.out.println();
     }
 }

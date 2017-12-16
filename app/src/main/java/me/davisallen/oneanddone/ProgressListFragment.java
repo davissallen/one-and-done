@@ -95,8 +95,8 @@ public class ProgressListFragment extends Fragment {
         public void onBindViewHolder(GoalHolder holder, int position) {
             Goal goal = goals.get(position);
             holder.goalTextView.setText(goal.getGoal());
-            holder.dayOfMonthTextView.setText(goal.getDayOfMonthFromMillis());
-            holder.monthTextView.setText(goal.getMonthFromMillis());
+            holder.dayOfMonthTextView.setText(goal.dayOfMonthFromMillis());
+            holder.monthTextView.setText(goal.monthFromMillis());
             if (goal.getIsCompleted()) {
                 holder.statusImageView.setImageResource(R.drawable.ic_check_green_36dp);
             } else {

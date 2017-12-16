@@ -20,4 +20,7 @@
     <string name="unknown_sign_in_response">I don\'t have a clue...</string>
     <string name="a11y_nav_user_image">profile picture</string>
 
+    <string name="goals_db_name">goals</string>
+    <string name="congrats">So proud of you!</string>
+
 </resources>
