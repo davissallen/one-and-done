@@ -45,7 +45,6 @@ public class GoalViewFragment extends Fragment {
     @BindView(R.id.tv_goal_view_goal) TextView mGoalTextView;
     @BindView(R.id.pulsator) PulsatorLayout mPulsator;
     @BindView(R.id.button_complete) ImageView mCompleteButton;
-    @BindView(R.id.button_shadow) ImageView mButtonShadow;
 
     OnGoalCompleteListener mListener;
     AppCompatActivity mActivity;
@@ -82,7 +81,7 @@ public class GoalViewFragment extends Fragment {
                     completeButtonAnim.setAnimationListener(new Animation.AnimationListener() {
                         @Override
                         public void onAnimationStart(Animation animation) {
-                            mButtonShadow.setVisibility(View.INVISIBLE);
+
                         }
                         @Override
                         public void onAnimationEnd(Animation animation) {
@@ -100,7 +99,6 @@ public class GoalViewFragment extends Fragment {
                 }
             });
             mPulsator.start();
-            mButtonShadow.setVisibility(View.VISIBLE);
         }
 
 
