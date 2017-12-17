@@ -101,8 +101,6 @@ public class GoalViewFragment extends Fragment {
             mPulsator.start();
         }
 
-
-
         return view;
     }
 
