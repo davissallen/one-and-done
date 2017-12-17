@@ -1,5 +1,6 @@
 package me.davisallen.oneanddone;
 
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -24,6 +25,8 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.davisallen.oneanddone.pojo.Goal;
+import nl.dionsegijn.konfetti.KonfettiView;
+import nl.dionsegijn.konfetti.models.Shape;
 import pl.bclogic.pulsator4droid.library.PulsatorLayout;
 import timber.log.Timber;
 
@@ -40,6 +43,7 @@ public class GoalViewFragment extends Fragment {
     private Goal mGoal;
 
     @BindView(R.id.goal_view_container) ConstraintLayout mContainer;
+    @BindView(R.id.konfetti) KonfettiView mKonfetti;
     @BindView(R.id.clock_goal_view) TextClock mTextClock;
     @BindView(R.id.tv_goal_view_date) TextView mDateTextView;
     @BindView(R.id.tv_goal_view_goal) TextView mGoalTextView;
@@ -85,6 +89,17 @@ public class GoalViewFragment extends Fragment {
                         }
                         @Override
                         public void onAnimationEnd(Animation animation) {
+                            // Rain down the skies with confetti!
+                            mKonfetti.build()
+                                    // pink, blue, yellow, orange, green, red, white
+                                    .addColors(Color.YELLOW, Color.GREEN, Color.MAGENTA, Color.WHITE, Color.RED)
+                                    .setDirection(0.0, 359.0)
+                                    .setSpeed(1f, 6f)
+                                    .setFadeOutEnabled(true)
+                                    .setTimeToLive(2000L)
+                                    .addShapes(Shape.RECT, Shape.CIRCLE)
+                                    .setPosition(-50f, mKonfetti.getWidth() + 50f, -50f, -50f)
+                                    .stream(200, 5000L);
                             updateUIForCompletedGoal();
                         }
                         @Override
