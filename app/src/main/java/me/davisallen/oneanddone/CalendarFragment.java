@@ -66,11 +66,17 @@ public class CalendarFragment extends Fragment {
 
         calculateGoalCounts();
 
-        // Get the date of first goal ever.
-        long firstGoalDateInMillis = mParentActivity.mGoals.get(0).getDateInMillis();
-        // Get the date of last goal ever.
-        long lastGoalDateInMillis = mParentActivity.mGoals.get(
-                mParentActivity.mGoals.size()-1).getDateInMillis();
+        long firstGoalDateInMillis, lastGoalDateInMillis;
+        if (mParentActivity.mGoals != null && mParentActivity.mGoals.size() > 0) {
+            // Get the date of first goal ever.
+            firstGoalDateInMillis = mParentActivity.mGoals.get(0).getDateInMillis();
+            // Get the date of last goal ever.
+            lastGoalDateInMillis = mParentActivity.mGoals.get(
+                    mParentActivity.mGoals.size() - 1).getDateInMillis();
+        } else {
+            firstGoalDateInMillis = System.currentTimeMillis();
+            lastGoalDateInMillis = System.currentTimeMillis();
+        }
         mCalendar.setMinDate(firstGoalDateInMillis);
         mCalendar.setMaxDate(lastGoalDateInMillis);
     }

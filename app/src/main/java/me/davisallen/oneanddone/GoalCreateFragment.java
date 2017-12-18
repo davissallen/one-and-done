@@ -1,10 +1,13 @@
 package me.davisallen.oneanddone;
 
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +32,7 @@ public class GoalCreateFragment extends Fragment {
 
     @BindView(R.id.et_create_goal) TextInputEditText mEditTextDailyGoal;
     @BindView(R.id.button_create_goal) Button mCreateGoalButton;
+    private AppCompatActivity mActivity;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -36,6 +40,13 @@ public class GoalCreateFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_goal_create, container, false);
         ButterKnife.bind(this, view);
+
+        mActivity = (AppCompatActivity) getActivity();
+        ActionBar toolbar = mActivity.getSupportActionBar();
+        if (toolbar != null) {
+            toolbar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorPrimary)));
+        }
+
         return view;
     }
 

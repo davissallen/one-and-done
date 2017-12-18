@@ -2,11 +2,12 @@ package me.davisallen.oneanddone;
 
 import android.animation.ObjectAnimator;
 import android.animation.StateListAnimator;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -26,8 +27,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.firebase.ui.auth.AuthUI;
-import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -37,6 +39,7 @@ import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,17 +50,26 @@ import butterknife.ButterKnife;
 import me.davisallen.oneanddone.pojo.Goal;
 import timber.log.Timber;
 
-import static me.davisallen.oneanddone.utils.SnackbarUtils.showSnackbar;
+import static com.firebase.ui.auth.ui.ExtraConstants.EXTRA_IDP_RESPONSE;
 
 // TODO: Create setting to change background color.
+// TODO: Add notifications.
+// TODO: Hide keyboard when leave main screen if open.
 
 public class MainActivity extends AppCompatActivity implements
         GoalCreateFragment.DailyGoalCreatedListener,
         GoalViewFragment.OnGoalCompleteListener,
         NavigationView.OnNavigationItemSelectedListener {
 
+    // Fragment tags
+    public static final String GOAL_VIEW_TAG = "goal_view_tag";
+    public static final String GOAL_CREATE_TAG = "goal_create_tag";
+    public static final String PROGRESS_LIST_TAG = "progress_list_tag";
+    public static final String CALENDAR_TAG = "calendar_tag";
+
     // Params to send data to fragments
     public static final String PARAM_CREATE_GOAL = "create_goal";
+    public static final String PARAM_GOAL_JUST_COMPLETED = "goal_just_completed";
     private static final String GOALS_KEY = "goals_key";
     private static final String PREFS_NAME = "preferences";
     private static final String TODAYS_GOAL_KEY = "todays_goal_key";
@@ -65,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements
     // Firebase Analytics instance
     private FirebaseAnalytics mFirebaseAnalytics;
     // Firebase Authorization instance
-    private FirebaseAuth mAuth;
+    private FirebaseUser mUser;
     // Firebase Database instance
     private FirebaseDatabase mFirebaseDatabase;
     public DatabaseReference mGoalsByUserDbReference;
@@ -80,17 +92,27 @@ public class MainActivity extends AppCompatActivity implements
 
     ImageView mUserImage;
     TextView mUserName;
-    TextView mUserEmail;
+    TextView mUserSignInId;
     TextView mSignOut;
 
-    String mUserId;
     ArrayList<Goal> mGoals;
-    Goal mDailyGoal;
     FragmentManager mFragmentManager;
     SharedPreferences mSettings;
 
-    // Choose an arbitrary request code value
-    private static final int REQUEST_CODE_SIGN_IN = 1738;
+    public static Intent createIntent(Context context) {
+        Intent intent = new Intent();
+        return intent.setClass(context, MainActivity.class);
+    }
+
+    public static Intent createIntent(Context context, IdpResponse idpResponse) {
+
+        Intent startIntent = new Intent();
+        if (idpResponse != null) {
+            startIntent.putExtra(EXTRA_IDP_RESPONSE, idpResponse);
+        }
+
+        return startIntent.setClass(context, MainActivity.class);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,21 +132,21 @@ public class MainActivity extends AppCompatActivity implements
         // Initialize the Toolbar, NavBar, and Main UI.
         initializeUI();
 
-        // Get reference the shared preferences
+        // Get reference the shared preferences.
         mSettings = getSharedPreferences(PREFS_NAME, 0);
     }
 
     private void initializeFirebaseTools() {
         // Obtain the FirebaseAnalytics instance.
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-        // Obtain the FirebaseAuth instance.
-        mAuth = FirebaseAuth.getInstance();
-        mUserId = mAuth.getUid();
+        // Get the user info from FirebaseAuth.
+        mUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (mUser == null) {
+            Timber.e("Did not get user! What!");
+        }
         // Obtain the FirebaseStorage instance.
         mFirebaseDatabase = FirebaseUtils.getDatabase();
-        // Obtain DatabaseReference to "goals"
-        mGoalsByUserDbReference = mFirebaseDatabase.getReference(
-                getString(R.string.goals_db_name)).child(mUserId);
+        mGoalsByUserDbReference = mFirebaseDatabase.getReference(getString(R.string.goals_db_name)).child(mUser.getUid());
     }
 
     private void initializeUI() {
@@ -134,15 +156,6 @@ public class MainActivity extends AppCompatActivity implements
         initializeNavDrawer();
         // Initialize main screen.
         initializeMainScreen();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        // TODO: Should I put this in onResume ?
-        // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        updateUiForUserAuth(currentUser);
     }
 
     @Override
@@ -189,10 +202,10 @@ public class MainActivity extends AppCompatActivity implements
             initializeMainScreen();
         } else if (id == R.id.nav_list) {
             ProgressListFragment progressListFragment = new ProgressListFragment();
-            openFragment(progressListFragment);
+            openFragment(progressListFragment, PROGRESS_LIST_TAG);
         } else if (id == R.id.nav_calendar) {
             CalendarFragment calendarFragment = new CalendarFragment();
-            openFragment(calendarFragment);
+            openFragment(calendarFragment, CALENDAR_TAG);
         }
 
         mDrawer.closeDrawer(GravityCompat.START);
@@ -201,66 +214,24 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
+        // https://stackoverflow.com/a/10261438/2457426
+        outState.putString("WORKAROUND_FOR_BUG_19917_KEY", "WORKAROUND_FOR_BUG_19917_VALUE");
         if (mGoals != null) {
             outState.putParcelableArrayList(GOALS_KEY, mGoals);
         }
         super.onSaveInstanceState(outState);
     }
 
-    private void updateUiForUserAuth(FirebaseUser currentUser) {
-        if (currentUser == null) {
-            startActivityForResult(
-                    AuthUI.getInstance()
-                            .createSignInIntentBuilder()
-                            .setIsSmartLockEnabled(true)
-                            .build(),
-                    REQUEST_CODE_SIGN_IN);
-        } else {
-            // TODO: get those views and update them in nav drawer
-            // Name, email address, and profile photo Url
-            String name = currentUser.getDisplayName();
-            String email = currentUser.getEmail();
-            Uri photoUrl = currentUser.getPhotoUrl();
-
-            mUserName.setText(name);
-            mUserEmail.setText(email);
-//            Picasso.with(this).load(photoUrl).into(mUserImage);
-        }
-    }
-
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == REQUEST_CODE_SIGN_IN) {
-            IdpResponse response = IdpResponse.fromResultIntent(data);
-
-            // Successfully signed in
-            if (resultCode == RESULT_OK) {
-                // TODO: what to do here?
-//                startActivity(SignedInActivity.createIntent(this, response));
-//                finish();
-//                return;
-            } else {
-                // Sign in failed
-                if (response == null) {
-                    // User pressed back button
-                    showSnackbar(this, R.string.sign_in_cancelled);
-                    return;
-                }
-
-                if (response.getErrorCode() == ErrorCodes.NO_NETWORK) {
-                    showSnackbar(this, R.string.no_internet_connection);
-                    return;
-                }
-
-                if (response.getErrorCode() == ErrorCodes.UNKNOWN_ERROR) {
-                    showSnackbar(this, R.string.unknown_error);
-                    return;
-                }
-            }
-
-            showSnackbar(this, R.string.unknown_sign_in_response);
-        }
+    public void onSignOut(View view) {
+        AuthUI.getInstance()
+                .signOut(this)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Timber.d("Successfully signed out!");
+                    }
+                });
+        startActivity(SignInActivity.createIntent(this));
+        finish();
     }
 
     private void initializeToolbar() {
@@ -284,14 +255,26 @@ public class MainActivity extends AppCompatActivity implements
         LinearLayout navHeaderLayout = (LinearLayout) mNavigationView.getHeaderView(0);
         mUserImage = (ImageView) navHeaderLayout.findViewById(R.id.nav_user_image);
         mUserName = (TextView) navHeaderLayout.findViewById(R.id.nav_user_name);
-        mUserEmail = (TextView) navHeaderLayout.findViewById(R.id.nav_user_email);
+        mUserSignInId = (TextView) navHeaderLayout.findViewById(R.id.nav_user_sign_in_id);
         mSignOut = (TextView) navHeaderLayout.findViewById(R.id.nav_sign_out);
+
+        // Set user image
+        if (mUser.getPhotoUrl() != null) {
+            Picasso.with(this).load(mUser.getPhotoUrl()).into(mUserImage);
+        }
+        // Set user name
+        mUserName.setText(mUser.getDisplayName());
+        // Set user sign in ID (phone number or email)
+        if (mUser.getEmail() != null) {
+            mUserSignInId.setText(mUser.getEmail());
+        } else if (mUser.getPhoneNumber() != null) {
+            mUserSignInId.setText(mUser.getPhoneNumber());
+        }
 
         mSignOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mAuth.signOut();
-                updateUiForUserAuth(mAuth.getCurrentUser());
+                onSignOut(view);
             }
         });
     }
@@ -304,10 +287,10 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void initializeMainScreen() {
-        if (mGoals != null) {
+        if (mGoals != null && mGoals.size() != 0) {
             selectFragmentBasedOnGoal();
         } else {
-            mGoalsByUserDbReference.orderByChild("dateInMillis").addListenerForSingleValueEvent(getAllGoalsByUserListener);
+            mGoalsByUserDbReference.orderByChild("dateInMillis").addValueEventListener(getAllGoalsByUserListener);
         }
     }
 
@@ -324,12 +307,12 @@ public class MainActivity extends AppCompatActivity implements
                 Bundle bundle = new Bundle();
                 bundle.putParcelable(PARAM_CREATE_GOAL, mostRecentGoal);
                 goalViewFragment.setArguments(bundle);
-                openFragment(goalViewFragment);
+                openFragment(goalViewFragment, GOAL_VIEW_TAG);
 
             } else {
 
                 GoalCreateFragment goalCreateFragment = new GoalCreateFragment();
-                openFragment(goalCreateFragment);
+                openFragment(goalCreateFragment, GOAL_CREATE_TAG);
 
             }
 
@@ -337,19 +320,43 @@ public class MainActivity extends AppCompatActivity implements
 
             Timber.w("Did not get a most recent goal.");
             GoalCreateFragment goalCreateFragment = new GoalCreateFragment();
-            openFragment(goalCreateFragment);
+            openFragment(goalCreateFragment, GOAL_CREATE_TAG);
 
         }
     }
 
-    private void openFragment(Fragment fragment) {
+    private void openFragment(Fragment fragment, String tag) {
         if (mFragmentManager == null) {
             mFragmentManager = getSupportFragmentManager();
         }
 
+        switch(tag) {
+            case GOAL_CREATE_TAG:
+                GoalCreateFragment goalCreateFragment = (GoalCreateFragment) mFragmentManager.findFragmentByTag(tag);
+                if (goalCreateFragment != null && goalCreateFragment.isVisible()) {
+                    return;
+                }
+            case GOAL_VIEW_TAG:
+                GoalViewFragment goalViewFragment = (GoalViewFragment) mFragmentManager.findFragmentByTag(tag);
+                if (goalViewFragment != null && goalViewFragment.isVisible()) {
+                    return;
+                }
+            case PROGRESS_LIST_TAG:
+                ProgressListFragment progressListFragment = (ProgressListFragment) mFragmentManager.findFragmentByTag(tag);
+                if (progressListFragment != null && progressListFragment.isVisible()) {
+                    return;
+                }
+            case CALENDAR_TAG:
+                CalendarFragment calendarFragment = (CalendarFragment) mFragmentManager.findFragmentByTag(tag);
+                if (calendarFragment != null && calendarFragment.isVisible()) {
+                    return;
+                }
+        }
+
         FragmentTransaction transaction = mFragmentManager.beginTransaction();
-        transaction.replace(R.id.main_fragment_container, fragment);
-        transaction.commit();
+        transaction.replace(R.id.main_fragment_container, fragment, tag);
+        // https://stackoverflow.com/a/10261438/2457426
+        transaction.commitAllowingStateLoss();
     }
 
     @Override
@@ -358,7 +365,7 @@ public class MainActivity extends AppCompatActivity implements
         Timber.d(String.format("Sending goal '%s' to database.", goal));
 
         // Write a message to the database
-        if (mGoalsByUserDbReference != null && mUserId != null) {
+        if (mGoalsByUserDbReference != null && mUser != null) {
             mGoalsByUserDbReference.push().setValue(new Goal(goal));
             initializeMainScreen();
         } else {
@@ -366,40 +373,10 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-//    ChildEventListener getAllGoalsByUserListener = new ChildEventListener() {
-//        @Override
-//        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-//            Goal goal = dataSnapshot.getValue(Goal.class);
-//            if (goal != null) {
-//                mGoals.add(goal);
-//            } else {
-//                Timber.e("Got null goal from server :(");
-//            }
-//            selectFragmentBasedOnGoal();
-//        }
-//        @Override
-//        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-//
-//        }
-//        @Override
-//        public void onChildRemoved(DataSnapshot dataSnapshot) {
-//
-//        }
-//        @Override
-//        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-//
-//        }
-//        @Override
-//        public void onCancelled(DatabaseError databaseError) {
-//            Timber.e("Data download cancelled in intialize main screen.");
-//        }
-//    };
-
     ValueEventListener getAllGoalsByUserListener = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
             mGoals = new ArrayList<>();
-            // TODO: See if the behavior is different for one goal vs many goals bc getChildren()
             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                 try {
                     Goal goal = snapshot.getValue(Goal.class);
@@ -439,12 +416,6 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onGoalCompleted() {
-        // TODO: Update the goal in the cloud!
-
         mGoalsByUserDbReference.orderByChild("dateInMillis").limitToLast(1).addListenerForSingleValueEvent(getMostRecentGoalByUserListener);
-
-        // Update value in cloud to completed.
-        Timber.e("Goal is doing nothing");
-        System.out.println();
     }
 }

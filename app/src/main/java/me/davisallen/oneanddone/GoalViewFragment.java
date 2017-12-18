@@ -89,18 +89,10 @@ public class GoalViewFragment extends Fragment {
                         }
                         @Override
                         public void onAnimationEnd(Animation animation) {
-                            // Rain down the skies with confetti!
-                            mKonfetti.build()
-                                    // pink, blue, yellow, orange, green, red, white
-                                    .addColors(Color.YELLOW, Color.GREEN, Color.MAGENTA, Color.WHITE, Color.RED)
-                                    .setDirection(0.0, 359.0)
-                                    .setSpeed(1f, 6f)
-                                    .setFadeOutEnabled(true)
-                                    .setTimeToLive(2000L)
-                                    .addShapes(Shape.RECT, Shape.CIRCLE)
-                                    .setPosition(-50f, mKonfetti.getWidth() + 50f, -50f, -50f)
-                                    .stream(200, 5000L);
                             updateUIForCompletedGoal();
+                            celebrate();
+                            // Update the goal in the cloud!
+                            setGoalCompleted();
                         }
                         @Override
                         public void onAnimationRepeat(Animation animation) {
@@ -108,15 +100,26 @@ public class GoalViewFragment extends Fragment {
                         }
                     });
                     view.startAnimation(completeButtonAnim);
-
-                    // Update the goal in the cloud!
-                    setGoalCompleted();
                 }
             });
             mPulsator.start();
         }
 
         return view;
+    }
+
+    public void celebrate() {
+        // Rain down the skies with confetti!
+        mKonfetti.build()
+                // pink, blue, yellow, orange, green, red, white
+                .addColors(Color.YELLOW, Color.GREEN, Color.MAGENTA, Color.WHITE, Color.RED)
+                .setDirection(0.0, 359.0)
+                .setSpeed(1f, 6f)
+                .setFadeOutEnabled(true)
+                .setTimeToLive(2000L)
+                .addShapes(Shape.RECT, Shape.CIRCLE)
+                .setPosition(-50f, mKonfetti.getWidth() + 50f, -50f, -50f)
+                .stream(200, 5000L);
     }
 
     private void updateUIForCompletedGoal() {
