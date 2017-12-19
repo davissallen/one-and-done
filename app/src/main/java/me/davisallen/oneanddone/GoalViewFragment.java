@@ -76,6 +76,7 @@ public class GoalViewFragment extends Fragment {
         if (mGoal.getIsCompleted()) {
             updateUIForCompletedGoal();
         } else {
+            mCompleteButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_check_primary));
             mCompleteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View view) {
@@ -123,12 +124,13 @@ public class GoalViewFragment extends Fragment {
     }
 
     private void updateUIForCompletedGoal() {
-        mCompleteButton.setBackgroundColor(getResources().getColor(R.color.button_unselectable));
         mContainer.setBackground(getResources().getDrawable(R.drawable.blue_gradient));
         ActionBar toolbar = mActivity.getSupportActionBar();
         if (toolbar != null) {
             toolbar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorAccent)));
         }
+
+        mCompleteButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_check_gray));
         mCompleteButton.setClickable(false);
         mCompleteButton.setOnClickListener(new View.OnClickListener() {
             @Override

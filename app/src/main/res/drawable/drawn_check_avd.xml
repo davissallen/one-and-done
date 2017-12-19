@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-vector xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    tools:targetApi="lollipop">
+    <aapt:attr name="android:drawable">
+        <vector
+            android:name="vector"
+            android:width="64dp"
+            android:height="64dp"
+            android:viewportWidth="32"
+            android:viewportHeight="32">
+            <group android:name="circle">
+                <path
+                    android:name="path"
+                    android:pathData=""
+                    android:fillColor="#e91e63"
+                    android:strokeColor="#ffffff"
+                    android:strokeWidth="1"
+                    android:strokeLineCap="round"/>
+            </group>
+            <group android:name="check">
+                <path
+                    android:name="c1"
+                    android:pathData=""
+                    android:strokeColor="#ffffff"
+                    android:strokeWidth="1"
+                    android:strokeLineCap="round"
+                    android:strokeLineJoin="bevel"/>
+                <path
+                    android:name="c2"
+                    android:pathData=""
+                    android:strokeColor="#ffffff"
+                    android:strokeWidth="1"
+                    android:strokeLineCap="round"/>
+            </group>
+        </vector>
+    </aapt:attr>
+    <target android:name="c1">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:propertyName="pathData"
+                android:startOffset="500"
+                android:duration="199"
+                android:valueFrom="M 8 16 L 8.01 16.01"
+                android:valueTo="M 8 16 L 13 21"
+                android:valueType="pathType"
+                android:interpolator="@android:anim/linear_interpolator"/>
+        </aapt:attr>
+    </target>
+    <target android:name="c2">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:propertyName="pathData"
+                android:startOffset="699"
+                android:duration="802"
+                android:valueFrom="M 13 21 L 14 20"
+                android:valueTo="M 13 21 L 24 10"
+                android:valueType="pathType"
+                android:interpolator="@android:anim/decelerate_interpolator"/>
+        </aapt:attr>
+    </target>
+    <target android:name="path">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:propertyName="pathData"
+                android:duration="1501"
+                android:valueFrom="M 16 15 C 15.96 15 15.921 15.003 15.882 15.009 C 15.424 15.079 15 15.54 15 16 C 15 16.8 15.8 17 16 17 C 16.4 17 17 16.7 17 16 C 17 15.7 16.7 15 16 15"
+                android:valueTo="M 16 1 C 16 1 16 1 16 1 C 7.716 1 1 7.716 1 16 C 1 24.284 7.716 31 16 31 C 24.284 31 31 24.284 31 16 C 31 7.716 24.284 1 16 1"
+                android:valueType="pathType"
+                android:interpolator="@android:anim/decelerate_interpolator"/>
+        </aapt:attr>
+    </target>
+</animated-vector>

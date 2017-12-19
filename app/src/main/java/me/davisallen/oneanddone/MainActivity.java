@@ -17,6 +17,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateUtils;
 import android.view.Menu;
@@ -55,6 +56,7 @@ import static com.firebase.ui.auth.ui.ExtraConstants.EXTRA_IDP_RESPONSE;
 // TODO: Create setting to change background color.
 // TODO: Add notifications.
 // TODO: Hide keyboard when leave main screen if open.
+// TODO: Make recurring service at midnight to update goals.
 
 public class MainActivity extends AppCompatActivity implements
         GoalCreateFragment.DailyGoalCreatedListener,
@@ -119,6 +121,9 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        // TODO: verify that this allows vector drawables
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
 
         // Get the goals from the saved instance state if they exist.
         if (savedInstanceState != null && savedInstanceState.containsKey(GOALS_KEY)) {
@@ -330,6 +335,7 @@ public class MainActivity extends AppCompatActivity implements
             mFragmentManager = getSupportFragmentManager();
         }
 
+        // TODO: Fix bug where device crashes here. Find it!
         switch(tag) {
             case GOAL_CREATE_TAG:
                 GoalCreateFragment goalCreateFragment = (GoalCreateFragment) mFragmentManager.findFragmentByTag(tag);
