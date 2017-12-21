@@ -1,5 +1,7 @@
 package me.davisallen.oneanddone;
 
+//region imports
+//---------------------------------------------------------------------------------------
 import android.animation.ObjectAnimator;
 import android.animation.StateListAnimator;
 import android.content.Context;
@@ -17,7 +19,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateUtils;
 import android.view.Menu;
@@ -49,9 +50,12 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.davisallen.oneanddone.pojo.Goal;
+import me.davisallen.oneanddone.utils.FirebaseUtils;
 import timber.log.Timber;
 
 import static com.firebase.ui.auth.ui.ExtraConstants.EXTRA_IDP_RESPONSE;
+//---------------------------------------------------------------------------------------
+//endregion
 
 // TODO: Create setting to change background color.
 // TODO: Add notifications.
@@ -63,6 +67,9 @@ public class MainActivity extends AppCompatActivity implements
         GoalViewFragment.OnGoalCompleteListener,
         NavigationView.OnNavigationItemSelectedListener {
 
+
+    //region Class objects
+    //---------------------------------------------------------------------------------------
     // Fragment tags
     public static final String GOAL_VIEW_TAG = "goal_view_tag";
     public static final String GOAL_CREATE_TAG = "goal_create_tag";
@@ -71,20 +78,16 @@ public class MainActivity extends AppCompatActivity implements
 
     // Params to send data to fragments
     public static final String PARAM_CREATE_GOAL = "create_goal";
-    public static final String PARAM_GOAL_JUST_COMPLETED = "goal_just_completed";
-    private static final String GOALS_KEY = "goals_key";
+    private static final String SAVE_GOALS_KEY = "save_goals_key";
     private static final String PREFS_NAME = "preferences";
-    private static final String TODAYS_GOAL_KEY = "todays_goal_key";
 
-    // Firebase Analytics instance
+    // Firebase class objects
+    // TODO: Implement firebase analytics
     private FirebaseAnalytics mFirebaseAnalytics;
-    // Firebase Authorization instance
     private FirebaseUser mUser;
-    // Firebase Database instance
-    private FirebaseDatabase mFirebaseDatabase;
     public DatabaseReference mGoalsByUserDbReference;
 
-    // Bind any views with Butterknife
+    // Butterknife view binding
     // Toolbar
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.app_bar_layout) AppBarLayout mAppBarLayout;
@@ -92,15 +95,21 @@ public class MainActivity extends AppCompatActivity implements
     @BindView(R.id.nav_view) NavigationView mNavigationView;
     @BindView(R.id.drawer_layout) DrawerLayout mDrawer;
 
+    // Nav drawer views not caught by Butterknife
     ImageView mUserImage;
     TextView mUserName;
     TextView mUserSignInId;
     TextView mSignOut;
 
+    // MainActivity class objects
     ArrayList<Goal> mGoals;
     FragmentManager mFragmentManager;
     SharedPreferences mSettings;
+    //---------------------------------------------------------------------------------------
+    //endregion
 
+    //region createIntent methods for starting MainActivity from another activity
+    //---------------------------------------------------------------------------------------
     public static Intent createIntent(Context context) {
         Intent intent = new Intent();
         return intent.setClass(context, MainActivity.class);
@@ -115,19 +124,20 @@ public class MainActivity extends AppCompatActivity implements
 
         return startIntent.setClass(context, MainActivity.class);
     }
+    //---------------------------------------------------------------------------------------
+    //endregion
 
+    //region Overridden lifecycle methods
+    //---------------------------------------------------------------------------------------
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        // TODO: verify that this allows vector drawables
-        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
-
         // Get the goals from the saved instance state if they exist.
-        if (savedInstanceState != null && savedInstanceState.containsKey(GOALS_KEY)) {
-            mGoals = savedInstanceState.getParcelableArrayList(GOALS_KEY);
+        if (savedInstanceState != null && savedInstanceState.containsKey(SAVE_GOALS_KEY)) {
+            mGoals = savedInstanceState.getParcelableArrayList(SAVE_GOALS_KEY);
         }
 
         // Initializes Firebase instances.
@@ -139,28 +149,6 @@ public class MainActivity extends AppCompatActivity implements
 
         // Get reference the shared preferences.
         mSettings = getSharedPreferences(PREFS_NAME, 0);
-    }
-
-    private void initializeFirebaseTools() {
-        // Obtain the FirebaseAnalytics instance.
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-        // Get the user info from FirebaseAuth.
-        mUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (mUser == null) {
-            Timber.e("Did not get user! What!");
-        }
-        // Obtain the FirebaseStorage instance.
-        mFirebaseDatabase = FirebaseUtils.getDatabase();
-        mGoalsByUserDbReference = mFirebaseDatabase.getReference(getString(R.string.goals_db_name)).child(mUser.getUid());
-    }
-
-    private void initializeUI() {
-        // Sets toolbar elevation to 0 with state list animator.
-        initializeToolbar();
-        // Initializes nav drawer layout.
-        initializeNavDrawer();
-        // Initialize main screen.
-        initializeMainScreen();
     }
 
     @Override
@@ -222,21 +210,35 @@ public class MainActivity extends AppCompatActivity implements
         // https://stackoverflow.com/a/10261438/2457426
         outState.putString("WORKAROUND_FOR_BUG_19917_KEY", "WORKAROUND_FOR_BUG_19917_VALUE");
         if (mGoals != null) {
-            outState.putParcelableArrayList(GOALS_KEY, mGoals);
+            outState.putParcelableArrayList(SAVE_GOALS_KEY, mGoals);
         }
         super.onSaveInstanceState(outState);
     }
+    //---------------------------------------------------------------------------------------
+    //endregion
 
-    public void onSignOut(View view) {
-        AuthUI.getInstance()
-                .signOut(this)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    public void onComplete(@NonNull Task<Void> task) {
-                        Timber.d("Successfully signed out!");
-                    }
-                });
-        startActivity(SignInActivity.createIntent(this));
-        finish();
+    //region Activity initialization methods
+    //---------------------------------------------------------------------------------------
+    private void initializeFirebaseTools() {
+        // Obtain the FirebaseAnalytics instance.
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        // Get the user info from FirebaseAuth.
+        mUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (mUser == null) {
+            Timber.e("Did not get user! What!");
+        }
+        // Obtain the FirebaseStorage instance.
+        FirebaseDatabase firebaseDatabase = FirebaseUtils.getDatabase();
+        mGoalsByUserDbReference = firebaseDatabase.getReference(getString(R.string.goals_db_name)).child(mUser.getUid());
+    }
+
+    private void initializeUI() {
+        // Sets toolbar elevation to 0 with state list animator.
+        initializeToolbar();
+        // Initializes nav drawer layout.
+        initializeNavDrawer();
+        // Initialize main screen.
+        initializeMainScreen();
     }
 
     private void initializeToolbar() {
@@ -292,13 +294,13 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void initializeMainScreen() {
-        if (mGoals != null && mGoals.size() != 0) {
-            selectFragmentBasedOnGoal();
-        } else {
-            mGoalsByUserDbReference.orderByChild("dateInMillis").addValueEventListener(getAllGoalsByUserListener);
-        }
+        mGoalsByUserDbReference.orderByChild("dateInMillis").addValueEventListener(getAllGoalsByUserListener);
     }
+    //---------------------------------------------------------------------------------------
+    //endregion
 
+    //region Fragment tools
+    //---------------------------------------------------------------------------------------
     private void selectFragmentBasedOnGoal() {
 
         if (mGoals != null && mGoals.size() > 0) {
@@ -361,10 +363,15 @@ public class MainActivity extends AppCompatActivity implements
 
         FragmentTransaction transaction = mFragmentManager.beginTransaction();
         transaction.replace(R.id.main_fragment_container, fragment, tag);
+        // TODO: Is this right???
         // https://stackoverflow.com/a/10261438/2457426
         transaction.commitAllowingStateLoss();
     }
+    //---------------------------------------------------------------------------------------
+    //endregion
 
+    //region Overriden fragment listener methods
+    //---------------------------------------------------------------------------------------
     @Override
     public void onCreateGoal(String goal) {
         // This is called when a goal is created by the user in GoalCreateFragment.
@@ -379,6 +386,15 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
+    @Override
+    public void onGoalCompleted() {
+        mGoalsByUserDbReference.orderByChild("dateInMillis").limitToLast(1).addListenerForSingleValueEvent(getMostRecentGoalByUserListener);
+    }
+    //---------------------------------------------------------------------------------------
+    //endregion
+
+    //region Custom goal listeners
+    //---------------------------------------------------------------------------------------
     ValueEventListener getAllGoalsByUserListener = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -413,15 +429,29 @@ public class MainActivity extends AppCompatActivity implements
 
         }
     };
+    //---------------------------------------------------------------------------------------
+    //endregion
+
+    //region Miscellaneous methods
+    //---------------------------------------------------------------------------------------
+    public void onSignOut(View view) {
+        AuthUI.getInstance()
+                .signOut(this)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Timber.d("Successfully signed out!");
+                    }
+                });
+        startActivity(SignInActivity.createIntent(this));
+        finish();
+    }
 
     public void setMostRecentGoalCompleted(String key) {
         Map<String, Object> goalUpdate = new HashMap<>();
         goalUpdate.put(key + "/" + "isCompleted", true);
         mGoalsByUserDbReference.updateChildren(goalUpdate);
     }
+    //---------------------------------------------------------------------------------------
+    //endregion
 
-    @Override
-    public void onGoalCompleted() {
-        mGoalsByUserDbReference.orderByChild("dateInMillis").limitToLast(1).addListenerForSingleValueEvent(getMostRecentGoalByUserListener);
-    }
 }

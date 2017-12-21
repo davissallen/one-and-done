@@ -1,4 +1,4 @@
-package me.davisallen.oneanddone;
+package me.davisallen.oneanddone.utils;
 
 import com.google.firebase.database.FirebaseDatabase;
 
