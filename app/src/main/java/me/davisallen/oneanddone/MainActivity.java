@@ -67,7 +67,6 @@ public class MainActivity extends AppCompatActivity implements
         GoalViewFragment.OnGoalCompleteListener,
         NavigationView.OnNavigationItemSelectedListener {
 
-
     //region Class objects
     //---------------------------------------------------------------------------------------
     // Fragment tags
@@ -135,6 +134,7 @@ public class MainActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        // TODO: Force the goals to update if it is the next day.
         // Get the goals from the saved instance state if they exist.
         if (savedInstanceState != null && savedInstanceState.containsKey(SAVE_GOALS_KEY)) {
             mGoals = savedInstanceState.getParcelableArrayList(SAVE_GOALS_KEY);

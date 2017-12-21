@@ -21,6 +21,7 @@ import android.widget.Toast;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -52,6 +53,10 @@ public class GoalViewFragment extends Fragment {
 
     OnGoalCompleteListener mListener;
     AppCompatActivity mActivity;
+
+    interface OnGoalCompleteListener {
+        public void onGoalCompleted();
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -136,7 +141,7 @@ public class GoalViewFragment extends Fragment {
         mCompleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getActivity(), getResources().getString(R.string.congrats), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getRandomCongratulationsString(), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -149,10 +154,16 @@ public class GoalViewFragment extends Fragment {
         mListener.onGoalCompleted();
     }
 
+    private String getRandomCongratulationsString() {
+        String[] array = getActivity().getResources().getStringArray(R.array.congrats_array);
+        return array[new Random().nextInt(array.length)];
+    }
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // Set the views with appropriate data
         setDate();
         mGoalTextView.setText(mGoal.getGoal());
     }
@@ -160,9 +171,5 @@ public class GoalViewFragment extends Fragment {
     private void setDate() {
         SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM dd, yyyy", Locale.US);
         mDateTextView.setText(sdf.format(new Date()));
-    }
-
-    interface OnGoalCompleteListener {
-        public void onGoalCompleted();
     }
 }

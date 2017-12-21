@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="congrats_array">
+        <item>So proud of you!</item>
+        <item>You did it!</item>
+        <item>You\'re a wonder!</item>
+        <item>You deserve a gold medal!</item>
+        <item>You\'re a star!</item>
+    </string-array>
+</resources>
