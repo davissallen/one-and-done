@@ -124,6 +124,7 @@ public class GoalViewFragment extends Fragment {
     }
 
     private void updateUIForCompletedGoal() {
+
         mContainer.setBackground(getResources().getDrawable(R.drawable.blue_gradient));
         ActionBar toolbar = mActivity.getSupportActionBar();
         if (toolbar != null) {

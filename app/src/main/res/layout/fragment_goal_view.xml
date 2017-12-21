@@ -63,9 +63,7 @@
         app:pulse_duration="2500"
         app:pulse_interpolator="AccelerateDecelerate"
         app:pulse_repeat="0"
-        app:pulse_startFromScratch="false">
-
-    </pl.bclogic.pulsator4droid.library.PulsatorLayout>
+        app:pulse_startFromScratch="false" />
 
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/button_complete"
