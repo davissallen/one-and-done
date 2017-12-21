@@ -2,6 +2,7 @@ package me.davisallen.oneanddone;
 
 //region imports
 //---------------------------------------------------------------------------------------
+
 import android.animation.ObjectAnimator;
 import android.animation.StateListAnimator;
 import android.content.Context;
@@ -143,11 +144,10 @@ public class MainActivity extends AppCompatActivity implements
         initializeFirebaseTools();
         // Initializes Timber debugger.
         initializeTimber();
+        // Initialize class objects
+        mSettings = getSharedPreferences(PREFS_NAME, 0);
         // Initialize the Toolbar, NavBar, and Main UI.
         initializeUI();
-
-        // Get reference the shared preferences.
-        mSettings = getSharedPreferences(PREFS_NAME, 0);
     }
 
     @Override
@@ -319,7 +319,6 @@ public class MainActivity extends AppCompatActivity implements
 
                 GoalCreateFragment goalCreateFragment = new GoalCreateFragment();
                 openFragment(goalCreateFragment, GOAL_CREATE_TAG);
-
             }
 
         } else {

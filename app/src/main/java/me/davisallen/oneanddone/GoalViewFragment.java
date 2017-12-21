@@ -16,7 +16,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextClock;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -32,6 +31,7 @@ import pl.bclogic.pulsator4droid.library.PulsatorLayout;
 import timber.log.Timber;
 
 import static me.davisallen.oneanddone.MainActivity.PARAM_CREATE_GOAL;
+import static me.davisallen.oneanddone.utils.ToastUtils.showToast;
 
 /**
  * Package Name:   me.davisallen.oneanddone
@@ -141,7 +141,7 @@ public class GoalViewFragment extends Fragment {
         mCompleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getActivity(), getRandomCongratulationsString(), Toast.LENGTH_SHORT).show();
+                showToast(getActivity(), getRandomCongratulationsString());
             }
         });
 
