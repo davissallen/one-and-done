@@ -52,4 +52,9 @@
         <item name="android:fontFamily">sans-serif-light</item>
     </style>
 
+    <style name="BannerText">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:fontFamily">sans-serif-thin</item></style>
+
 </resources>

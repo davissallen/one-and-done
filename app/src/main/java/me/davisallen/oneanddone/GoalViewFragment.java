@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextClock;
 import android.widget.TextView;
@@ -48,6 +49,7 @@ public class GoalViewFragment extends Fragment {
     @BindView(R.id.goal_view_container) ConstraintLayout mContainer;
     @BindView(R.id.konfetti) KonfettiView mKonfetti;
     @BindView(R.id.clock_goal_view) TextClock mTextClock;
+    @BindView(R.id.banner) FrameLayout mBanner;
     @BindView(R.id.tv_goal_view_date) TextView mDateTextView;
     @BindView(R.id.tv_goal_view_goal) TextView mGoalTextView;
     @BindView(R.id.pulsator) PulsatorLayout mPulsator;
@@ -111,6 +113,7 @@ public class GoalViewFragment extends Fragment {
 
                 }
             });
+            mBanner.setVisibility(View.INVISIBLE);
             mPulsator.start();
         }
 
@@ -174,6 +177,8 @@ public class GoalViewFragment extends Fragment {
         // Stop and hide the pulsing.
         mPulsator.setVisibility(View.INVISIBLE);
         mPulsator.stop();
+
+        mBanner.setVisibility(View.VISIBLE);
     }
 
     public void setGoalCompleted() {
