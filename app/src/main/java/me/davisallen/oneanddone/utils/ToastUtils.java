@@ -14,7 +14,9 @@ public class ToastUtils {
     private static Toast sToast;
 
     public static void showToast(Context context, String message) {
-        sToast.cancel();
+        if (sToast != null) {
+            sToast.cancel();
+        }
         sToast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
         sToast.show();
     }

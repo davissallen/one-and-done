@@ -1,5 +1,6 @@
 package me.davisallen.oneanddone;
 
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -86,26 +88,27 @@ public class GoalViewFragment extends Fragment {
                 @Override
                 public void onClick(final View view) {
 
-                    // Run a funky animation to jump the button up, spin it around, and jump back down.
-                    Animation completeButtonAnim = AnimationUtils.loadAnimation(getActivity(), R.anim.complete_goal_funk);
-                    completeButtonAnim.setAnimationListener(new Animation.AnimationListener() {
-                        @Override
-                        public void onAnimationStart(Animation animation) {
-
-                        }
-                        @Override
-                        public void onAnimationEnd(Animation animation) {
-                            updateUIForCompletedGoal();
-                            celebrate();
-                            // Update the goal in the cloud!
-                            setGoalCompleted();
-                        }
-                        @Override
-                        public void onAnimationRepeat(Animation animation) {
-
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle(getResources().getString(R.string.confirm_completed_title));
+                    builder.setMessage(getResources().getString(R.string.confirm_completed_message));
+                    // TODO: Get a logo-only image from rct3dt
+                    builder.setIcon(R.drawable.one_and_done_logo);
+                    String positiveResponse = getResources().getString(R.string.confirm_completed_positive);
+                    String negativeResponse = getResources().getString(R.string.confirm_completed_negative);
+                    builder.setPositiveButton(positiveResponse, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.dismiss();
+                            startAnimationToCompleteGoal(view);
                         }
                     });
-                    view.startAnimation(completeButtonAnim);
+                    builder.setNegativeButton(negativeResponse, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.dismiss();
+                        }
+                    });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+
                 }
             });
             mPulsator.start();
@@ -126,6 +129,29 @@ public class GoalViewFragment extends Fragment {
                 .addShapes(Shape.RECT, Shape.CIRCLE)
                 .setPosition(-50f, mKonfetti.getWidth() + 50f, -50f, -50f)
                 .stream(200, 5000L);
+    }
+
+    public void startAnimationToCompleteGoal(View view) {
+        // Run a funky animation to jump the button up, spin it around, and jump back down.
+        Animation completeButtonAnim = AnimationUtils.loadAnimation(getActivity(), R.anim.complete_goal_funk);
+        completeButtonAnim.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                updateUIForCompletedGoal();
+                celebrate();
+                // Update the goal in the cloud!
+                setGoalCompleted();
+            }
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        view.startAnimation(completeButtonAnim);
     }
 
     private void updateUIForCompletedGoal() {

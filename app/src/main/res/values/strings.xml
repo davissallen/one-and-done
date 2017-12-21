@@ -17,10 +17,13 @@
     <string name="sign_in_cancelled">Sign in cancelled</string>
     <string name="no_internet_connection">No internet connection</string>
     <string name="unknown_error">Unknown error</string>
-    <string name="unknown_sign_in_response">I don\'t have a clue...</string>
+    <string name="unknown_sign_in_response">I don\'t have a clue…</string>
     <string name="a11y_nav_user_image">profile picture</string>
 
     <string name="goals_db_name">goals</string>
-    <string name="congrats">So proud of you!</string>
+    <string name="confirm_completed_title">You\'re so close!</string>
+    <string name="confirm_completed_message">Did you complete your goal?</string>
+    <string name="confirm_completed_positive">Yes</string>
+    <string name="confirm_completed_negative">Not yet</string>
 
 </resources>
