@@ -51,19 +51,21 @@
             android:paddingStart="8dp"
             android:paddingTop="8dp"
             android:textAlignment="textStart"
+            android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/widget_goal_container"
             tools:text="Bake cookies" />
 
         <TextView
-            android:id="@+id/textView4"
+            android:id="@+id/tv_widget_action_button"
             style="@style/widget_confirm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="8dp"
             android:paddingEnd="8dp"
             android:paddingStart="8dp"
+            android:paddingTop="8dp"
             android:text="@string/widget_confirm"
             android:textAlignment="textEnd"
             app:layout_constraintEnd_toEndOf="parent"

@@ -61,6 +61,7 @@ import static com.firebase.ui.auth.ui.ExtraConstants.EXTRA_IDP_RESPONSE;
 // TODO: Create setting to change background color.
 // TODO: Add notifications.
 // TODO: Hide keyboard when leave main screen if open.
+// TODO: Goal streaks
 
 public class MainActivity extends AppCompatActivity implements
         GoalCreateFragment.DailyGoalCreatedListener,

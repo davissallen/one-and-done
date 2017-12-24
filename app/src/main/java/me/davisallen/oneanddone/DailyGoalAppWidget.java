@@ -24,6 +24,19 @@ public class DailyGoalAppWidget extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+
+        // If there is not a goal for today, make the tv_widget_goal GONE and update button to say
+        // "Set a goal!".
+        updateAppWidgetNoGoalToday(context, appWidgetManager, appWidgetId);
+        // If there is a goal in progress for today, make the tv_widget_goal VISIBLE and update
+        // button to say "I did it!".
+        updateAppWidgetGoalInProgress(context, appWidgetManager, appWidgetId);
+        // If there is a goal completed for today, make the tv_widget_goal VISIBLE and update button
+        // to say "Congratulations" abd be in black/gray.
+        // optionally, show another text view that says "Come back tomorrow to keep up the streak!"
+        updateAppWidgetNoGoalCompleted(context, appWidgetManager, appWidgetId);
+
+
         // There may be multiple widgets active, so update all of them
         for (int appWidgetId : appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId);
