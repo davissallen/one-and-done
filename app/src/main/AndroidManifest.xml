@@ -38,9 +38,8 @@
         </receiver>
 
         <service
-            android:name=".UpdateWidgetService"
-            android:enabled="true"
-            android:exported="true"></service>
+            android:name=".AppWidgetGoalIntentService"
+            android:exported="false"></service>
     </application>
 
 </manifest>

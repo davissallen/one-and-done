@@ -7,7 +7,6 @@ import android.animation.ObjectAnimator;
 import android.animation.StateListAnimator;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -55,6 +54,8 @@ import me.davisallen.oneanddone.utils.FirebaseUtils;
 import timber.log.Timber;
 
 import static com.firebase.ui.auth.ui.ExtraConstants.EXTRA_IDP_RESPONSE;
+import static me.davisallen.oneanddone.AppWidgetGoalIntentService.ACTION_GET_MOST_RECENT_GOAL;
+import static me.davisallen.oneanddone.DailyGoalAppWidget.EXTRA_GOAL;
 //---------------------------------------------------------------------------------------
 //endregion
 
@@ -104,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements
     // MainActivity class objects
     ArrayList<Goal> mGoals;
     FragmentManager mFragmentManager;
-    SharedPreferences mSettings;
+    MainActivity mActivity;
     //---------------------------------------------------------------------------------------
     //endregion
 
@@ -146,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements
         // Initializes Timber debugger.
         initializeTimber();
         // Initialize class objects
-        mSettings = getSharedPreferences(PREFS_NAME, 0);
+        mActivity = this;
         // Initialize the Toolbar, NavBar, and Main UI.
         initializeUI();
     }
@@ -294,7 +295,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void initializeMainScreen() {
-        mGoalsByUserDbReference.orderByChild("dateInMillis").addValueEventListener(getAllGoalsByUserListener);
+        mGoalsByUserDbReference.orderByChild("dateInMillis").addValueEventListener(getAllGoalsByUserValueListener);
     }
     //---------------------------------------------------------------------------------------
     //endregion
@@ -373,9 +374,6 @@ public class MainActivity extends AppCompatActivity implements
     //---------------------------------------------------------------------------------------
     @Override
     public void onCreateGoal(String goal) {
-        // This is called when a goal is created by the user in GoalCreateFragment.
-        Timber.d(String.format("Sending goal '%s' to database.", goal));
-
         // Write a message to the database
         if (mGoalsByUserDbReference != null && mUser != null) {
             mGoalsByUserDbReference.push().setValue(new Goal(goal));
@@ -387,14 +385,15 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onGoalCompleted() {
-        mGoalsByUserDbReference.orderByChild("dateInMillis").limitToLast(1).addListenerForSingleValueEvent(getMostRecentGoalByUserListener);
+        // Updates goal in database to completed.
+        mGoalsByUserDbReference.orderByChild("dateInMillis").limitToLast(1).addListenerForSingleValueEvent(setMostRecentGoalCompletedValueListener);
     }
     //---------------------------------------------------------------------------------------
     //endregion
 
     //region Custom goal listeners
     //---------------------------------------------------------------------------------------
-    ValueEventListener getAllGoalsByUserListener = new ValueEventListener() {
+    ValueEventListener getAllGoalsByUserValueListener = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
             mGoals = new ArrayList<>();
@@ -408,6 +407,18 @@ public class MainActivity extends AppCompatActivity implements
                 }
             }
             selectFragmentBasedOnGoal();
+
+            Goal mostRecentGoal;
+            if (mGoals.size() > 0) {
+                mostRecentGoal = mGoals.get(mGoals.size() - 1);
+            } else {
+                mostRecentGoal = null;
+            }
+
+            Intent widgetServiceIntent = new Intent(mActivity, AppWidgetGoalIntentService.class);
+            widgetServiceIntent.setAction(ACTION_GET_MOST_RECENT_GOAL);
+            widgetServiceIntent.putExtra(EXTRA_GOAL, mostRecentGoal);
+            startService(widgetServiceIntent);
         }
 
         @Override
@@ -416,17 +427,16 @@ public class MainActivity extends AppCompatActivity implements
         }
     };
 
-    ValueEventListener getMostRecentGoalByUserListener = new ValueEventListener() {
+    ValueEventListener setMostRecentGoalCompletedValueListener = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
-            String key = dataSnapshot.getChildren().iterator().next().getKey();
-            setMostRecentGoalCompleted(key);
+            // Get the key of the most recent goal, then use it to update the value.
+            String mostRecentGoalKey = dataSnapshot.getChildren().iterator().next().getKey();
+            setMostRecentGoalCompleted(mostRecentGoalKey);
         }
 
         @Override
-        public void onCancelled(DatabaseError databaseError) {
-
-        }
+        public void onCancelled(DatabaseError databaseError) {}
     };
     //---------------------------------------------------------------------------------------
     //endregion
@@ -445,9 +455,9 @@ public class MainActivity extends AppCompatActivity implements
         finish();
     }
 
-    public void setMostRecentGoalCompleted(String key) {
+    public void setMostRecentGoalCompleted(String mostRecentGoalKey) {
         Map<String, Object> goalUpdate = new HashMap<>();
-        goalUpdate.put(key + "/" + "isCompleted", true);
+        goalUpdate.put(mostRecentGoalKey + "/" + "isCompleted", true);
         mGoalsByUserDbReference.updateChildren(goalUpdate);
     }
     //---------------------------------------------------------------------------------------

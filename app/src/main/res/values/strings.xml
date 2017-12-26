@@ -29,5 +29,7 @@
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
     <string name="widget_confirm">I DID IT!</string>
+    <string name="prefs_most_recent_goal_goal">prefs_most_recent_goal_goal</string>
+    <string name="pref_most_recent_goal_date_millis">pref_most_recent_goal_date_millis</string>
 
 </resources>
