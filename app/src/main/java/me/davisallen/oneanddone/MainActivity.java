@@ -411,16 +411,19 @@ public class MainActivity extends AppCompatActivity implements
             }
             selectFragmentBasedOnGoal();
 
-            Goal mostRecentGoal;
+            Goal todaysGoal = null;
             if (mGoals.size() > 0) {
-                mostRecentGoal = mGoals.get(mGoals.size() - 1);
-            } else {
-                mostRecentGoal = null;
+                Goal mostRecentGoal = mGoals.get(mGoals.size() - 1);
+                if (DateUtils.isToday(mostRecentGoal.getDateInMillis())) {
+                    todaysGoal = mostRecentGoal;
+                } else {
+                    todaysGoal = null;
+                }
             }
 
             Intent widgetServiceIntent = new Intent(mActivity, AppWidgetGoalIntentService.class);
             widgetServiceIntent.setAction(ACTION_GET_MOST_RECENT_GOAL);
-            widgetServiceIntent.putExtra(EXTRA_GOAL, mostRecentGoal);
+            widgetServiceIntent.putExtra(EXTRA_GOAL, todaysGoal);
             startService(widgetServiceIntent);
         }
 

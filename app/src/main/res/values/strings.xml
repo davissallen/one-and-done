@@ -32,4 +32,12 @@
     <string name="prefs_most_recent_goal_goal">prefs_most_recent_goal_goal</string>
     <string name="pref_most_recent_goal_date_millis">pref_most_recent_goal_date_millis</string>
 
+    <!-- Widget strings -->
+    <!-- TODO: figure out why this isn't italicized. -->
+    <string name="widget_goal_unset"><i>No goal set today.</i></string>
+    <string name="widget_button_completed">Well done.</string>
+    <string name="widget_button_uncompleted">I did it!</string>
+    <string name="widget_button_unset">Set a goal</string>
+    <!-- END Widget strings -->
+
 </resources>

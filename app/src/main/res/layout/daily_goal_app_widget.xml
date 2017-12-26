@@ -44,7 +44,6 @@
 
         <TextView
             android:id="@+id/tv_widget_goal"
-            style="@style/widget_goal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingEnd="8dp"

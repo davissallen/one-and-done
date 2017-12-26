@@ -27,17 +27,17 @@ public class DailyGoalAppWidget extends AppWidgetProvider {
             views.setTextViewText(R.id.tv_widget_goal, goal.getGoal());
             if (goal.getIsCompleted()) {
                 views.setInt(R.id.tv_widget_goal, "setPaintFlags", Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
-                views.setTextViewText(R.id.tv_widget_action_button, "Well done.");
+                views.setTextViewText(R.id.tv_widget_action_button, context.getResources().getString(R.string.widget_button_completed));
                 views.setTextColor(R.id.tv_widget_action_button, context.getResources().getColor(R.color.button_unselectable));
             } else {
                 views.setInt(R.id.tv_widget_goal, "setPaintFlags", 0);
-                views.setTextViewText(R.id.tv_widget_action_button, "I DID IT!");
+                views.setTextViewText(R.id.tv_widget_action_button, context.getResources().getString(R.string.widget_button_uncompleted));
                 views.setTextColor(R.id.tv_widget_action_button, context.getResources().getColor(R.color.colorAccent));
             }
         } else {
             views.setInt(R.id.tv_widget_goal, "setPaintFlags", 0);
-            views.setTextViewText(R.id.tv_widget_goal, "No goal set.");
-            views.setTextViewText(R.id.tv_widget_action_button, "Click me!");
+            views.setTextViewText(R.id.tv_widget_goal, context.getResources().getString(R.string.widget_goal_unset));
+            views.setTextViewText(R.id.tv_widget_action_button, context.getResources().getString(R.string.widget_button_unset));
             views.setTextColor(R.id.tv_widget_action_button, context.getResources().getColor(R.color.colorAccent));
         }
 
