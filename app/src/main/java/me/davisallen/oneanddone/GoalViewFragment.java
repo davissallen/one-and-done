@@ -34,7 +34,6 @@ import pl.bclogic.pulsator4droid.library.PulsatorLayout;
 import timber.log.Timber;
 
 import static me.davisallen.oneanddone.MainActivity.PARAM_CREATE_GOAL;
-import static me.davisallen.oneanddone.utils.ToastUtils.showToast;
 
 /**
  * Package Name:   me.davisallen.oneanddone
@@ -127,13 +126,13 @@ public class GoalViewFragment extends Fragment {
         mKonfetti.build()
                 // pink, blue, yellow, orange, green, red, white
                 .addColors(Color.YELLOW, Color.GREEN, Color.MAGENTA, Color.WHITE, Color.RED)
-                .setDirection(0.0, 359.0)
+                .setDirection(0f, 359f)
                 .setSpeed(1f, 6f)
                 .setFadeOutEnabled(true)
-                .setTimeToLive(2000L)
+                .setTimeToLive(2500L)
                 .addShapes(Shape.RECT, Shape.CIRCLE)
-                .setPosition(-50f, mKonfetti.getWidth() + 50f, -50f, -50f)
-                .stream(200, 5000L);
+                .setPosition(100f, mKonfetti.getWidth() - 100f, 0f, 0f)
+                .stream(50, 5000L);
     }
 
     public void startAnimationToCompleteGoal(View view) {
@@ -172,7 +171,8 @@ public class GoalViewFragment extends Fragment {
         mCompleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showToast(getActivity(), getRandomCongratulationsString());
+                celebrate();
+//                showToast(getActivity(), getRandomCongratulationsString());
             }
         });
 
