@@ -63,6 +63,9 @@ import static me.davisallen.oneanddone.DailyGoalAppWidget.EXTRA_GOAL;
 // TODO: Add notifications.
 // TODO: Hide keyboard when leave main screen if open.
 // TODO: Goal streaks
+// TODO: Add feature to edit goal once set (but not completed)
+// TODO: Start service at every midnight to update UI and widget.
+// TODO: Delay banner entrance upon completion.
 
 public class MainActivity extends AppCompatActivity implements
         GoalCreateFragment.DailyGoalCreatedListener,
