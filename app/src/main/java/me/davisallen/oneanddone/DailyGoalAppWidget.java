@@ -1,5 +1,6 @@
 package me.davisallen.oneanddone;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
@@ -40,6 +41,10 @@ public class DailyGoalAppWidget extends AppWidgetProvider {
             views.setTextViewText(R.id.tv_widget_action_button, context.getResources().getString(R.string.widget_button_unset));
             views.setTextColor(R.id.tv_widget_action_button, context.getResources().getColor(R.color.colorAccent));
         }
+
+        Intent intent = new Intent(context, MainActivity.class);
+        PendingIntent openMainViewPendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+        views.setOnClickPendingIntent(R.id.tv_widget_action_button, openMainViewPendingIntent);
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);

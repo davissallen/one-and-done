@@ -70,8 +70,10 @@ public class GoalViewFragment extends Fragment {
         mListener = (OnGoalCompleteListener) getActivity();
 
         Bundle receivedArgs = getArguments();
-        if (receivedArgs != null && receivedArgs.containsKey(PARAM_CREATE_GOAL)) {
-            mGoal = receivedArgs.getParcelable(PARAM_CREATE_GOAL);
+        if (receivedArgs != null) {
+            if (receivedArgs.containsKey(PARAM_CREATE_GOAL)) {
+                mGoal = receivedArgs.getParcelable(PARAM_CREATE_GOAL);
+            }
         } else {
             Timber.e("Did not receive goal, oh no! :O");
         }

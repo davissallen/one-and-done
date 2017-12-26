@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements
     // Params to send data to fragments
     public static final String PARAM_CREATE_GOAL = "create_goal";
     private static final String SAVE_GOALS_KEY = "save_goals_key";
-    private static final String PREFS_NAME = "preferences";
+    public static final int RC_COMPLETE_GOAL_FROM_WIDGET = 55;
 
     // Firebase class objects
     // TODO: Implement firebase analytics
@@ -109,6 +109,7 @@ public class MainActivity extends AppCompatActivity implements
     ArrayList<Goal> mGoals;
     FragmentManager mFragmentManager;
     MainActivity mActivity;
+    Boolean mOpenedFromWidget = false;
     //---------------------------------------------------------------------------------------
     //endregion
 
@@ -153,6 +154,15 @@ public class MainActivity extends AppCompatActivity implements
         mActivity = this;
         // Initialize the Toolbar, NavBar, and Main UI.
         initializeUI();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RC_COMPLETE_GOAL_FROM_WIDGET) {
+            mOpenedFromWidget = true;
+        }
     }
 
     @Override
@@ -313,15 +323,12 @@ public class MainActivity extends AppCompatActivity implements
             long lastGoalCreatedMillis = mostRecentGoal.getDateInMillis();
 
             if (DateUtils.isToday(lastGoalCreatedMillis)) {
-
                 GoalViewFragment goalViewFragment = new GoalViewFragment();
                 Bundle bundle = new Bundle();
                 bundle.putParcelable(PARAM_CREATE_GOAL, mostRecentGoal);
                 goalViewFragment.setArguments(bundle);
                 openFragment(goalViewFragment, GOAL_VIEW_TAG);
-
             } else {
-
                 GoalCreateFragment goalCreateFragment = new GoalCreateFragment();
                 openFragment(goalCreateFragment, GOAL_CREATE_TAG);
             }
