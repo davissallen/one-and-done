@@ -126,13 +126,13 @@ public class GoalViewFragment extends Fragment {
         mKonfetti.build()
                 // pink, blue, yellow, orange, green, red, white
                 .addColors(Color.YELLOW, Color.GREEN, Color.MAGENTA, Color.WHITE, Color.RED)
-                .setDirection(0f, 359f)
+                .setDirection(120f, 60f)
                 .setSpeed(1f, 6f)
                 .setFadeOutEnabled(true)
-                .setTimeToLive(2500L)
+                .setTimeToLive(2000L)
                 .addShapes(Shape.RECT, Shape.CIRCLE)
-                .setPosition(100f, mKonfetti.getWidth() - 100f, 0f, 0f)
-                .stream(50, 5000L);
+                .setPosition(0f, mKonfetti.getWidth()/1f, 0f, 0f)
+                .stream(40, 5000L);
     }
 
     public void startAnimationToCompleteGoal(View view) {
