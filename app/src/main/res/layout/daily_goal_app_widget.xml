@@ -65,7 +65,7 @@
             android:paddingEnd="8dp"
             android:paddingStart="8dp"
             android:paddingTop="8dp"
-            android:text="@string/widget_confirm"
+            android:text="@string/widget_button_uncompleted"
             android:textAlignment="textEnd"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_widget_goal" />

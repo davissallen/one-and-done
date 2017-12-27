@@ -34,6 +34,7 @@ import pl.bclogic.pulsator4droid.library.PulsatorLayout;
 import timber.log.Timber;
 
 import static me.davisallen.oneanddone.MainActivity.PARAM_CREATE_GOAL;
+import static me.davisallen.oneanddone.utils.ToastUtils.showToast;
 
 /**
  * Package Name:   me.davisallen.oneanddone
@@ -171,8 +172,7 @@ public class GoalViewFragment extends Fragment {
         mCompleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                celebrate();
-//                showToast(getActivity(), getRandomCongratulationsString());
+                showToast(getActivity(), getRandomCongratulationsString());
             }
         });
 
