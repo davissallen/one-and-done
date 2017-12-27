@@ -34,9 +34,9 @@
     <!-- Widget strings -->
     <!-- TODO: figure out why this isn't italicized. -->
     <string name="widget_goal_unset"><i>No goal set today.</i></string>
-    <string name="widget_button_completed">Well done.</string>
+    <string name="widget_button_completed">Completed!</string>
     <string name="widget_button_uncompleted">I did it!</string>
-    <string name="widget_button_unset">Set a goal</string>
+    <string name="widget_button_unset">Set a goal!</string>
     <!-- END Widget strings -->
 
 </resources>

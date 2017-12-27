@@ -2,6 +2,7 @@ package me.davisallen.oneanddone;
 
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -87,6 +88,7 @@ public class GoalViewFragment extends Fragment {
         if (mGoal.getIsCompleted()) {
             updateUIForCompletedGoal();
         } else {
+            mGoalTextView.setPaintFlags(0);
             mCompleteButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_check_primary));
             mCompleteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -166,6 +168,8 @@ public class GoalViewFragment extends Fragment {
         if (toolbar != null) {
             toolbar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorAccent)));
         }
+
+        mGoalTextView.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
 
         mCompleteButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_check_gray));
         mCompleteButton.setClickable(false);
