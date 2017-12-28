@@ -3,6 +3,7 @@
     package="me.davisallen.oneanddone">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:allowBackup="true"
@@ -37,9 +38,7 @@
                 android:resource="@xml/daily_goal_app_widget_info" />
         </receiver>
 
-        <service
-            android:name=".AppWidgetGoalIntentService"
-            android:exported="false" />
+        <service android:name=".AppWidgetGoalIntentService" />
     </application>
 
 </manifest>

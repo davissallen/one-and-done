@@ -434,7 +434,13 @@ public class MainActivity extends AppCompatActivity implements
             Intent widgetServiceIntent = new Intent(mActivity, AppWidgetGoalIntentService.class);
             widgetServiceIntent.setAction(ACTION_GET_MOST_RECENT_GOAL);
             widgetServiceIntent.putExtra(EXTRA_GOAL, todaysGoal);
-            startService(widgetServiceIntent);
+            try {
+                startService(widgetServiceIntent);
+            } catch (IllegalStateException e) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    startForegroundService(widgetServiceIntent);
+                }
+            }
         }
 
         @Override
