@@ -63,7 +63,7 @@ public class SignInActivity extends AppCompatActivity {
                         .setIsSmartLockEnabled(false)
                         .setAvailableProviders(providers)
                         .setTheme(R.style.AppTheme)
-                        .setLogo(R.drawable.one_and_done_logo)
+                        .setLogo(R.drawable.logo_small)
                         .build(),
                 RC_SIGN_IN);
     }

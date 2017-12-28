@@ -98,7 +98,7 @@ public class GoalViewFragment extends Fragment {
                     builder.setTitle(getResources().getString(R.string.confirm_completed_title));
                     builder.setMessage(getResources().getString(R.string.confirm_completed_message));
                     // TODO: Get a logo-only image from rct3dt
-                    builder.setIcon(R.drawable.one_and_done_logo);
+                    builder.setIcon(R.drawable.logo);
                     String positiveResponse = getResources().getString(R.string.confirm_completed_positive);
                     String negativeResponse = getResources().getString(R.string.confirm_completed_negative);
                     builder.setPositiveButton(positiveResponse, new DialogInterface.OnClickListener() {
