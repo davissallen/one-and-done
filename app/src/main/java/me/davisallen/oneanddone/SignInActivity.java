@@ -36,9 +36,9 @@ public class SignInActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        startSignInActivity();
+        // Uncomment this and comment out the snippet below to disable auto sign in.
+        // startSignInActivity();
 
-        // TODO: Uncomment this and comment above for auto sign in.
         FirebaseAuth auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() != null) {
             // already signed in
@@ -63,6 +63,7 @@ public class SignInActivity extends AppCompatActivity {
                         .setIsSmartLockEnabled(false)
                         .setAvailableProviders(providers)
                         .setTheme(R.style.AppTheme)
+                        .setLogo(R.drawable.one_and_done_logo)
                         .build(),
                 RC_SIGN_IN);
     }

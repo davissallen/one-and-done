@@ -5,9 +5,6 @@ package me.davisallen.oneanddone;
 
 import android.animation.ObjectAnimator;
 import android.animation.StateListAnimator;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -47,7 +44,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -72,6 +68,7 @@ import static me.davisallen.oneanddone.DailyGoalAppWidget.EXTRA_GOAL;
 // TODO: Convert the goal fetching to a dedicated task so it can run outside MainActivity
 // TODO: Delay banner entrance upon completion.
 // TODO: Make a welcome screen for first time users.
+// TODO: Implement the animated vector drawable (or another animation).
 
 public class MainActivity extends AppCompatActivity implements
         GoalCreateFragment.DailyGoalCreatedListener,
@@ -160,25 +157,6 @@ public class MainActivity extends AppCompatActivity implements
         mActivity = this;
         // Initialize the Toolbar, NavBar, and Main UI.
         initializeUI();
-
-        // TODO: Move this somewhere else so the alarm doesn't restart every minute lol
-        // Set the alarm to start at approximately 2:00 p.m.
-        Calendar calendar = Calendar.getInstance();
-        long oneDayInMillis = (60 * 60 * 24) * 1000;
-        long tomorrowInMillis = System.currentTimeMillis() + oneDayInMillis;
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.HOUR_OF_DAY, 17);
-        calendar.set(Calendar.MINUTE, 33);
-        calendar.set(Calendar.SECOND, 0);
-
-        // With setInexactRepeating(), you have to use one of the AlarmManager interval
-        // constants--in this case, AlarmManager.INTERVAL_DAY.
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Service.ALARM_SERVICE);
-        if (alarmManager != null) {
-            Intent alarmIntent = new Intent(this, MainActivity.class);
-            PendingIntent alarmPendingIntent = PendingIntent.getActivity(this, 0, alarmIntent, 0);
-            alarmManager.setInexactRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, alarmPendingIntent);
-        }
     }
 
     @Override
