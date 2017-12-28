@@ -62,13 +62,14 @@ import static me.davisallen.oneanddone.DailyGoalAppWidget.EXTRA_GOAL;
 // TODO: Create setting to change background color.
 // TODO: Add notifications.
 // TODO: Hide keyboard when leave main screen if open.
-// TODO: Goal streaks
-// TODO: Add feature to edit goal once set (but not completed)
+// TODO: Goal streaks.
+// TODO: Add feature to edit goal once set (but not completed).
 // TODO: Start service at every midnight to update UI and widget.
-// TODO: Convert the goal fetching to a dedicated task so it can run outside MainActivity
+// TODO: Convert the goal fetching to a dedicated task so it can run independent of MainActivity.
 // TODO: Delay banner entrance upon completion.
 // TODO: Make a welcome screen for first time users.
 // TODO: Implement the animated vector drawable (or another animation).
+// TODO: Update widget updating IntentService to JobIntentService to use JobScheduler.
 
 public class MainActivity extends AppCompatActivity implements
         GoalCreateFragment.DailyGoalCreatedListener,
@@ -79,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements
     //---------------------------------------------------------------------------------------
     // Fragment tags
     public static final String GOAL_VIEW_TAG = "goal_view_tag";
+    public static final String SPLASH_TAG = "splash_tag";
     public static final String GOAL_CREATE_TAG = "goal_create_tag";
     public static final String PROGRESS_LIST_TAG = "progress_list_tag";
     public static final String CALENDAR_TAG = "calendar_tag";
@@ -142,6 +144,8 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        openFragment(new SplashFragment(), SPLASH_TAG);
 
         // TODO: Force the goals to update if it is the next day.
         // Get the goals from the saved instance state if they exist.
