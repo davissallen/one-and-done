@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">One &amp; Done</string>
+    <string name="app_name">1 &amp; Done</string>
     <string name="title_daily_goal">Daily Goal</string>
     <string name="title_list">Progress List</string>
     <string name="title_calendar">Calendar</string>

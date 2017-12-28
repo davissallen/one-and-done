@@ -69,7 +69,9 @@ import static me.davisallen.oneanddone.DailyGoalAppWidget.EXTRA_GOAL;
 // TODO: Goal streaks
 // TODO: Add feature to edit goal once set (but not completed)
 // TODO: Start service at every midnight to update UI and widget.
+// TODO: Convert the goal fetching to a dedicated task so it can run outside MainActivity
 // TODO: Delay banner entrance upon completion.
+// TODO: Make a welcome screen for first time users.
 
 public class MainActivity extends AppCompatActivity implements
         GoalCreateFragment.DailyGoalCreatedListener,
