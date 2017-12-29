@@ -3,11 +3,9 @@
     <string name="title_daily_goal">Daily Goal</string>
     <string name="title_list">Progress List</string>
     <string name="title_calendar">Calendar</string>
-    <string name="daily_goal_prompt">What will you do today?</string>
     <string name="calendar_goal_completed">Goal completed</string>
     <string name="calendar_goal_negative">Goal uncompleted</string>
     <string name="calendar_goal_neutral">Goal not set</string>
-    <string name="create_goal_text_transition">create_goal_text_transition</string>
     <string name="create_goal_prompt">What will you do today?</string>
     <string name="navigation_drawer_open">navigation_drawer_open</string>
     <string name="navigation_drawer_close">navigation_drawer_close</string>
@@ -26,10 +24,6 @@
     <string name="confirm_completed_positive">Yes</string>
     <string name="confirm_completed_negative">Not yet</string>
     <string name="banner">Congratulations! Come back tomorrow to get one day closer to your achieving your dreams!!!</string>
-    <string name="appwidget_text">EXAMPLE</string>
-    <string name="add_widget">Add widget</string>
-    <string name="prefs_most_recent_goal_goal">prefs_most_recent_goal_goal</string>
-    <string name="pref_most_recent_goal_date_millis">pref_most_recent_goal_date_millis</string>
 
     <!-- Widget strings -->
     <!-- TODO: figure out why this isn't italicized. -->
@@ -39,7 +33,6 @@
     <string name="widget_button_unset">Set a goal!</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <!-- END Widget strings -->
 
 </resources>

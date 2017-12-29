@@ -46,6 +46,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -67,9 +68,10 @@ import static me.davisallen.oneanddone.DailyGoalAppWidget.EXTRA_GOAL;
 // TODO: Start service at every midnight to update UI and widget.
 // TODO: Convert the goal fetching to a dedicated task so it can run independent of MainActivity.
 // TODO: Delay banner entrance upon completion.
-// TODO: Make a welcome screen for first time users.
+// TODO: Make a welcome (help) screen for first time users.
 // TODO: Implement the animated vector drawable (or another animation).
 // TODO: Update widget updating IntentService to JobIntentService to use JobScheduler.
+// TODO: Make the splash screen better..
 
 public class MainActivity extends AppCompatActivity implements
         GoalCreateFragment.DailyGoalCreatedListener,
@@ -147,7 +149,6 @@ public class MainActivity extends AppCompatActivity implements
 
         openFragment(new SplashFragment(), SPLASH_TAG);
 
-        // TODO: Force the goals to update if it is the next day.
         // Get the goals from the saved instance state if they exist.
         if (savedInstanceState != null && savedInstanceState.containsKey(SAVE_GOALS_KEY)) {
             mGoals = savedInstanceState.getParcelableArrayList(SAVE_GOALS_KEY);
@@ -157,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements
         initializeFirebaseTools();
         // Initializes Timber debugger.
         initializeTimber();
-        // Initialize class objects
+        // Initialize class objects.
         mActivity = this;
         // Initialize the Toolbar, NavBar, and Main UI.
         initializeUI();
@@ -240,6 +241,7 @@ public class MainActivity extends AppCompatActivity implements
 
     //region Activity initialization methods
     //---------------------------------------------------------------------------------------
+
     private void initializeFirebaseTools() {
         // Obtain the FirebaseAnalytics instance.
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
@@ -408,7 +410,7 @@ public class MainActivity extends AppCompatActivity implements
     //---------------------------------------------------------------------------------------
     //endregion
 
-    //region Custom goal listeners
+    //region Custom Firebase listeners
     //---------------------------------------------------------------------------------------
     ValueEventListener getAllGoalsByUserValueListener = new ValueEventListener() {
         @Override
@@ -456,8 +458,15 @@ public class MainActivity extends AppCompatActivity implements
     ValueEventListener setMostRecentGoalCompletedValueListener = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
-            // Get the key of the most recent goal, then use it to update the value.
-            String mostRecentGoalKey = dataSnapshot.getChildren().iterator().next().getKey();
+            // Get the key of the first element in the arraylist (the most recent goal), then use it to update the value.
+            String mostRecentGoalKey = null;
+            try {
+                mostRecentGoalKey = dataSnapshot.getChildren().iterator().next().getKey();
+            } catch (NoSuchElementException e) {
+                Timber.e("No goal was found in the database.");
+                e.printStackTrace();
+                return;
+            }
             setMostRecentGoalCompleted(mostRecentGoalKey);
         }
 
