@@ -33,6 +33,7 @@
     <string name="widget_button_unset">Set a goal!</string>
     <string name="a11y_goal_complete_status">Goal complete status.</string>
     <string name="goal_complete_button">Goal complete button.</string>
+    <string name="sign_out">Sign out</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <!-- END Widget strings -->

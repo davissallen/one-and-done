@@ -40,6 +40,6 @@
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-medium"
         android:paddingTop="4dp"
-        android:text="Sign out" />
+        android:text="@string/sign_out" />
 
 </LinearLayout>
