@@ -391,7 +391,7 @@ public class MainActivity extends AppCompatActivity implements
     //---------------------------------------------------------------------------------------
     //endregion
 
-    //region Custom Firebase listeners
+    //region Asynchronous Firebase listeners
     //---------------------------------------------------------------------------------------
     final ValueEventListener getAllGoalsByUserValueListener = new ValueEventListener() {
         @Override
