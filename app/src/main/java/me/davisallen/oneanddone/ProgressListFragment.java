@@ -115,10 +115,10 @@ public class ProgressListFragment extends Fragment {
     }
 
     class GoalHolder extends RecyclerView.ViewHolder {
-        TextView goalTextView;
-        TextView dayOfMonthTextView;
-        TextView monthTextView;
-        ImageView statusImageView;
+        final TextView goalTextView;
+        final TextView dayOfMonthTextView;
+        final TextView monthTextView;
+        final ImageView statusImageView;
 
         GoalHolder(View itemView) {
             super(itemView);

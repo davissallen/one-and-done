@@ -9,7 +9,6 @@
     <string name="create_goal_prompt">What will you do today?</string>
     <string name="navigation_drawer_open">navigation_drawer_open</string>
     <string name="navigation_drawer_close">navigation_drawer_close</string>
-    <string name="action_settings">Settings</string>
 
     <string name="fui_progress_dialog_signing_up">Opening up your portal to success…</string>
     <string name="sign_in_cancelled">Sign in cancelled</string>

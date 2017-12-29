@@ -13,11 +13,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name="me.davisallen.oneanddone.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".SignInActivity"
+            android:name="me.davisallen.oneanddone.SignInActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme">
             <intent-filter>
@@ -28,7 +28,7 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".DailyGoalAppWidget">
+        <receiver android:name="me.davisallen.oneanddone.DailyGoalAppWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -38,7 +38,7 @@
                 android:resource="@xml/daily_goal_app_widget_info" />
         </receiver>
 
-        <service android:name=".AppWidgetGoalIntentService" />
+        <service android:name="me.davisallen.oneanddone.AppWidgetGoalIntentService" />
     </application>
 
 </manifest>

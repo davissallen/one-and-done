@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 27
-    buildToolsVersion '26.0.2'
+    buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "me.davisallen.oneanddone"
         minSdkVersion 17
@@ -44,7 +44,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-database:11.8.0'
     implementation 'com.firebaseui:firebase-ui-database:3.1.0'
 
-    // TODO: Everything else??
     implementation 'com.google.firebase:firebase-core:11.8.0'
 
     //*********** Library imports ***********//

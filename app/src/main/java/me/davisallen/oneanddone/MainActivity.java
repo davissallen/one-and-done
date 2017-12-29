@@ -72,6 +72,7 @@ import static me.davisallen.oneanddone.DailyGoalAppWidget.EXTRA_GOAL;
 // TODO: Implement the animated vector drawable (or another animation).
 // TODO: Update widget updating IntentService to JobIntentService to use JobScheduler.
 // TODO: Make the splash screen better..
+// TODO: Implement firebase analytics
 
 public class MainActivity extends AppCompatActivity implements
         GoalCreateFragment.DailyGoalCreatedListener,
@@ -93,8 +94,6 @@ public class MainActivity extends AppCompatActivity implements
     public static final int RC_COMPLETE_GOAL_FROM_WIDGET = 55;
 
     // Firebase class objects
-    // TODO: Implement firebase analytics
-    private FirebaseAnalytics mFirebaseAnalytics;
     private FirebaseUser mUser;
     public DatabaseReference mGoalsByUserDbReference;
 
@@ -397,7 +396,7 @@ public class MainActivity extends AppCompatActivity implements
 
     //region Custom Firebase listeners
     //---------------------------------------------------------------------------------------
-    ValueEventListener getAllGoalsByUserValueListener = new ValueEventListener() {
+    final ValueEventListener getAllGoalsByUserValueListener = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
             mGoals = new ArrayList<>();
@@ -440,7 +439,7 @@ public class MainActivity extends AppCompatActivity implements
         }
     };
 
-    ValueEventListener setMostRecentGoalCompletedValueListener = new ValueEventListener() {
+    final ValueEventListener setMostRecentGoalCompletedValueListener = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
             // Get the key of the first element in the arraylist (the most recent goal), then use it to update the value.

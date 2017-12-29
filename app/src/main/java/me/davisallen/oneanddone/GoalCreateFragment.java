@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 /**
  * Package Name:   me.davisallen.oneanddone
@@ -89,7 +90,7 @@ public class GoalCreateFragment extends Fragment {
             }
             mListener.onCreateGoal(goal);
         } else {
-            // TODO: Make an error notification
+            Timber.e("The goal entered has 0 lenght.");
         }
     }
 

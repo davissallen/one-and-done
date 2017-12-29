@@ -1,7 +1,6 @@
 package me.davisallen.oneanddone;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -53,15 +52,6 @@ public class CalendarFragment extends Fragment {
     }
 
     private void initializeCalendarSettings() {
-        mCalendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
-            @Override
-            public void onSelectedDayChange(@NonNull CalendarView calendarView, int year, int month, int day) {
-                month += 1;
-
-                return;
-            }
-        });
-
         calculateGoalCounts();
 
         long firstGoalDateInMillis, lastGoalDateInMillis;

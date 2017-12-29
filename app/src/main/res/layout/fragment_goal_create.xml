@@ -37,7 +37,9 @@
                 android:maxLength="90"
                 android:textColor="@color/white"
                 android:textSize="24sp"
-                android:theme="@style/WhiteEditText" />
+                android:theme="@style/WhiteEditText"
+                android:nextFocusUp="@+id/nav_view"
+                android:nextFocusLeft="@+id/nav_view" />
 
         </android.support.design.widget.TextInputLayout>
 
