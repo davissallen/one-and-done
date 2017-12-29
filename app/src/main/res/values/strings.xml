@@ -3,9 +3,9 @@
     <string name="title_daily_goal">Daily Goal</string>
     <string name="title_list">Progress List</string>
     <string name="title_calendar">Calendar</string>
-    <string name="calendar_goal_completed">Goal completed</string>
-    <string name="calendar_goal_negative">Goal uncompleted</string>
-    <string name="calendar_goal_neutral">Goal not set</string>
+    <string name="calendar_goal_completed">Goals completed</string>
+    <string name="calendar_goal_negative">Goals uncompleted</string>
+    <string name="calendar_goal_neutral">Goals not set</string>
     <string name="create_goal_prompt">What will you do today?</string>
     <string name="navigation_drawer_open">navigation_drawer_open</string>
     <string name="navigation_drawer_close">navigation_drawer_close</string>
@@ -33,6 +33,7 @@
     <string name="a11y_goal_complete_status">Goal complete status.</string>
     <string name="goal_complete_button">Goal complete button.</string>
     <string name="sign_out">Sign out</string>
+    <string name="firebase_auth_error">Did not get user! What!</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <!-- END Widget strings -->
