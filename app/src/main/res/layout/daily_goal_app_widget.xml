@@ -23,7 +23,8 @@
             android:layout_height="36dp"
             android:layout_gravity="center_vertical"
             android:layout_margin="4dp"
-            android:src="@drawable/logo_small" />
+            android:src="@drawable/logo_small"
+            android:contentDescription="@string/app_name" />
 
         <TextView
             android:id="@+id/tv_widget_title"

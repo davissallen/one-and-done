@@ -41,7 +41,8 @@
         app:layout_constraintBottom_toTopOf="@+id/li_goal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/li_goal"
-        app:srcCompat="@drawable/ic_check_green_36dp" />
+        app:srcCompat="@drawable/ic_check_green_36dp"
+        android:contentDescription="@string/a11y_goal_complete_status" />
 
     <View
         android:id="@+id/li_divider"

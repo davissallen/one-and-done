@@ -31,6 +31,7 @@
     <string name="widget_button_completed">Completed!</string>
     <string name="widget_button_uncompleted">I did it!</string>
     <string name="widget_button_unset">Set a goal!</string>
+    <string name="a11y_goal_complete_status">Goal complete status.</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <!-- END Widget strings -->
