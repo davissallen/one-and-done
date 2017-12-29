@@ -94,6 +94,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
         android:scaleType="center"
+        android:contentDescription="@string/goal_complete_button"
         app:srcCompat="@drawable/ic_check_primary"
         app:layout_constraintBottom_toTopOf="@+id/pulsator"
         app:layout_constraintEnd_toStartOf="@+id/pulsator"
