@@ -34,6 +34,8 @@
     <string name="goal_complete_button">Goal complete button.</string>
     <string name="sign_out">Sign out</string>
     <string name="firebase_auth_error">Did not get user! What!</string>
+    <string name="notification_channel1">notification_channel1</string>
+    <string name="notification_channel2">notification_channel2</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <!-- END Widget strings -->

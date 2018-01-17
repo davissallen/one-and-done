@@ -62,7 +62,7 @@ import static me.davisallen.oneanddone.DailyGoalAppWidget.EXTRA_GOAL;
 // TODO: Create setting to change background color.
 // TODO: Add notifications.
 // TODO: Hide keyboard when leave main screen if open.
-// TODO: Goal streaks.
+// TODO: Goal streaks (maybe an extra table in DB?).
 // TODO: Add feature to edit goal once set (but not completed).
 // TODO: Start service at every midnight to update UI and widget.
 // TODO: Convert the goal fetching to a dedicated task so it can run independent of MainActivity.
@@ -115,6 +115,7 @@ public class MainActivity extends AppCompatActivity implements
     FragmentManager mFragmentManager;
     MainActivity mActivity;
     Boolean mOpenedFromWidget = false;
+    private NotificationHelper mNofificationHelper;
     //---------------------------------------------------------------------------------------
     //endregion
 
@@ -152,6 +153,8 @@ public class MainActivity extends AppCompatActivity implements
             mGoals = savedInstanceState.getParcelableArrayList(SAVE_GOALS_KEY);
         }
 
+        // Set up Notifications
+        initializeNotifications();
         // Initializes Firebase instances.
         initializeFirebaseTools();
         // Initializes Timber debugger.
@@ -161,6 +164,34 @@ public class MainActivity extends AppCompatActivity implements
         // Initialize the Toolbar, NavBar, and Main UI.
         initializeUI();
     }
+
+    public void initializeNotifications() {
+        mNofificationHelper = new NotificationHelper(this);
+    }
+
+//    public void sendNotification(int id, String title) {
+//        NotificationCompat.Builder nb = null;
+//        switch (id) {
+//            case NOTI_PRIMARY1:
+//                nb = noti.getNotification1(title, getString(R.string.primary1_body));
+//                break;
+//
+//            case NOTI_PRIMARY2:
+//                nb = noti.getNotification1(title, getString(R.string.primary2_body));
+//                break;
+//
+//            case NOTI_SECONDARY1:
+//                nb = noti.getNotification2(title, getString(R.string.secondary1_body));
+//                break;
+//
+//            case NOTI_SECONDARY2:
+//                nb = noti.getNotification2(title, getString(R.string.secondary2_body));
+//                break;
+//        }
+//        if (nb != null) {
+//            noti.notify(id, nb);
+//        }
+//    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
