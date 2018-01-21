@@ -59,6 +59,7 @@ import static me.davisallen.oneanddone.DailyGoalAppWidget.EXTRA_GOAL;
 //---------------------------------------------------------------------------------------
 //endregion
 
+// TODO: Convert codebase to Kotlin
 // TODO: Create setting to change background color.
 // TODO: Add notifications.
 // TODO: Hide keyboard when leave main screen if open.
