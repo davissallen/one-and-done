@@ -5,10 +5,13 @@ package me.davisallen.oneanddone;
 
 import android.animation.ObjectAnimator;
 import android.animation.StateListAnimator;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.NavigationView;
@@ -99,11 +102,15 @@ public class MainActivity extends AppCompatActivity implements
 
     // Butterknife view binding
     // Toolbar
-    @BindView(R.id.toolbar) Toolbar mToolbar;
-    @BindView(R.id.app_bar_layout) AppBarLayout mAppBarLayout;
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
+    @BindView(R.id.app_bar_layout)
+    AppBarLayout mAppBarLayout;
     // Nav drawer
-    @BindView(R.id.nav_view) NavigationView mNavigationView;
-    @BindView(R.id.drawer_layout) DrawerLayout mDrawer;
+    @BindView(R.id.nav_view)
+    NavigationView mNavigationView;
+    @BindView(R.id.drawer_layout)
+    DrawerLayout mDrawer;
 
     // Nav drawer views not caught by Butterknife
     ImageView mUserImage;
@@ -116,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements
     FragmentManager mFragmentManager;
     MainActivity mActivity;
     Boolean mOpenedFromWidget = false;
-    private NotificationHelper mNofificationHelper;
+
     //---------------------------------------------------------------------------------------
     //endregion
 
@@ -167,32 +174,27 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     public void initializeNotifications() {
-        mNofificationHelper = new NotificationHelper(this);
+        Intent alarmIntent = new Intent(this, AlarmReceiver.class);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                this, 0, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+        if (alarmManager != null) {
+            alarmManager.setRepeating(
+                    AlarmManager.RTC_WAKEUP, System.currentTimeMillis(),
+                    5000, pendingIntent);
+        }
     }
 
-//    public void sendNotification(int id, String title) {
-//        NotificationCompat.Builder nb = null;
-//        switch (id) {
-//            case NOTI_PRIMARY1:
-//                nb = noti.getNotification1(title, getString(R.string.primary1_body));
-//                break;
-//
-//            case NOTI_PRIMARY2:
-//                nb = noti.getNotification1(title, getString(R.string.primary2_body));
-//                break;
-//
-//            case NOTI_SECONDARY1:
-//                nb = noti.getNotification2(title, getString(R.string.secondary1_body));
-//                break;
-//
-//            case NOTI_SECONDARY2:
-//                nb = noti.getNotification2(title, getString(R.string.secondary2_body));
-//                break;
-//        }
-//        if (nb != null) {
-//            noti.notify(id, nb);
-//        }
-//    }
+    public void goToNotificationSettings() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            Intent i = new Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+            i.putExtra(Settings.EXTRA_APP_PACKAGE, getPackageName());
+            startActivity(i);
+        }
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -370,7 +372,7 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         // TODO: Fix bug where device crashes here. Find it!
-        switch(tag) {
+        switch (tag) {
             case GOAL_CREATE_TAG:
                 GoalCreateFragment goalCreateFragment = (GoalCreateFragment) mFragmentManager.findFragmentByTag(tag);
                 if (goalCreateFragment != null && goalCreateFragment.isVisible()) {
@@ -484,7 +486,8 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         @Override
-        public void onCancelled(DatabaseError databaseError) {}
+        public void onCancelled(DatabaseError databaseError) {
+        }
     };
     //---------------------------------------------------------------------------------------
     //endregion

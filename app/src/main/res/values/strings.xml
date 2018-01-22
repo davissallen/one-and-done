@@ -36,6 +36,9 @@
     <string name="firebase_auth_error">Did not get user! What!</string>
     <string name="notification_channel1">notification_channel1</string>
     <string name="notification_channel2">notification_channel2</string>
+    <string name="channel_one_body">channel 1 notification</string>
+    <string name="channel_two_body">channel 2 notification</string>
+    <string name="notif_channel_reminder_description">Reminders to set and complete your goals.</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <!-- END Widget strings -->

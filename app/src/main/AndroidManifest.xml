@@ -39,10 +39,10 @@
         </receiver>
 
         <service android:name=".AppWidgetGoalIntentService" />
-        <service
-            android:name=".NotificationService"
-            android:enabled="true"
-            android:exported="true"></service>
+
+        <receiver
+            android:name="me.davisallen.oneanddone.AlarmReceiver"
+            android:process=":remote" />
     </application>
 
 </manifest>
