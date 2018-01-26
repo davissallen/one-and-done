@@ -18,8 +18,18 @@ public class NotificationJobService extends JobService {
     @Override
     public boolean onStartJob(JobParameters job) {
         // Do some work here
-        String currentDateTimeString = DateFormat.getDateTimeInstance().format(new Date());
-        Timber.d(String.format("%s: Job is going off!!", currentDateTimeString));
+
+        // *** NOTE ***
+        // THIS WILL RUN ON THE MAIN THREAD! MAKE SURE TO USE ASYNCTASK FOR NETWORK TASKS
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String currentDateTimeString = DateFormat.getDateTimeInstance().format(new Date());
+                Timber.d(String.format("%s: Job is going off!!", currentDateTimeString));
+            }
+        }).start();
+
         return false; // Answers the question: "Is there still work going on?"
     }
 

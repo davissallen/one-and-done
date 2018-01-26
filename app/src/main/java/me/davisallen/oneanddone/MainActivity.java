@@ -180,10 +180,6 @@ public class MainActivity extends AppCompatActivity implements
     public void initializeNotifications() {
         // TODO
 
-        // *** NOTE ***
-        // THIS WILL RUN ON THE MAIN THREAD! MAKE SURE TO USE ASYNCTASK FOR NETWORK TASKS
-
-
         FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(this));
 
         Bundle myExtrasBundle = new Bundle();
@@ -201,7 +197,9 @@ public class MainActivity extends AppCompatActivity implements
                 // start between 0 and 60 seconds from time
                 .setTrigger(Trigger.executionWindow(0, 5))
                 // overwrite an existing job with the same tag
-                .setReplaceCurrent(true)
+                // TODO: Investigate why this seems to make job SO much slower when true outside
+                //     the execution window.
+                .setReplaceCurrent(false)
                 // retry with exponential backoff
                 .setRetryStrategy(RetryStrategy.DEFAULT_EXPONENTIAL)
                 .setExtras(myExtrasBundle)
