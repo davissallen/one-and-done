@@ -5,8 +5,6 @@ package me.davisallen.oneanddone;
 
 import android.animation.ObjectAnimator;
 import android.animation.StateListAnimator;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -31,6 +29,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.firebase.jobdispatcher.FirebaseJobDispatcher;
+import com.firebase.jobdispatcher.GooglePlayDriver;
+import com.firebase.jobdispatcher.Job;
+import com.firebase.jobdispatcher.Lifetime;
+import com.firebase.jobdispatcher.RetryStrategy;
+import com.firebase.jobdispatcher.Trigger;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -112,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawer;
 
-    // Nav drawer views not caught by Butterknife
+    // Nav drawer views not inflated until after onCreate
     ImageView mUserImage;
     TextView mUserName;
     TextView mUserSignInId;
@@ -174,21 +178,40 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     public void initializeNotifications() {
-        Intent alarmIntent = new Intent(this, AlarmReceiver.class);
+        // TODO
 
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                this, 0, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        // *** NOTE ***
+        // THIS WILL RUN ON THE MAIN THREAD! MAKE SURE TO USE ASYNCTASK FOR NETWORK TASKS
 
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
-        if (alarmManager != null) {
-            alarmManager.setRepeating(
-                    AlarmManager.RTC_WAKEUP, System.currentTimeMillis(),
-                    5000, pendingIntent);
-        }
+        FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(this));
+
+        Bundle myExtrasBundle = new Bundle();
+        myExtrasBundle.putString("some_key", "some_value");
+
+        Job myJob = dispatcher.newJobBuilder()
+                // the JobService that will be called
+                .setService(NotificationJobService.class)
+                // uniquely identifies the job
+                .setTag("my-unique-notification-tag")
+                // recurring job
+                .setRecurring(true)
+                // will live forever!
+                .setLifetime(Lifetime.FOREVER)
+                // start between 0 and 60 seconds from time
+                .setTrigger(Trigger.executionWindow(0, 5))
+                // overwrite an existing job with the same tag
+                .setReplaceCurrent(true)
+                // retry with exponential backoff
+                .setRetryStrategy(RetryStrategy.DEFAULT_EXPONENTIAL)
+                .setExtras(myExtrasBundle)
+                .build();
+
+        dispatcher.mustSchedule(myJob);
     }
 
     public void goToNotificationSettings() {
+        // TODO: Implement this, have a notifications settings icon perform this.
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             Intent i = new Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
             i.putExtra(Settings.EXTRA_APP_PACKAGE, getPackageName());
