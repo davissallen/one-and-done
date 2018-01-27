@@ -186,8 +186,8 @@ public class MainActivity extends AppCompatActivity implements
         Bundle myExtrasBundle = new Bundle();
         myExtrasBundle.putString("some_key", "some_value");
 
-        int notification_period_s = 60;
-        int notifiaction_flex = 10;
+        int notification_period = 60;
+        int notification_flex = 10;
 
         Job myJob = dispatcher.newJobBuilder()
                 // the JobService that will be called
@@ -199,7 +199,7 @@ public class MainActivity extends AppCompatActivity implements
                 // will live forever!
                 .setLifetime(Lifetime.FOREVER)
                 // start between 0 and 60 seconds from time
-                .setTrigger(createPeriodicTrigger(notification_period_s, notifiaction_flex))
+                .setTrigger(createPeriodicTrigger(notification_period, notification_flex))
                 // overwrite an existing job with the same tag
                 // TODO: Investigate why this seems to make job SO much slower when true outside
                 //     the execution window.
