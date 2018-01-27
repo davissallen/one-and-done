@@ -81,6 +81,8 @@ import static me.davisallen.oneanddone.DailyGoalAppWidget.EXTRA_GOAL;
 // TODO: Update widget updating IntentService to JobIntentService to use JobScheduler.
 // TODO: Make the splash screen better..
 // TODO: Implement firebase analytics
+// TODO: Make the input text font use thinner version of roboto.
+// TODO: Make banner not white?
 
 public class MainActivity extends AppCompatActivity implements
         GoalCreateFragment.DailyGoalCreatedListener,
