@@ -32,6 +32,7 @@ import android.widget.TextView;
 import com.firebase.jobdispatcher.FirebaseJobDispatcher;
 import com.firebase.jobdispatcher.GooglePlayDriver;
 import com.firebase.jobdispatcher.Job;
+import com.firebase.jobdispatcher.JobTrigger;
 import com.firebase.jobdispatcher.Lifetime;
 import com.firebase.jobdispatcher.RetryStrategy;
 import com.firebase.jobdispatcher.Trigger;
@@ -185,6 +186,9 @@ public class MainActivity extends AppCompatActivity implements
         Bundle myExtrasBundle = new Bundle();
         myExtrasBundle.putString("some_key", "some_value");
 
+        int notification_period_s = 60;
+        int notifiaction_flex = 10;
+
         Job myJob = dispatcher.newJobBuilder()
                 // the JobService that will be called
                 .setService(NotificationJobService.class)
@@ -195,17 +199,21 @@ public class MainActivity extends AppCompatActivity implements
                 // will live forever!
                 .setLifetime(Lifetime.FOREVER)
                 // start between 0 and 60 seconds from time
-                .setTrigger(Trigger.executionWindow(0, 5))
+                .setTrigger(createPeriodicTrigger(notification_period_s, notifiaction_flex))
                 // overwrite an existing job with the same tag
                 // TODO: Investigate why this seems to make job SO much slower when true outside
                 //     the execution window.
-                .setReplaceCurrent(false)
+                .setReplaceCurrent(true)
                 // retry with exponential backoff
                 .setRetryStrategy(RetryStrategy.DEFAULT_EXPONENTIAL)
                 .setExtras(myExtrasBundle)
                 .build();
 
         dispatcher.mustSchedule(myJob);
+    }
+
+    public static JobTrigger createPeriodicTrigger(int period, int flex) {
+        return Trigger.executionWindow(period-flex, period);
     }
 
     public void goToNotificationSettings() {
