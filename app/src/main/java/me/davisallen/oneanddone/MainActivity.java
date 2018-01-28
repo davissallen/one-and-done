@@ -73,16 +73,17 @@ import static me.davisallen.oneanddone.DailyGoalAppWidget.EXTRA_GOAL;
 // TODO: Hide keyboard when leave main screen if open.
 // TODO: Goal streaks (maybe an extra table in DB?).
 // TODO: Add feature to edit goal once set (but not completed).
-// TODO: Start service at every midnight to update UI and widget.
+// TODO: Start service at every midnight to update UI and widget (or just use firebase db listener).
 // TODO: Convert the goal fetching to a dedicated task so it can run independent of MainActivity.
 // TODO: Delay banner entrance upon completion.
 // TODO: Make a welcome (help) screen for first time users.
 // TODO: Implement the animated vector drawable (or another animation).
 // TODO: Update widget updating IntentService to JobIntentService to use JobScheduler.
 // TODO: Make the splash screen better..
-// TODO: Implement firebase analytics
+// TODO: Implement firebase analytics.
 // TODO: Make the input text font use thinner version of roboto.
 // TODO: Make banner not white?
+// TODO: Accept goal input from notification like messages response-in-notification.
 
 public class MainActivity extends AppCompatActivity implements
         GoalCreateFragment.DailyGoalCreatedListener,

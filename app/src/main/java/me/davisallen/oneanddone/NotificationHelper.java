@@ -60,6 +60,7 @@ class NotificationHelper extends ContextWrapper {
                 .setContentText("COME HERE YA BOY MAKE A GOAL ALREDY K")
                 .setSmallIcon(getSmallIcon())
                 .setAutoCancel(true)
+                .addAction(R.drawable.ic_send, getString(R.string.notification_create_action), openAppPendingIntent)
                 .setContentIntent(openAppPendingIntent);
     }
 
@@ -71,6 +72,7 @@ class NotificationHelper extends ContextWrapper {
                 .setContentText("DID YOU DO IT YET HUH?")
                 .setSmallIcon(getSmallIcon())
                 .setAutoCancel(true)
+                .addAction(R.drawable.ic_check_green_36dp, getString(R.string.notification_complete_action), openAppPendingIntent)
                 .setContentIntent(openAppPendingIntent);
     }
 

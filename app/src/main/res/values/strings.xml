@@ -38,6 +38,8 @@
     <string name="channel_complete_goal">Complete your goal!</string>
     <string name="channel_create_goal_desc">Reminders to create a goal if unset.</string>
     <string name="channel_complete_goal_desc">Reminders to complete your goal that you set!</string>
+    <string name="notification_complete_action">I did it!</string>
+    <string name="notification_create_action">Send it in!</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <!-- END Widget strings -->
