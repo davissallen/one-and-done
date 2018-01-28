@@ -3,8 +3,10 @@ package me.davisallen.oneanddone;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 
 /**
@@ -51,19 +53,25 @@ class NotificationHelper extends ContextWrapper {
     }
 
     public NotificationCompat.Builder getNotificationCreateGoal() {
+        Intent openAppIntent = new Intent(this, MainActivity.class);
+        PendingIntent openAppPendingIntent = PendingIntent.getActivity(this, 0, openAppIntent, 0);
         return new NotificationCompat.Builder(getApplicationContext(), CHANNEL_CREATE_GOAL)
                 .setContentTitle("COME HERE YA BOY MAKE A GOAL ALREDY K")
                 .setContentText("COME HERE YA BOY MAKE A GOAL ALREDY K")
                 .setSmallIcon(getSmallIcon())
-                .setAutoCancel(true);
+                .setAutoCancel(true)
+                .setContentIntent(openAppPendingIntent);
     }
 
     public NotificationCompat.Builder getNotificationCompleteGoal(String goal) {
+        Intent openAppIntent = new Intent(this, MainActivity.class);
+        PendingIntent openAppPendingIntent = PendingIntent.getActivity(this, 0, openAppIntent, 0);
         return new NotificationCompat.Builder(getApplicationContext(), CHANNEL_COMPLETE_GOAL)
                 .setContentTitle(goal)
                 .setContentText("DID YOU DO IT YET HUH?")
                 .setSmallIcon(getSmallIcon())
-                .setAutoCancel(true);
+                .setAutoCancel(true)
+                .setContentIntent(openAppPendingIntent);
     }
 
     public void notify(int id, NotificationCompat.Builder notification) {

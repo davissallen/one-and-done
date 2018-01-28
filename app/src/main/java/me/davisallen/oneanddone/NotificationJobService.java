@@ -38,6 +38,7 @@ public class NotificationJobService extends JobService {
     public boolean onStartJob(JobParameters job) {
         // Do some work here
 
+        // TODO: Make this thread safe and async
         // *** NOTE ***
         // THIS WILL RUN ON THE MAIN THREAD! MAKE SURE TO USE ASYNCTASK FOR NETWORK TASKS
 
@@ -94,7 +95,9 @@ public class NotificationJobService extends JobService {
     final ValueEventListener getMostRecentGoalByUser = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
+
             Goal goal = null;
+
             try {
                 goal = dataSnapshot.getChildren().iterator().next().getValue(Goal.class);
             } catch (NoSuchElementException e) {
@@ -102,11 +105,13 @@ public class NotificationJobService extends JobService {
                 e.printStackTrace();
                 return;
             }
+
             if (goal == null || !DateUtils.isToday(goal.getDateInMillis())) {
                 postNotification(NotificationHelper.NOTIFICATION_CREATE_GOAL, null);
             } else {
                 postNotification(NotificationHelper.NOTIFICATION_COMPLETE_GOAL, goal.getGoal());
             }
+
         }
 
         @Override
