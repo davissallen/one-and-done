@@ -54,10 +54,11 @@ class NotificationHelper extends ContextWrapper {
 
     public NotificationCompat.Builder getNotificationCreateGoal() {
         Intent openAppIntent = new Intent(this, MainActivity.class);
+        openAppIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent openAppPendingIntent = PendingIntent.getActivity(this, 0, openAppIntent, 0);
         return new NotificationCompat.Builder(getApplicationContext(), CHANNEL_CREATE_GOAL)
-                .setContentTitle("COME HERE YA BOY MAKE A GOAL ALREDY K")
-                .setContentText("COME HERE YA BOY MAKE A GOAL ALREDY K")
+                .setContentTitle("Feeling a little misguided?")
+                .setContentText("Set a goal for today!")
                 .setSmallIcon(getSmallIcon())
                 .setAutoCancel(true)
                 .addAction(R.drawable.ic_send, getString(R.string.notification_create_action), openAppPendingIntent)
@@ -67,9 +68,10 @@ class NotificationHelper extends ContextWrapper {
     public NotificationCompat.Builder getNotificationCompleteGoal(String goal) {
         Intent openAppIntent = new Intent(this, MainActivity.class);
         PendingIntent openAppPendingIntent = PendingIntent.getActivity(this, 0, openAppIntent, 0);
+        openAppIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         return new NotificationCompat.Builder(getApplicationContext(), CHANNEL_COMPLETE_GOAL)
                 .setContentTitle(goal)
-                .setContentText("DID YOU DO IT YET HUH?")
+                .setContentText("Did you get it done yet?")
                 .setSmallIcon(getSmallIcon())
                 .setAutoCancel(true)
                 .addAction(R.drawable.ic_check_green_36dp, getString(R.string.notification_complete_action), openAppPendingIntent)

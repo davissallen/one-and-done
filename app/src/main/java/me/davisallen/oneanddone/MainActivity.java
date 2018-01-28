@@ -189,7 +189,9 @@ public class MainActivity extends AppCompatActivity implements
         Bundle myExtrasBundle = new Bundle();
         myExtrasBundle.putString("some_key", "some_value");
 
-        int notification_period = 60 * 60 * 6;  // Every 6 hours.
+        // TODO: Re enable this after testing.
+//        int notification_period = 60 * 60 * 6;  // Every 6 hours.
+        int notification_period = 60;  // Every 6 hours.
         int notification_flex = 10;
 
         Job myJob = dispatcher.newJobBuilder()
