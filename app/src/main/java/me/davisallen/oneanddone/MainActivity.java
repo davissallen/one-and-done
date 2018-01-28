@@ -186,12 +186,8 @@ public class MainActivity extends AppCompatActivity implements
 
         FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(this));
 
-        Bundle myExtrasBundle = new Bundle();
-        myExtrasBundle.putString("some_key", "some_value");
-
-        // TODO: Re enable this after testing.
-//        int notification_period = 60 * 60 * 6;  // Every 6 hours.
-        int notification_period = 60;  // Every 6 hours.
+        int notification_period = 60 * 60 * 6;  // Every 6 hours.
+//        int notification_period = 60;  // Every minute (for testing).
         int notification_flex = 10;
 
         Job myJob = dispatcher.newJobBuilder()
@@ -211,7 +207,6 @@ public class MainActivity extends AppCompatActivity implements
                 .setReplaceCurrent(true)
                 // retry with exponential backoff
                 .setRetryStrategy(RetryStrategy.DEFAULT_EXPONENTIAL)
-                .setExtras(myExtrasBundle)
                 .build();
 
         dispatcher.mustSchedule(myJob);
