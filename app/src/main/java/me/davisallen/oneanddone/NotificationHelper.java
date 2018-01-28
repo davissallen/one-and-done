@@ -60,6 +60,7 @@ class NotificationHelper extends ContextWrapper {
                 .setContentTitle("Feeling a little misguided?")
                 .setContentText("Set a goal for today!")
                 .setSmallIcon(getSmallIcon())
+                .setStyle(new NotificationCompat.BigPictureStyle())
                 .setAutoCancel(true)
                 .addAction(R.drawable.ic_send, getString(R.string.notification_create_action), openAppPendingIntent)
                 .setContentIntent(openAppPendingIntent);

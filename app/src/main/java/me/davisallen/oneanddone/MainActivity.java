@@ -84,6 +84,7 @@ import static me.davisallen.oneanddone.DailyGoalAppWidget.EXTRA_GOAL;
 // TODO: Make the input text font use thinner version of roboto.
 // TODO: Make banner not white?
 // TODO: Accept goal input from notification like messages response-in-notification.
+// TODO: Custom notification layout (color at least)
 
 public class MainActivity extends AppCompatActivity implements
         GoalCreateFragment.DailyGoalCreatedListener,
@@ -186,8 +187,8 @@ public class MainActivity extends AppCompatActivity implements
 
         FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(this));
 
-        int notification_period = 60 * 60 * 6;  // Every 6 hours.
-//        int notification_period = 60;  // Every minute (for testing).
+//        int notification_period = 60 * 60 * 6;  // Every 6 hours.
+        int notification_period = 60;  // Every minute (for testing).
         int notification_flex = 10;
 
         Job myJob = dispatcher.newJobBuilder()
