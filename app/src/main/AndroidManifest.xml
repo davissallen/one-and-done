@@ -39,15 +39,22 @@
         </receiver>
 
         <service android:name=".AppWidgetGoalIntentService" />
-
         <service
-            android:exported="false"
-            android:name="me.davisallen.oneanddone.NotificationJobService">
+            android:name=".NotificationJobService"
+            android:exported="false">
             <intent-filter>
-                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />
             </intent-filter>
         </service>
 
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="me.davisallen.oneanddone.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

@@ -69,13 +69,12 @@ import static me.davisallen.oneanddone.DailyGoalAppWidget.EXTRA_GOAL;
 
 // TODO: Convert codebase to Kotlin
 // TODO: Create setting to change background color.
-// TODO: Add notifications.
 // TODO: Hide keyboard when leave main screen if open.
 // TODO: Goal streaks (maybe an extra table in DB?).
 // TODO: Add feature to edit goal once set (but not completed).
 // TODO: Start service at every midnight to update UI and widget (or just use firebase db listener).
 // TODO: Convert the goal fetching to a dedicated task so it can run independent of MainActivity.
-// TODO: Delay banner entrance upon completion.
+// TODO: Delay the banner entrance upon completion.
 // TODO: Make a welcome (help) screen for first time users.
 // TODO: Implement the animated vector drawable (or another animation).
 // TODO: Update widget updating IntentService to JobIntentService to use JobScheduler.
@@ -183,12 +182,11 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     public void initializeNotifications() {
-        // TODO
 
         FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(this));
 
-//        int notification_period = 60 * 60 * 6;  // Every 6 hours.
-        int notification_period = 60;  // Every minute (for testing).
+        int notification_period = 60 * 60 * 6;  // Every 6 hours.
+//        int notification_period = 60;  // Every minute (for testing).
         int notification_flex = 10;
 
         Job myJob = dispatcher.newJobBuilder()
@@ -253,6 +251,18 @@ public class MainActivity extends AppCompatActivity implements
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_settings) {
+            Intent settingsIntent = new Intent(this, SettingsActivity.class);
+            startActivity(settingsIntent);
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
