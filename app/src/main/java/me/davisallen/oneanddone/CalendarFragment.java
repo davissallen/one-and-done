@@ -35,6 +35,30 @@ public class CalendarFragment extends Fragment {
     private MainActivity mParentActivity;
 
     // TODO: Update the view on every calendar swipe (asynchronously).
+    private class GoalCount {
+
+        private int countCompleted;
+        private int countUncompleted;
+        private int countNotSet;
+
+        public GoalCount(int completed, int uncompleted, int notSet) {
+            this.countCompleted = completed;
+            this.countUncompleted = uncompleted;
+            this.countNotSet = notSet;
+        }
+
+        public int getCountCompleted() {
+            return countCompleted;
+        }
+
+        public int getCountUncompleted() {
+            return countUncompleted;
+        }
+
+        public int getCountNotSet() {
+            return countNotSet;
+        }
+    }
 
     @Nullable
     @Override
@@ -52,7 +76,7 @@ public class CalendarFragment extends Fragment {
     }
 
     private void initializeCalendarSettings() {
-        calculateGoalCounts();
+        populateGoalCounts();
 
         long firstGoalDateInMillis, lastGoalDateInMillis;
         if (mParentActivity.mGoals != null && mParentActivity.mGoals.size() > 0) {
@@ -69,7 +93,12 @@ public class CalendarFragment extends Fragment {
         mCalendar.setMaxDate(lastGoalDateInMillis);
     }
 
-    private void calculateGoalCounts() {
+    private void populateGoalCounts() {
+        GoalCount count = calculateGoalCounts();
+        updateCounts(count);
+    }
+
+    private GoalCount calculateGoalCounts() {
 
         long dateInMillis = mCalendar.getDate();
 
@@ -91,13 +120,13 @@ public class CalendarFragment extends Fragment {
             }
         }
 
-        updateCounts(count_completed, count_neutral, count_uncompleted);
+        return new GoalCount(count_completed, count_neutral, count_uncompleted);
     }
 
-    private void updateCounts(int count_completed, int count_neutral, int count_uncompleted) {
-        mCountCompleted.setText(String.valueOf(count_completed));
-        mCountNeutral.setText(String.valueOf(count_neutral));
-        mCountUncompleted.setText(String.valueOf(count_uncompleted));
+    private void updateCounts(GoalCount count) {
+        mCountCompleted.setText(String.valueOf(count.getCountCompleted()));
+        mCountNeutral.setText(String.valueOf(count.getCountNotSet()));
+        mCountUncompleted.setText(String.valueOf(count.getCountUncompleted()));
     }
 
     private long getBeginningOfMonthInMillis(long dateInMillis) {
