@@ -185,7 +185,7 @@ public class MainActivity extends AppCompatActivity implements
 
         FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(this));
 
-        int notification_period = 60 * 60 * 6;  // Every 6 hours.
+        int notification_period = 60 * 60 * 1;  // Every 1 hour.
 //        int notification_period = 60;  // Every minute (for testing).
         int notification_flex = 10;
 
