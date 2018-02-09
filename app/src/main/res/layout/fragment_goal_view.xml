@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="?attr/actionBarSize"
         android:background="@color/white"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -60,14 +61,17 @@
 
     <TextView
         android:id="@+id/tv_goal_view_goal"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="48dp"
+        android:layout_marginStart="48dp"
         android:layout_marginTop="64dp"
+        android:gravity="center"
         android:paddingEnd="16dp"
         android:paddingStart="16dp"
         android:theme="@style/ViewGoalGoal"
-        app:layout_constraintEnd_toEndOf="@+id/clock_goal_view"
-        app:layout_constraintStart_toStartOf="@+id/clock_goal_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_goal_view_date"
         tools:text="Bake cookies" />
 
@@ -77,15 +81,15 @@
         android:layout_height="128dp"
         android:layout_marginTop="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/tv_goal_view_goal"
-        app:layout_constraintStart_toEndOf="@+id/tv_goal_view_goal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_goal_view_goal"
         app:pulse_color="@color/white"
         app:pulse_count="2"
         app:pulse_duration="2500"
         app:pulse_interpolator="AccelerateDecelerate"
         app:pulse_repeat="0"
-        app:pulse_startFromScratch="false" >
+        app:pulse_startFromScratch="false">
 
     </pl.bclogic.pulsator4droid.library.PulsatorLayout>
 
@@ -115,8 +119,6 @@
         android:contentDescription="edit goal"
         app:layout_constraintBottom_toBottomOf="@+id/tv_goal_view_goal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/tv_goal_view_goal"
         app:layout_constraintTop_toTopOf="@+id/tv_goal_view_goal"
         app:srcCompat="@drawable/ic_edit" />
 
