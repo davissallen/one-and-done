@@ -116,5 +116,8 @@
     <!-- END Widget strings -->
 
     <string name="action_settings">Settings</string>
+    <string name="confirm_edit_goal_title">Do you want to edit your goal?</string>
+    <string name="confirm_edit_goal_positive">Edit</string>
+    <string name="confirm_edit_goal_negative">Cancel</string>
 
 </resources>

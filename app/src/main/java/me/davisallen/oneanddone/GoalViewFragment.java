@@ -1,10 +1,12 @@
 package me.davisallen.oneanddone;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
@@ -55,7 +57,9 @@ public class GoalViewFragment extends Fragment {
     @BindView(R.id.tv_goal_view_goal) TextView mGoalTextView;
     @BindView(R.id.pulsator) PulsatorLayout mPulsator;
     @BindView(R.id.button_complete) ImageView mCompleteButton;
+    @BindView(R.id.iv_edit_goal) ImageView mEditGoalImageView;
 
+    Context mContext;
     OnGoalCompleteListener mListener;
     AppCompatActivity mActivity;
 
@@ -67,6 +71,7 @@ public class GoalViewFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mContext = getContext();
         mActivity = (AppCompatActivity) getActivity();
         mListener = (OnGoalCompleteListener) getActivity();
 
@@ -78,10 +83,11 @@ public class GoalViewFragment extends Fragment {
         } else {
             Timber.e("Did not receive goal, oh no! :O");
         }
+
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_goal_view, container, false);
         ButterKnife.bind(this, view);
 
@@ -94,10 +100,9 @@ public class GoalViewFragment extends Fragment {
                 @Override
                 public void onClick(final View view) {
 
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                     builder.setTitle(getResources().getString(R.string.confirm_completed_title));
                     builder.setMessage(getResources().getString(R.string.confirm_completed_message));
-                    // TODO: Get a logo-only image from rct3dt
                     builder.setIcon(R.drawable.logo);
                     String positiveResponse = getResources().getString(R.string.confirm_completed_positive);
                     String negativeResponse = getResources().getString(R.string.confirm_completed_negative);
@@ -120,6 +125,34 @@ public class GoalViewFragment extends Fragment {
             mBanner.setVisibility(View.INVISIBLE);
             mPulsator.start();
         }
+
+        mEditGoalImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+
+                builder.setTitle(getResources().getString(R.string.confirm_edit_goal_title));
+//                builder.setMessage(getResources().getString(R.string.configm_edit_goal_prompt));
+                builder.setIcon(R.drawable.logo);
+                String positiveResponse = getResources().getString(R.string.confirm_edit_goal_positive);
+                String negativeResponse = getResources().getString(R.string.confirm_edit_goal_negative);
+                builder.setPositiveButton(positiveResponse, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                        showToast(mContext, "Your goal will be edited!");
+                        // Do positive action
+                        // open fragment create goal, delete goal in database.
+                    }
+                });
+                builder.setNegativeButton(negativeResponse, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
+                AlertDialog alert = builder.create();
+                alert.show();
+            }
+        });
 
         return view;
     }
