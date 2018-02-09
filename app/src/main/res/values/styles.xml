@@ -35,6 +35,13 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
+
+    <style name="CreateGoalGoal" parent="WhiteEditText">
+        <item name="android:textSize">28sp</item>
+        <item name="android:fontFamily">sans-serif-thin</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
     <style name="GoalListItem">
         <item name="android:textColor">@color/black</item>
     </style>

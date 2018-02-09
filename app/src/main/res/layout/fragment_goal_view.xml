@@ -63,11 +63,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="64dp"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp"
         android:theme="@style/ViewGoalGoal"
         app:layout_constraintEnd_toEndOf="@+id/clock_goal_view"
         app:layout_constraintStart_toStartOf="@+id/clock_goal_view"
         app:layout_constraintTop_toBottomOf="@+id/tv_goal_view_date"
-        tools:text="Bake Cookies" />
+        tools:text="Bake cookies" />
 
     <pl.bclogic.pulsator4droid.library.PulsatorLayout
         android:id="@+id/pulsator"
@@ -104,5 +106,18 @@
         app:riv_mutate_background="true"
         app:riv_oval="true"
         app:riv_tile_mode="repeat" />
+
+    <ImageView
+        android:id="@+id/iv_edit_goal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:contentDescription="edit goal"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_goal_view_goal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/tv_goal_view_goal"
+        app:layout_constraintTop_toTopOf="@+id/tv_goal_view_goal"
+        app:srcCompat="@drawable/ic_edit" />
 
 </android.support.constraint.ConstraintLayout>
