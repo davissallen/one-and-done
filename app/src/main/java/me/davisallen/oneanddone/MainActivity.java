@@ -462,6 +462,12 @@ public class MainActivity extends AppCompatActivity implements
         // Updates goal in database to completed.
         mGoalsByUserDbReference.orderByChild("dateInMillis").limitToLast(1).addListenerForSingleValueEvent(setMostRecentGoalCompletedValueListener);
     }
+
+    @Override
+    public void onGoalEdited() {
+        mGoalsByUserDbReference.orderByChild("dateInMillis").limitToLast(1).addListenerForSingleValueEvent(deleteMostRecentEntryValueListener);
+    }
+
     //---------------------------------------------------------------------------------------
     //endregion
 
@@ -523,6 +529,17 @@ public class MainActivity extends AppCompatActivity implements
                 return;
             }
             setMostRecentGoalCompleted(mostRecentGoalKey);
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+        }
+    };
+
+    final ValueEventListener deleteMostRecentEntryValueListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            dataSnapshot.getChildren().iterator().next().getRef().removeValue();
         }
 
         @Override

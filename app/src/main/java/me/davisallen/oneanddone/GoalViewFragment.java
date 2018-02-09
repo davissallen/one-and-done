@@ -65,6 +65,7 @@ public class GoalViewFragment extends Fragment {
 
     interface OnGoalCompleteListener {
         public void onGoalCompleted();
+        public void onGoalEdited();
     }
 
     @Override
@@ -140,8 +141,8 @@ public class GoalViewFragment extends Fragment {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.dismiss();
                         showToast(mContext, "Your goal will be edited!");
-                        // Do positive action
-                        // open fragment create goal, delete goal in database.
+                        // Delete goal in database.
+                        mListener.onGoalEdited();
                     }
                 });
                 builder.setNegativeButton(negativeResponse, new DialogInterface.OnClickListener() {
