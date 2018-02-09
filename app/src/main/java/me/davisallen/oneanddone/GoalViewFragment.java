@@ -140,7 +140,6 @@ public class GoalViewFragment extends Fragment {
                 builder.setPositiveButton(positiveResponse, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.dismiss();
-                        showToast(mContext, "Your goal will be edited!");
                         // Delete goal in database.
                         mListener.onGoalEdited();
                     }
