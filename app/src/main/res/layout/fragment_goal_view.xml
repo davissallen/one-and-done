@@ -10,9 +10,9 @@
     <FrameLayout
         android:id="@+id/banner"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="72dp"
         android:layout_marginTop="?attr/actionBarSize"
-        android:background="@color/white"
+        android:background="@drawable/banner_gradient"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,7 +22,8 @@
             android:id="@+id/tv_banner"
             style="@style/BannerText"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
             android:padding="8dp"
             android:text="@string/banner"
             android:textAlignment="center" />
