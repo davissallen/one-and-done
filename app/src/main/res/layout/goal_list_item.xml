@@ -11,12 +11,16 @@
 
     <TextView
         android:id="@+id/li_goal"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
+        android:ellipsize="end"
+        android:singleLine="true"
         android:theme="@style/ListItemGoal"
         app:layout_constraintBottom_toTopOf="@+id/li_day_of_month"
+        app:layout_constraintEnd_toStartOf="@+id/li_status"
         app:layout_constraintStart_toEndOf="@+id/li_month"
         app:layout_constraintTop_toBottomOf="@+id/li_month"
         tools:text="Bake cookies" />
@@ -37,7 +41,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
         app:layout_constraintBottom_toTopOf="@+id/li_goal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/li_goal"
