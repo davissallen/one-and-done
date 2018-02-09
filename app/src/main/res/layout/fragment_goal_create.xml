@@ -24,7 +24,7 @@
             android:layout_marginEnd="0dp"
             app:counterTextAppearance="@style/WhiteCounter"
             app:counterEnabled="true"
-            app:counterMaxLength="90"
+            app:counterMaxLength="45"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" >
 

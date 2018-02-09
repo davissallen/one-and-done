@@ -82,6 +82,9 @@ import static me.davisallen.oneanddone.DailyGoalAppWidget.EXTRA_GOAL;
 // TODO: Make banner not white?
 // TODO: Accept goal input from notification like messages response-in-notification.
 // TODO: Custom notification layout (color at least)
+// TODO: Add transition from creating to viewing a goal.
+// TODO: Actually limit character input to 45 chars.
+// TODO: Don't allow text to appear over add button.
 
 public class MainActivity extends AppCompatActivity implements
         GoalCreateFragment.DailyGoalCreatedListener,
