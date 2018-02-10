@@ -6,11 +6,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <Button
+        android:id="@+id/button_create_goal"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginBottom="24dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/ic_add_circle_outline_white_24dp"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+
     <android.support.constraint.ConstraintLayout
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="24dp"
         android:layout_marginStart="16dp"
         app:layout_constraintBottom_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -21,12 +32,12 @@
             android:id="@+id/textInputLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="0dp"
-            app:counterTextAppearance="@style/WhiteCounter"
+            android:layout_marginEnd="16dp"
             app:counterEnabled="true"
             app:counterMaxLength="45"
+            app:counterTextAppearance="@style/WhiteCounter"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" >
+            app:layout_constraintStart_toStartOf="parent">
 
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/et_create_goal"
@@ -35,23 +46,13 @@
                 android:imeOptions="actionGo"
                 android:inputType="text"
                 android:maxLength="45"
+                android:nextFocusLeft="@+id/nav_view"
+                android:nextFocusUp="@+id/nav_view"
                 android:textColor="@color/white"
                 android:textSize="24sp"
-                android:theme="@style/CreateGoalGoal"
-                android:nextFocusUp="@+id/nav_view"
-                android:nextFocusLeft="@+id/nav_view" />
+                android:theme="@style/CreateGoalGoal" />
 
         </android.support.design.widget.TextInputLayout>
-
-        <Button
-            android:id="@+id/button_create_goal"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginBottom="24dp"
-            android:background="@drawable/ic_add_circle_outline_white_24dp"
-            app:layout_constraintBottom_toBottomOf="@+id/textInputLayout"
-            app:layout_constraintEnd_toEndOf="@+id/textInputLayout"
-            app:layout_constraintTop_toTopOf="@+id/textInputLayout" />
 
     </android.support.constraint.ConstraintLayout>
 
