@@ -90,7 +90,7 @@ public class GoalCreateFragment extends Fragment {
             }
             mListener.onCreateGoal(goal);
         } else {
-            Timber.e("The goal entered has 0 lenght.");
+            Timber.e("The goal entered has 0 length.");
         }
     }
 

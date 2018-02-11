@@ -67,9 +67,9 @@ import static me.davisallen.oneanddone.DailyGoalAppWidget.EXTRA_GOAL;
 //---------------------------------------------------------------------------------------
 //endregion
 
-// TODO: Convert codebase to Kotlin
+// TODO: Convert codebase to Kotlin.
 // TODO: Create setting to change background color.
-// TODO: Hide keyboard when leave main screen if open.
+// TODO: Hide keyboard when lose focus of edit text.
 // TODO: Goal streaks (maybe an extra table in DB?).
 // TODO: Start service at every midnight to update UI and widget (or just use firebase db listener).
 // TODO: Convert the goal fetching to a dedicated task so it can run independent of MainActivity.
@@ -79,11 +79,9 @@ import static me.davisallen.oneanddone.DailyGoalAppWidget.EXTRA_GOAL;
 // TODO: Update widget updating IntentService to JobIntentService to use JobScheduler.
 // TODO: Make the splash screen better..
 // TODO: Implement firebase analytics.
-// TODO: Make banner not white?
 // TODO: Accept goal input from notification like messages response-in-notification.
 // TODO: Custom notification layout (color at least)
 // TODO: Add transition from creating to viewing a goal.
-// TODO: Don't allow text to appear over add button.
 
 public class MainActivity extends AppCompatActivity implements
         GoalCreateFragment.DailyGoalCreatedListener,

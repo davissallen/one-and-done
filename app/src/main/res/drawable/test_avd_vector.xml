@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:name="vector"
+    android:width="64dp"
+    android:height="64dp"
+    android:viewportWidth="32"
+    android:viewportHeight="32">
+    <group android:name="circle">
+        <path
+            android:name="path"
+            android:pathData="M 16 1 C 7.716 1 1 7.716 1 16 C 1 24.284 7.716 31 16 31 C 24.284 31 31 24.284 31 16 C 31 7.716 24.284 1 16 1 Z"
+            android:fillColor="#e91e63"
+            android:strokeColor="#ffffff"
+            android:strokeWidth="1"
+            android:strokeLineCap="round"/>
+    </group>
+    <group android:name="check">
+        <path
+            android:name="c1"
+            android:pathData="M 8 16 L 13 21"
+            android:strokeColor="#ffffff"
+            android:strokeWidth="1"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="bevel"/>
+        <path
+            android:name="c2"
+            android:pathData="M 13 21 L 24 10"
+            android:strokeColor="#ffffff"
+            android:strokeWidth="1"
+            android:strokeLineCap="round"/>
+    </group>
+</vector>

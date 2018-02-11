@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:drawable="@drawable/test_avd_vector">
+
+    <target
+        android:animation="@animator/c1_obj_anim"
+        android:name="c1" />
+
+    <target
+        android:animation="@animator/c2_obj_anim"
+        android:name="c2" />
+
+    <target
+        android:animation="@animator/path_obj_anim"
+        android:name="path" />
+
+</animated-vector>

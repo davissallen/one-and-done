@@ -94,23 +94,38 @@
 
     </pl.bclogic.pulsator4droid.library.PulsatorLayout>
 
-    <com.makeramen.roundedimageview.RoundedImageView
+    <!--<com.makeramen.roundedimageview.RoundedImageView-->
+        <!--android:id="@+id/button_complete"-->
+        <!--android:layout_width="32dp"-->
+        <!--android:layout_height="32dp"-->
+        <!--android:layout_alignParentEnd="true"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:contentDescription="@string/goal_complete_button"-->
+        <!--android:scaleType="center"-->
+        <!--app:layout_constraintBottom_toTopOf="@+id/pulsator"-->
+        <!--app:layout_constraintEnd_toStartOf="@+id/pulsator"-->
+        <!--app:layout_constraintStart_toEndOf="@+id/pulsator"-->
+        <!--app:layout_constraintTop_toBottomOf="@+id/pulsator"-->
+        <!--app:riv_corner_radius="30dp"-->
+        <!--app:riv_mutate_background="true"-->
+        <!--app:riv_oval="true"-->
+        <!--app:riv_tile_mode="repeat"-->
+        <!--app:srcCompat="@drawable/test_avd_vector" />-->
+
+    <ImageView
         android:id="@+id/button_complete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
-        android:scaleType="center"
         android:contentDescription="@string/goal_complete_button"
-        app:srcCompat="@drawable/ic_check_primary"
+        android:scaleType="center"
         app:layout_constraintBottom_toTopOf="@+id/pulsator"
         app:layout_constraintEnd_toStartOf="@+id/pulsator"
         app:layout_constraintStart_toEndOf="@+id/pulsator"
         app:layout_constraintTop_toBottomOf="@+id/pulsator"
-        app:riv_corner_radius="30dp"
-        app:riv_mutate_background="true"
-        app:riv_oval="true"
-        app:riv_tile_mode="repeat" />
+        app:srcCompat="@drawable/avd_anim" />
+
 
     <ImageView
         android:id="@+id/iv_edit_goal"

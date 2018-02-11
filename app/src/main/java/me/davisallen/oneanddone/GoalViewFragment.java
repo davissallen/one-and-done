@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.Animatable;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,8 +18,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextClock;
@@ -96,30 +96,35 @@ public class GoalViewFragment extends Fragment {
             updateUIForCompletedGoal();
         } else {
             mGoalTextView.setPaintFlags(0);
-            mCompleteButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_check_primary));
+//            mCompleteButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_check_primary));
             mCompleteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View view) {
 
-                    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                    builder.setTitle(getResources().getString(R.string.confirm_completed_title));
-                    builder.setMessage(getResources().getString(R.string.confirm_completed_message));
-                    builder.setIcon(R.drawable.logo);
-                    String positiveResponse = getResources().getString(R.string.confirm_completed_positive);
-                    String negativeResponse = getResources().getString(R.string.confirm_completed_negative);
-                    builder.setPositiveButton(positiveResponse, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.dismiss();
-                            startAnimationToCompleteGoal(view);
-                        }
-                    });
-                    builder.setNegativeButton(negativeResponse, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.dismiss();
-                        }
-                    });
-                    AlertDialog alert = builder.create();
-                    alert.show();
+                    Drawable drawable = mCompleteButton.getDrawable();
+                    if (drawable instanceof Animatable) {
+                        ((Animatable) drawable).start();
+                    }
+
+//                    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+//                    builder.setTitle(getResources().getString(R.string.confirm_completed_title));
+//                    builder.setMessage(getResources().getString(R.string.confirm_completed_message));
+//                    builder.setIcon(R.drawable.logo);
+//                    String positiveResponse = getResources().getString(R.string.confirm_completed_positive);
+//                    String negativeResponse = getResources().getString(R.string.confirm_completed_negative);
+//                    builder.setPositiveButton(positiveResponse, new DialogInterface.OnClickListener() {
+//                        public void onClick(DialogInterface dialog, int id) {
+//                            dialog.dismiss();
+//                            startAnimationToCompleteGoal(view);
+//                        }
+//                    });
+//                    builder.setNegativeButton(negativeResponse, new DialogInterface.OnClickListener() {
+//                        public void onClick(DialogInterface dialog, int id) {
+//                            dialog.dismiss();
+//                        }
+//                    });
+//                    AlertDialog alert = builder.create();
+//                    alert.show();
 
                 }
             });
@@ -172,26 +177,27 @@ public class GoalViewFragment extends Fragment {
     }
 
     public void startAnimationToCompleteGoal(View view) {
-        // Run a funky animation to jump the button up, spin it around, and jump back down.
-        Animation completeButtonAnim = AnimationUtils.loadAnimation(getActivity(), R.anim.complete_goal_funk);
-        completeButtonAnim.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
 
-            }
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                updateUIForCompletedGoal();
-                celebrate();
-                // Update the goal in the cloud!
-                setGoalCompleted();
-            }
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-        view.startAnimation(completeButtonAnim);
+//        // Run a funky animation to jump the button up, spin it around, and jump back down.
+//        Animation completeButtonAnim = AnimationUtils.loadAnimation(getActivity(), R.anim.complete_goal_funk);
+//        completeButtonAnim.setAnimationListener(new Animation.AnimationListener() {
+//            @Override
+//            public void onAnimationStart(Animation animation) {
+//
+//            }
+//            @Override
+//            public void onAnimationEnd(Animation animation) {
+//                updateUIForCompletedGoal();
+//                celebrate();
+//                // Update the goal in the cloud!
+//                setGoalCompleted();
+//            }
+//            @Override
+//            public void onAnimationRepeat(Animation animation) {
+//
+//            }
+//        });
+//        view.startAnimation(completeButtonAnim);
     }
 
     private void updateUIForCompletedGoal() {
