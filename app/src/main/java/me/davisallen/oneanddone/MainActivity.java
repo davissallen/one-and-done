@@ -75,7 +75,6 @@ import static me.davisallen.oneanddone.DailyGoalAppWidget.EXTRA_GOAL;
 // TODO: Convert the goal fetching to a dedicated task so it can run independent of MainActivity.
 // TODO: Delay the banner entrance upon completion.
 // TODO: Make a welcome (help) screen for first time users.
-// TODO: Implement the animated vector drawable (or another animation).
 // TODO: Update widget updating IntentService to JobIntentService to use JobScheduler.
 // TODO: Make the splash screen better..
 // TODO: Implement firebase analytics.
