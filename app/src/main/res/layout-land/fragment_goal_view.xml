@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/goal_view_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary">
+
+    <FrameLayout
+        android:id="@+id/banner"
+        android:layout_width="0dp"
+        android:layout_height="72dp"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:background="@drawable/banner_gradient"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tv_banner"
+            style="@style/BannerText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:text="@string/banner"
+            android:textAlignment="center" />
+
+    </FrameLayout>
+
+    <nl.dionsegijn.konfetti.KonfettiView
+        android:id="@+id/konfetti"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <TextClock
+        android:id="@+id/clock_goal_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:fontFamily="sans-serif-thin"
+        android:format12Hour="h:mm a"
+        android:textColor="@color/white"
+        android:textSize="68sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/banner"
+        app:layout_constraintVertical_bias="0.25"
+        tools:text="11:11am" />
+
+    <TextView
+        android:id="@+id/tv_goal_view_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toStartOf="@+id/clock_goal_view"
+        app:layout_constraintStart_toEndOf="@+id/clock_goal_view"
+        app:layout_constraintTop_toBottomOf="@+id/clock_goal_view"
+        tools:text="January 30, 2016" />
+
+    <TextView
+        android:id="@+id/tv_goal_view_goal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="48dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp"
+        android:theme="@style/ViewGoalGoal"
+        app:layout_constraintBottom_toTopOf="@+id/tv_goal_view_date"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/banner"
+        tools:text="Bake cookies" />
+
+    <pl.bclogic.pulsator4droid.library.PulsatorLayout
+        android:id="@+id/pulsator"
+        android:layout_width="128dp"
+        android:layout_height="128dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toStartOf="@+id/iv_edit_goal"
+        app:layout_constraintStart_toStartOf="@+id/tv_goal_view_goal"
+        app:layout_constraintTop_toBottomOf="@+id/tv_goal_view_goal"
+        app:pulse_color="@color/white"
+        app:pulse_count="2"
+        app:pulse_duration="2500"
+        app:pulse_interpolator="AccelerateDecelerate"
+        app:pulse_repeat="0"
+        app:pulse_startFromScratch="false">
+
+    </pl.bclogic.pulsator4droid.library.PulsatorLayout>
+
+    <ImageView
+        android:id="@+id/button_complete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:contentDescription="@string/goal_complete_button"
+        android:scaleType="center"
+        app:layout_constraintBottom_toTopOf="@+id/pulsator"
+        app:layout_constraintEnd_toStartOf="@+id/pulsator"
+        app:layout_constraintStart_toEndOf="@+id/pulsator"
+        app:layout_constraintTop_toBottomOf="@+id/pulsator"
+        app:srcCompat="@drawable/avd_anim" />
+
+
+    <ImageView
+        android:id="@+id/iv_edit_goal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:contentDescription="edit goal"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_goal_view_goal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tv_goal_view_goal"
+        app:srcCompat="@drawable/ic_edit" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="341dp" />
+
+</android.support.constraint.ConstraintLayout>
