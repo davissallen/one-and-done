@@ -67,6 +67,7 @@ import static me.davisallen.oneanddone.DailyGoalAppWidget.EXTRA_GOAL;
 //---------------------------------------------------------------------------------------
 //endregion
 
+// TODO: Change Firebase database permission rules.
 // TODO: Convert codebase to Kotlin.
 // TODO: Create setting to change background color.
 // TODO: Hide keyboard when lose focus of edit text.
