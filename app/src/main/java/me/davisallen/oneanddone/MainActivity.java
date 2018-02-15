@@ -82,6 +82,9 @@ import static me.davisallen.oneanddone.DailyGoalAppWidget.EXTRA_GOAL;
 // TODO: Accept goal input from notification like messages response-in-notification.
 // TODO: Custom notification layout (color at least)
 // TODO: Add transition from creating to viewing a goal.
+// TODO: Change Notification from BiGTextStyle
+// TODO: Add array of prompts for notification ("Are you done you?" "Keep it up!" etc.)
+// TODO: Move two notifications into one channel
 
 public class MainActivity extends AppCompatActivity implements
         GoalCreateFragment.DailyGoalCreatedListener,
