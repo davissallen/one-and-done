@@ -85,6 +85,7 @@ import static me.davisallen.oneanddone.DailyGoalAppWidget.EXTRA_GOAL;
 // TODO: Change Notification from BiGTextStyle
 // TODO: Add array of prompts for notification ("Are you done you?" "Keep it up!" etc.)
 // TODO: Move two notifications into one channel
+// TODO: Ensure notifications replace the current one (to prevent outdated messages).
 
 public class MainActivity extends AppCompatActivity implements
         GoalCreateFragment.DailyGoalCreatedListener,
