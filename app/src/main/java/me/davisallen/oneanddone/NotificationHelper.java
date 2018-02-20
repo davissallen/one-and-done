@@ -13,8 +13,10 @@ import android.support.v4.app.NotificationCompat;
  * Helper class to manage notification channels, and create notifications.
  */
 class NotificationHelper extends ContextWrapper {
-    private static final String CHANNEL_CREATE_GOAL = "channel_create_goal";
-    private static final String CHANNEL_COMPLETE_GOAL = "channel_complete_goal";
+    private static final String CHANNEL_GOAL_REMINDER = "channel_goal_reminder";
+    private static final String CHANNEL_GOAL_STREAK = "channel_goal_streak";
+//    private static final String CHANNEL_CREATE_GOAL = "channel_create_goal";
+//    private static final String CHANNEL_COMPLETE_GOAL = "channel_complete_goal";
 
     private NotificationManager manager;
 
@@ -33,34 +35,24 @@ class NotificationHelper extends ContextWrapper {
             return;
         }
 
-        NotificationChannel createGoalChannel = new NotificationChannel(
-                CHANNEL_CREATE_GOAL,
+        NotificationChannel goalReminderChannel = new NotificationChannel(
+                CHANNEL_GOAL_REMINDER,
                 getString(R.string.channel_create_goal),
                 NotificationManager.IMPORTANCE_DEFAULT);
-        createGoalChannel.setLightColor(getColor(R.color.colorPrimary));
-        createGoalChannel.setDescription(getString(R.string.channel_create_goal_desc));
-        createGoalChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
-        getManager().createNotificationChannel(createGoalChannel);
-
-        NotificationChannel completeGoalChannel = new NotificationChannel(
-                CHANNEL_COMPLETE_GOAL,
-                getString(R.string.channel_complete_goal),
-                NotificationManager.IMPORTANCE_DEFAULT);
-        completeGoalChannel.setLightColor(getColor(R.color.colorAccent));
-        completeGoalChannel.setDescription(getString(R.string.channel_complete_goal_desc));
-        completeGoalChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
-        getManager().createNotificationChannel(completeGoalChannel);
+        goalReminderChannel.setLightColor(getColor(R.color.colorPrimary));
+        goalReminderChannel.setDescription(getString(R.string.channel_goal_reminder));
+        goalReminderChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+        getManager().createNotificationChannel(goalReminderChannel);
     }
 
     public NotificationCompat.Builder getNotificationCreateGoal() {
         Intent openAppIntent = new Intent(this, MainActivity.class);
         openAppIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent openAppPendingIntent = PendingIntent.getActivity(this, 0, openAppIntent, 0);
-        return new NotificationCompat.Builder(getApplicationContext(), CHANNEL_CREATE_GOAL)
+        return new NotificationCompat.Builder(getApplicationContext(), CHANNEL_GOAL_REMINDER)
                 .setContentTitle("Feeling a little misguided?")
                 .setContentText("Set a goal for today!")
                 .setSmallIcon(getSmallIcon())
-//                .setStyle(new NotificationCompat.BigPictureStyle())
                 .setAutoCancel(true)
                 .addAction(R.drawable.ic_send, getString(R.string.notification_create_action), openAppPendingIntent)
                 .setContentIntent(openAppPendingIntent);
@@ -70,7 +62,7 @@ class NotificationHelper extends ContextWrapper {
         Intent openAppIntent = new Intent(this, MainActivity.class);
         PendingIntent openAppPendingIntent = PendingIntent.getActivity(this, 0, openAppIntent, 0);
         openAppIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        return new NotificationCompat.Builder(getApplicationContext(), CHANNEL_COMPLETE_GOAL)
+        return new NotificationCompat.Builder(getApplicationContext(), CHANNEL_GOAL_REMINDER)
                 .setContentTitle(goal)
                 .setContentText("Did you get it done yet?")
                 .setSmallIcon(getSmallIcon())

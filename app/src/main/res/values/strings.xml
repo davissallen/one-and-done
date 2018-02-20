@@ -119,5 +119,6 @@
     <string name="confirm_edit_goal_title">Do you want to edit your goal?</string>
     <string name="confirm_edit_goal_positive">Edit</string>
     <string name="confirm_edit_goal_negative">Cancel</string>
+    <string name="channel_goal_reminder">Reminding you to set or complete your goal!</string>
 
 </resources>
