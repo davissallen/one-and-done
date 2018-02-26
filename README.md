@@ -1,5 +1,4 @@
-![1 & Done logo](app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png "1 & Done")
-
+![1 & Done logo](app/src/main/res/drawable-hdpi/logo.png "1 & Done")
 # 1 & Done
 ### [In Development] A catalyst for character and goal-achieving!
 [Download the alpha release on the Play Store](https://play.google.com/apps/testing/me.davisallen.oneanddone)
