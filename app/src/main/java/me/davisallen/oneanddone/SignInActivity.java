@@ -2,8 +2,10 @@ package me.davisallen.oneanddone;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 
 import com.firebase.ui.auth.AuthUI;
@@ -34,20 +36,33 @@ public class SignInActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
-        // Uncomment this and comment out the snippet below to disable auto sign in.
-        // startSignInActivity();
-
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        if (auth.getCurrentUser() != null) {
-            // already signed in
-            startActivity(MainActivity.createIntent(this));
-            finish();
+        SharedPreferences sharedPreferences = this.getSharedPreferences(getString(R.string.file_shared_prefs), Context.MODE_PRIVATE);
+        boolean firstLaunch = sharedPreferences.getBoolean(getString(R.string.shared_prefs_first_launch), true);
+        if (firstLaunch) {
+            showOnboarding();
         } else {
-            startSignInActivity();
+            setContentView(R.layout.activity_main);
+
+            // Uncomment this and comment out the snippet below to disable auto sign in.
+            // startSignInActivity();
+
+            FirebaseAuth auth = FirebaseAuth.getInstance();
+            if (auth.getCurrentUser() != null) {
+                // already signed in
+                startActivity(MainActivity.createIntent(this));
+                finish();
+            } else {
+                startSignInActivity();
+            }
         }
 
+    }
+
+    private void showOnboarding() {
+        ActivityCompat.finishAffinity(SignInActivity.this);
+        Intent onboardingIntent = new Intent(SignInActivity.this, OnboardingActivity.class);
+        startActivity(onboardingIntent);
     }
 
     private void startSignInActivity() {
@@ -63,7 +78,7 @@ public class SignInActivity extends AppCompatActivity {
                         .setIsSmartLockEnabled(false)
                         .setAvailableProviders(providers)
                         .setTheme(R.style.AppTheme)
-                        .setLogo(R.drawable.logo_small)
+                        .setLogo(R.drawable.logo)
                         .build(),
                 RC_SIGN_IN);
     }

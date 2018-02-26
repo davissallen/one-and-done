@@ -16,11 +16,21 @@
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="WhiteCounter">
         <item name="android:textColor">#FFFFFF</item>
     </style>
+
+    <style name="GetStarted.Button" parent="ThemeOverlay.AppCompat">
+        <item name="colorAccent">@color/white</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:paddingLeft">20dp</item>
+        <item name="android:paddingRight">20dp</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
     <style name="WhiteEditText">
         <!-- Used for the bottom line when not selected / focused -->
         <item name="colorControlNormal">#FFFFFF</item>
@@ -45,9 +55,11 @@
     <style name="GoalListItem">
         <item name="android:textColor">@color/black</item>
     </style>
+
     <style name="ListItemGoal" parent="GoalListItem">
         <item name="android:textSize">20sp</item>
     </style>
+
     <style name="ListItemDate" parent="GoalListItem">
         <item name="android:textSize">28sp</item>
     </style>
@@ -66,7 +78,8 @@
     <style name="BannerText">
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/black</item>
-        <item name="android:fontFamily">sans-serif-thin</item></style>
+        <item name="android:fontFamily">sans-serif-thin</item>
+    </style>
 
     <style name="widget_title">
         <item name="android:textSize">18sp</item>

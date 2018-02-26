@@ -75,15 +75,12 @@ import static me.davisallen.oneanddone.DailyGoalAppWidget.EXTRA_GOAL;
 // TODO: Start service at every midnight to update UI and widget (or just use firebase db listener).
 // TODO: Convert the goal fetching to a dedicated task so it can run independent of MainActivity.
 // TODO: Delay the banner entrance upon completion.
-// TODO: Make a welcome (help) screen for first time users.
 // TODO: Update widget updating IntentService to JobIntentService to use JobScheduler.
-// TODO: Make the splash screen better..
 // TODO: Implement firebase analytics.
 // TODO: Accept goal input from notification like messages response-in-notification.
 // TODO: Custom notification layout (color at least)
 // TODO: Add transition from creating to viewing a goal.
 // TODO: Add array of prompts for notification ("Are you done you?" "Keep it up!" etc.)
-// TODO: Move two notifications into one channel
 // TODO: Ensure notifications replace the current one (to prevent outdated messages).
 
 public class MainActivity extends AppCompatActivity implements

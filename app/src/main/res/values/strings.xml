@@ -120,5 +120,14 @@
     <string name="confirm_edit_goal_positive">Edit</string>
     <string name="confirm_edit_goal_negative">Cancel</string>
     <string name="channel_goal_reminder">Reminding you to set or complete your goal!</string>
+    <string name="title_activity_onboarding">OnboardingActivity</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="get_started">GET STARTED</string>
+    <string name="onboarding_welcome"><![CDATA[Welcome to 1 & Done!]]></string>
+    <string name="onboarding_how_to">"<b>"Set daily goals"</b>" and be reminded to complete them!</string>
+    <string name="onboarding_track_stats">Track stats and get insight on how to be more productive!</string>
+    <string name="onboarding_end">Now go out, unleash your full potential, and get stuff DONE!</string>
+    <string name="file_shared_prefs">one_and_done_shared_preferences</string>
+    <string name="shared_prefs_first_launch">first_launch</string>
 
 </resources>

@@ -18,7 +18,7 @@
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:contentDescription="@string/a11y_nav_user_image"
-        app:srcCompat="@drawable/logo_small" />
+        app:srcCompat="@drawable/logo" />
 
     <TextView
         android:id="@+id/nav_user_name"
