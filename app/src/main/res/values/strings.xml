@@ -22,7 +22,7 @@
     <string name="confirm_completed_message">Did you complete your goal?</string>
     <string name="confirm_completed_positive">Yes</string>
     <string name="confirm_completed_negative">Not yet</string>
-    <string name="banner">Congratulations! Come back tomorrow to get one day closer to your achieving your dreams!!!</string>
+    <string name="banner">Congratulations! Come back tomorrow to get one day closer to achieving your dreams!!!</string>
 
     <!-- Widget strings -->
     <!-- TODO: figure out why this isn't italicized. -->
