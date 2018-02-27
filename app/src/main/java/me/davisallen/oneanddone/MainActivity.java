@@ -183,7 +183,7 @@ public class MainActivity extends AppCompatActivity implements
 
         FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(this));
 
-        int notification_period = 60 * 60 * 1;  // Every 1 hour.
+        int notification_period = 60 * 60 * 2;  // Every 2 hours.
 //        int notification_period = 60;  // Every minute (for testing).
         int notification_flex = 10;
 
@@ -199,8 +199,7 @@ public class MainActivity extends AppCompatActivity implements
                 // start between 0 and 60 seconds from time
                 .setTrigger(createPeriodicTrigger(notification_period, notification_flex))
                 // overwrite an existing job with the same tag
-                // TODO: Investigate why this seems to make job SO much slower when true outside
-                //     the execution window.
+                // TODO: Investigate why this seems to make job SO much slower when true outside the execution window.
                 .setReplaceCurrent(true)
                 // retry with exponential backoff
                 .setRetryStrategy(RetryStrategy.DEFAULT_EXPONENTIAL)

@@ -7,7 +7,10 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
+
+import java.util.Random;
 
 /**
  * Helper class to manage notification channels, and create notifications.
@@ -52,7 +55,10 @@ class NotificationHelper extends ContextWrapper {
         return new NotificationCompat.Builder(getApplicationContext(), CHANNEL_GOAL_REMINDER)
                 .setContentTitle("Feeling a little misguided?")
                 .setContentText("Set a goal for today!")
-                .setSmallIcon(getSmallIcon())
+                .setSmallIcon(R.drawable.ic_notification)
+                .setColorized(true)
+                .setColor(getResources().getColor(R.color.colorPrimary))
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.logo))
                 .setAutoCancel(true)
                 .addAction(R.drawable.ic_send, getString(R.string.notification_create_action), openAppPendingIntent)
                 .setContentIntent(openAppPendingIntent);
@@ -64,19 +70,30 @@ class NotificationHelper extends ContextWrapper {
         openAppIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         return new NotificationCompat.Builder(getApplicationContext(), CHANNEL_GOAL_REMINDER)
                 .setContentTitle(goal)
-                .setContentText("Did you get it done yet?")
-                .setSmallIcon(getSmallIcon())
+                .setContentText(getMotivationalPrompt())
+                .setSmallIcon(R.drawable.ic_notification)
+                .setColorized(true)
+                .setColor(getResources().getColor(R.color.colorPrimary))
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.logo))
                 .setAutoCancel(true)
                 .addAction(R.drawable.ic_check_green_36dp, getString(R.string.notification_complete_action), openAppPendingIntent)
                 .setContentIntent(openAppPendingIntent);
     }
 
-    public void notify(int id, NotificationCompat.Builder notification) {
-        getManager().notify(id, notification.build());
+    private CharSequence getMotivationalPrompt() {
+        CharSequence[] motivation = {
+                "Did you finish it yet?",
+                "You can do it!",
+                "Don't give up on your dreams!",
+                "Do it for you.",
+                "Believe in yourself!"
+        };
+        Random r = new Random();
+        return motivation[r.nextInt(motivation.length)];
     }
 
-    private int getSmallIcon() {
-        return R.drawable.ic_notification;
+    public void notify(int id, NotificationCompat.Builder notification) {
+        getManager().notify(id, notification.build());
     }
 
     private NotificationManager getManager() {
