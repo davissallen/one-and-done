@@ -14,7 +14,7 @@ import android.support.v4.app.NotificationCompat;
  */
 class NotificationHelper extends ContextWrapper {
     private static final String CHANNEL_GOAL_REMINDER = "channel_goal_reminder";
-    private static final String CHANNEL_GOAL_STREAK = "channel_goal_streak";
+//    private static final String CHANNEL_GOAL_STREAK = "channel_goal_streak";
 //    private static final String CHANNEL_CREATE_GOAL = "channel_create_goal";
 //    private static final String CHANNEL_COMPLETE_GOAL = "channel_complete_goal";
 
