@@ -80,8 +80,8 @@ import static me.davisallen.oneanddone.DailyGoalAppWidget.EXTRA_GOAL;
 // TODO: Accept goal input from notification like messages response-in-notification.
 // TODO: Custom notification layout (color at least)
 // TODO: Add transition from creating to viewing a goal.
-// TODO: Add array of prompts for notification ("Are you done you?" "Keep it up!" etc.)
 // TODO: Ensure notifications replace the current one (to prevent outdated messages).
+// TODO: Add landscape layout for onboarding.
 
 public class MainActivity extends AppCompatActivity implements
         GoalCreateFragment.DailyGoalCreatedListener,
@@ -248,18 +248,6 @@ public class MainActivity extends AppCompatActivity implements
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_settings) {
-            Intent settingsIntent = new Intent(this, SettingsActivity.class);
-            startActivity(settingsIntent);
-
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

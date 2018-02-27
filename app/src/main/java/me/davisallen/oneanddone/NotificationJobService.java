@@ -57,14 +57,13 @@ public class NotificationJobService extends JobService {
         } else {
             Timber.d(String.format("Actually got a user wow: %s.", mUser.getUid()));
 
+            // Obtain the FirebaseStorage instance.
+            FirebaseDatabase firebaseDatabase = FirebaseUtils.getDatabase();
+            mGoalsByUserDbReference = firebaseDatabase.getReference(getString(R.string.goals_db_name)).child(mUser.getUid());
+            mGoalsByUserDbReference.orderByChild("dateInMillis").limitToLast(1).addListenerForSingleValueEvent(getMostRecentGoalByUser);
+
+            mNotificationHelper = new NotificationHelper(getApplicationContext());
         }
-
-        // Obtain the FirebaseStorage instance.
-        FirebaseDatabase firebaseDatabase = FirebaseUtils.getDatabase();
-        mGoalsByUserDbReference = firebaseDatabase.getReference(getString(R.string.goals_db_name)).child(mUser.getUid());
-        mGoalsByUserDbReference.orderByChild("dateInMillis").limitToLast(1).addListenerForSingleValueEvent(getMostRecentGoalByUser);
-
-        mNotificationHelper = new NotificationHelper(getApplicationContext());
 
         return false; // Answers the question: "Is there still work going on?"
     }
