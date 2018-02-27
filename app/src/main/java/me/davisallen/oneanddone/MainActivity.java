@@ -81,7 +81,6 @@ import static me.davisallen.oneanddone.DailyGoalAppWidget.EXTRA_GOAL;
 // TODO: Custom notification layout (color at least)
 // TODO: Add transition from creating to viewing a goal.
 // TODO: Ensure notifications replace the current one (to prevent outdated messages).
-// TODO: Add landscape layout for onboarding.
 
 public class MainActivity extends AppCompatActivity implements
         GoalCreateFragment.DailyGoalCreatedListener,
